@@ -27,6 +27,11 @@ class Item(GameObject):
     """
 
     def __init__(self, name, image):
+        """
+        __init__(self, name, image) -> Item
+        name: name of the item
+        image: graphic of the item
+        """
         GameObject.__init__(self)
         self.name = name
         self.image = image
