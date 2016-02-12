@@ -37,7 +37,7 @@ def get_game_module():
         _module = inspect.getmodule(_frame[0])
 
         # Check if module is outside of us
-        if _module and _module.__name__ != __name__:
+        if _module and not _module.__name__.startswith("veripeditus.framework"):
             return _module
 
     # If we got here, caller could not be identified
