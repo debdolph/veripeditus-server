@@ -3,7 +3,8 @@ python:
  - "3.5"
 install:
  - python setup.py install
- - pip install pylint
+ - pip install pylint Coverage
 script:
- - python setup.py test
+ - coverage run --include="*veripeditus*" setup.py test
  - pylint -E veripeditus
+ - coverage report --fail-under=90
