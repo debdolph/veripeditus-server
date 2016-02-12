@@ -38,6 +38,4 @@ class Item(GameObject):
         image -- graphic of the item
         """
 
-        GameObject.__init__(self)
-        self.name = name
-        self.image = image
+        GameObject.__init__(self, name=name, image=image)
