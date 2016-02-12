@@ -7,4 +7,4 @@ install:
 script:
  - coverage run --include="*veripeditus*" setup.py test
  - pylint -E veripeditus
- - coverage report --fail-under=90 -m
+ - coverage report --fail-under=100 -m
