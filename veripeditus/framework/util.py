@@ -40,9 +40,6 @@ def get_game_module():
         if _module and not _module.__name__.startswith("veripeditus.framework"):
             return _module
 
-    # If we got here, caller could not be identified
-    return None
-
 def get_game_module_name():
     """ Get the module name of the calling game, or None """
 
