@@ -74,3 +74,14 @@ class GameDataTests(unittest.TestCase):
 
         file.close()
         reffile.close()
+
+    def test_get_game_data_file_name_enoent(self):
+        """ Test getting the full path to a non-existent resource """
+
+        resname = "enoent"
+        restype = "image"
+
+        from veripeditus.framework.util import get_game_data_file_name, NoSuchResourceError
+
+        with self.assertRaises(NoSuchResourceError):
+            get_game_data_file_name(restype, resname)
