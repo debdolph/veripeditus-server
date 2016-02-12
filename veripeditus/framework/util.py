@@ -26,7 +26,7 @@ class NoSuchResourceError(Exception):
 
     pass
 
-def get_game_data_file(module, restype, basename):
+def get_game_data_filename(module, restype, basename):
     """
     Get the full path of a game data resource.
 
