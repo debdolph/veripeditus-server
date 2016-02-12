@@ -22,9 +22,6 @@ import inspect
 import os
 import sys
 
-# Caching variable for the game module
-_game_module = None
-
 class NoSuchResourceError(Exception):
     """ Thrown when a resource cannot be found in a game data directory. """
 
@@ -33,26 +30,18 @@ class NoSuchResourceError(Exception):
 def get_game_module():
     """ Get the module object of the calling game, or None """
 
-    global _game_module
+    # Get full call stack; skip first two frames (inspect and us)
+    _stack = inspect.stack()
+    for _frame in  _stack[1:]:
+        # Get module from frame
+        _module = inspect.getmodule(_frame[0])
 
-    if _game_module:
-        # Return cached module if already found
-        return _game_module
-    else:
-        # Get full call stack; skip first two frames (inspect and us)
-        _stack = inspect.stack()
-        for _frame in  _stack[2:]:
-            # Get module from frame
-            _module = inspect.getmodule(_frame[0])
-
-            # Check if module is outside of us
-            if _module and not _module.__name__ == __name__:
-                _game_module = _module
-                return _game_module
+        # Check if module is outside of us
+        if _module and _module.__name__ != __name__:
+            return _module
 
     # If we got here, caller could not be identified
-    _game_module = None
-    return _game_module
+    return None
 
 def get_game_module_name():
     """ Get the module name of the calling game, or None """
@@ -86,5 +75,5 @@ def get_game_data_file_name(restype, basename):
             return _file
 
     # If we got here, no logic matched
-    raise NoSuchResourceError("No resource found for game %s, type %s, called %s; looked inside <%s>."
-                              % (_module, restype, basename, _respath))
+    raise NoSuchResourceError("No resource found for game %s, type %s, called %s."
+                              % (_module, restype, basename))

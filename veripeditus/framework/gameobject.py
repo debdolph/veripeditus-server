@@ -20,7 +20,7 @@ Never used directly, only inherited by other framework classes.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from wand.image import Image
-from veripeditus.framework.util import get_game_data_file
+from veripeditus.framework.util import get_game_data_file_name
 
 class GameObject(object):
     """
@@ -28,14 +28,9 @@ class GameObject(object):
     Never used directly, only inherited by other framework classes.
     """
 
-    def __init__(self, mod, **kwargs):
+    def __init__(self, **kwargs):
         """
         Initialise basic attributes of a game object.
-
-        Keyword arguments:
-
-        mod -- Name of the module that instantiates the game object.
-               Needed for finding data directories and the like.
 
         Optional keyword arguments:
 
@@ -44,10 +39,8 @@ class GameObject(object):
                  the instantiating module's data directory
         """
 
-        self._mod = ".".join(mod.split(".")[:3])
-
         if "name" in kwargs:
             self.name = kwargs["name"]
         if "image" in kwargs:
-            _filename = get_game_data_file(self._mod, "image", kwargs["image"])
+            _filename = get_game_data_file_name("image", kwargs["image"])
             self.image = Image(filename=_filename)
