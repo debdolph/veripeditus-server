@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import unittest
 
 class GameDataTests(unittest.TestCase):
@@ -25,6 +26,24 @@ class GameDataTests(unittest.TestCase):
 
         # Construct test data directory
         self.datadir = os.path.join(os.path.dirname(__file__), "data")
+
+    def test_get_game_module(self):
+        """ Test getting the game module (this is us) """
+
+        from veripeditus.framework.util import get_game_module
+
+        module = get_game_module()
+
+        self.assertEqual(module, sys.modules[__name__])
+
+    def test_get_game_module_name(self):
+        """ Test getting the name of the game module (this is us) """
+
+        from veripeditus.framework.util import get_game_module_name
+
+        module = get_game_module_name()
+
+        self.assertEqual(module, __name__)
 
     def test_get_game_data_file_name_image_png(self):
         """ Test getting the full path to an image resource in PNG format """
