@@ -37,4 +37,4 @@ class GameDataTests(unittest.TestCase):
         filename = get_game_data_filename(restype, resname)
 
         # The returned path should match ower self-constructed datadir
-        self.assertEquals(filename, os.path.join(self.datadir, "%s.png" % resname))
+        self.assertEquals(filename, os.path.join(self.datadir, restype, "%s.png" % resname))
