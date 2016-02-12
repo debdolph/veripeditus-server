@@ -26,4 +26,7 @@ class Item(GameObject):
     can be interacted with; otherwise immutable.
     """
 
-    pass
+    def __init__(self, name, image):
+        GameObject.__init__(self)
+        self.name = name
+        self.image = image
