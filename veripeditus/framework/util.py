@@ -59,7 +59,7 @@ def get_game_module_name():
 
     return get_game_module().__name__
 
-def get_game_data_filename(restype, basename):
+def get_game_data_file_name(restype, basename):
     """
     Get the full path of a game data resource.
 
