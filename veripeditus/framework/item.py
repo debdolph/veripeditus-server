@@ -1,3 +1,7 @@
+"""
+Module containing base classes for all kinds of game objects.
+"""
+
 # veripeditus-server - Server component for the Veripeditus game framework
 # Copyright (C) 2015  Dominik George <nik@naturalnet.de>
 #
@@ -14,10 +18,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Module containing base classes for all kinds of game objects.
-"""
-
 from veripeditus.framework.gameobject import GameObject
 
 class Item(GameObject):
@@ -28,10 +28,15 @@ class Item(GameObject):
 
     def __init__(self, name, image):
         """
-        __init__(self, name, image) -> Item
-        name: name of the item
-        image: graphic of the item
+        Initialisation of a generic item object, called by game
+        objects before adding game-specific attributes.
+
+        Keyword arguments:
+
+        name -- display name of the object instance
+        image -- graphic of the item
         """
+
         GameObject.__init__(self)
         self.name = name
         self.image = image

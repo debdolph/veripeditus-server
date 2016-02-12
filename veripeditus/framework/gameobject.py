@@ -1,3 +1,8 @@
+"""
+Parent object for all Veripeditus game objects
+Never used directly, only inherited by other framework classes.
+"""
+
 # veripeditus-server - Server component for the Veripeditus game framework
 # Copyright (C) 2015  Dominik George <nik@naturalnet.de>
 #
@@ -13,11 +18,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-Parent object for all Veripeditus game objects
-Never used directly, only inherited by other framework classes.
-"""
 
 class GameObject(object):
     """
