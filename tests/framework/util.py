@@ -57,3 +57,20 @@ class GameDataTests(unittest.TestCase):
 
         # The returned path should match ower self-constructed datadir
         self.assertEqual(filename, os.path.join(self.datadir, restype, "%s.png" % resname))
+
+    def test_get_game_data_file_image_png(self):
+        """ Test getting a file object for an image resource in PNG format """
+
+        resname = "testpng"
+        restype = "image"
+
+        from veripeditus.framework.util import get_game_data_file
+
+        file = get_game_data_file(restype, resname)
+        reffile = open(os.path.join(self.datadir, restype, "%s.png" % resname), "r")
+
+        # The returned data should match the data in the test file
+        self.assertEqual(file.read(), reffile.read())
+
+        file.close()
+        reffile.close()
