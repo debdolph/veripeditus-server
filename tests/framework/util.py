@@ -155,10 +155,10 @@ class GameDataTests(unittest.TestCase):
 
         from veripeditus.framework.util import get_game_data_file
 
-        file = get_game_data_file(restype, resname, "wb")
+        file = get_game_data_file(restype, resname, "r")
 
-        # The returned file object should be in write mode and binary
-        self.assertEqual(file.mode, "wb")
+        # The returned file object should be in read mode and not binary
+        self.assertEqual(file.mode, "r")
 
         file.close()
 
