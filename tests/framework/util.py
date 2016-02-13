@@ -17,6 +17,7 @@
 import os
 import sys
 import unittest
+from wand.image import Image
 
 class GameDataTests(unittest.TestCase):
     """ Tests that check game data handling in framework.util """
@@ -160,3 +161,35 @@ class GameDataTests(unittest.TestCase):
         self.assertEqual(file.mode, "wb")
 
         file.close()
+
+    def test_get_game_data_object_image_png(self):
+        """ Test getting an Image object form a PNG resource """
+
+        resname = "testpng"
+        restype = "image"
+
+        from veripeditus.framework.util import get_game_data_object
+
+        obj = get_game_data_object(restype, resname)
+
+        # Returned object should be an Image instance
+        self.assertTrue(isinstance(obj, Image))
+
+        # Verify size
+        self.assertEqual(obj.size, (192, 192))
+
+    def test_get_game_data_object_text(self):
+        """ Test getting a list of strings from a TXT resource """
+
+        resname = "testtxt"
+        restype = "text"
+
+        from veripeditus.framework.util import get_game_data_object
+
+        obj = get_game_data_object(restype, resname)
+
+        # Returned object should be a list
+        self.assertTrue(isinstance(obj, list))
+
+        # Verify size
+        self.assertEqual(len(obj), 3)
