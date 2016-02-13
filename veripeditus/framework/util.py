@@ -21,6 +21,7 @@ Utility functions for framework components
 import inspect
 import os
 import sys
+from wand.image import Image
 
 class NoSuchResourceError(Exception):
     """ Thrown when a resource cannot be found in a game data directory. """
@@ -108,3 +109,29 @@ def get_game_data_file(restype, basename, mode=None):
         _mode = mode
 
     return open(_filename, _mode)
+
+def get_game_data_object(restype, basename):
+    """
+    Get a file object of a game data resource, in read-only mode.
+
+    Keyword arguments:
+
+    restype -- type of the resource to be loaded; one of:
+               image - for image files
+    basename -- basename of the file to find; without extension
+                so a logical decision can be made by type
+    """
+
+    # Get the file object
+    _file = get_game_data_file(restype, basename)
+
+    # Check resource type and create a matching object
+    _obj = None
+    if restype == "image":
+        _obj = Image(file=_file)
+    elif restype == "text":
+        _obj = _file.readlines()
+
+    # Close file and return
+    _file.close()
+    return _obj
