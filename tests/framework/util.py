@@ -115,3 +115,33 @@ class GameDataTests(unittest.TestCase):
 
         file.close()
         reffile.close()
+
+    def test_get_game_data_file_text_mode(self):
+        """ Test getting the right file mode for a text resource """
+
+        resname = "testtxt"
+        restype = "text"
+
+        from veripeditus.framework.util import get_game_data_file
+
+        file = get_game_data_file(restype, resname)
+
+        # The returned file object should be in read mode and not binary
+        self.assertEqual(file.mode, "r")
+
+        file.close()
+
+    def test_get_game_data_file_image_mode(self):
+        """ Test getting the right file mode for an image resource """
+
+        resname = "testpng"
+        restype = "image"
+
+        from veripeditus.framework.util import get_game_data_file
+
+        file = get_game_data_file(restype, resname)
+
+        # The returned file object should be in read mode and binary
+        self.assertEqual(file.mode, "rb")
+
+        file.close()
