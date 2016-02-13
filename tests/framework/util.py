@@ -98,3 +98,20 @@ class GameDataTests(unittest.TestCase):
 
         # The returned path should match ower self-constructed datadir
         self.assertEqual(filename, os.path.join(self.datadir, restype, "%s.txt" % resname))
+
+    def test_get_game_data_file_text(self):
+        """ Test getting a file object for a text resource """
+
+        resname = "testtxt"
+        restype = "text"
+
+        from veripeditus.framework.util import get_game_data_file
+
+        file = get_game_data_file(restype, resname)
+        reffile = open(os.path.join(self.datadir, restype, "%s.txt" % resname), "rb")
+
+        # The returned data should match the data in the test file
+        self.assertEqual(file.read(), reffile.read())
+
+        file.close()
+        reffile.close()
