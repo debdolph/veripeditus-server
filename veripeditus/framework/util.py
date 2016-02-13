@@ -52,7 +52,8 @@ def get_game_data_file_name(restype, basename):
     Keyword arguments:
 
     restype -- type of the resource to be loaded; one of:
-               image - for image files
+                image - for image files
+                text - for text files
     basename -- basename of the file to find; without extension
                 so a logical decision can be made by type
     """
@@ -68,6 +69,11 @@ def get_game_data_file_name(restype, basename):
     if restype == "image":
         # Check whether a PNG file exists
         _file = os.path.join(_respath, "%s.png" % basename)
+        if os.path.isfile(_file):
+            return _file
+    elif restype == "text":
+        # Check whether a TXT file exists
+        _file = os.path.join(_respath, "%s.txt" % basename)
         if os.path.isfile(_file):
             return _file
 
