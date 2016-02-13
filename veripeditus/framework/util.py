@@ -96,4 +96,10 @@ def get_game_data_file(restype, basename):
     # Get the file path
     _filename = get_game_data_file_name(restype, basename)
 
-    return open(_filename, "rb")
+    # Determine file mode
+    _mode = "r"
+    if restype in ["image"]:
+        # These resource types are binary
+        _mode += "b"
+
+    return open(_filename, _mode)
