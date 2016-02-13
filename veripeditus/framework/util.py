@@ -81,7 +81,7 @@ def get_game_data_file_name(restype, basename):
     raise NoSuchResourceError("No resource found for game %s, type %s, called %s."
                               % (_module, restype, basename))
 
-def get_game_data_file(restype, basename):
+def get_game_data_file(restype, basename, mode=None):
     """
     Get a file object of a game data resource, in read-only mode.
 
@@ -91,15 +91,20 @@ def get_game_data_file(restype, basename):
                image - for image files
     basename -- basename of the file to find; without extension
                 so a logical decision can be made by type
+    mode -- optional argument to manuallz set desired file mode
     """
 
     # Get the file path
     _filename = get_game_data_file_name(restype, basename)
 
     # Determine file mode
-    _mode = "r"
-    if restype in ["image"]:
-        # These resource types are binary
-        _mode += "b"
+    if not mode:
+        _mode = "r"
+        if restype in ["image"]:
+            # These resource types are binary
+            _mode += "b"
+    else:
+        # Mode was given as argument
+        _mode = mode
 
     return open(_filename, _mode)
