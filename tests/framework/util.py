@@ -145,3 +145,18 @@ class GameDataTests(unittest.TestCase):
         self.assertEqual(file.mode, "rb")
 
         file.close()
+
+    def test_get_game_data_file_mode_manual(self):
+        """ Test getting the right file mode via argument """
+
+        resname = "testpng"
+        restype = "image"
+
+        from veripeditus.framework.util import get_game_data_file
+
+        file = get_game_data_file(restype, resname, "wb")
+
+        # The returned file object should be in write mode and binary
+        self.assertEqual(file.mode, "wb")
+
+        file.close()
