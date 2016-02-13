@@ -85,3 +85,16 @@ class GameDataTests(unittest.TestCase):
 
         with self.assertRaises(NoSuchResourceError):
             get_game_data_file_name(restype, resname)
+
+    def test_get_game_data_file_name_text(self):
+        """ Test getting the full path to a text resource """
+
+        resname = "testtxt"
+        restype = "text"
+
+        from veripeditus.framework.util import get_game_data_file_name
+
+        filename = get_game_data_file_name(restype, resname)
+
+        # The returned path should match ower self-constructed datadir
+        self.assertEqual(filename, os.path.join(self.datadir, restype, "%s.txt" % resname))
