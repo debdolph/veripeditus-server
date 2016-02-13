@@ -1,6 +1,6 @@
-# Veripeditus Game Server
+# Veripeditus AR Game Server
 
-Server component for the Veripeditus game framework
+Server component for the Veripeditus augmented-reality game framework
 
 ## What is Veripeditus?
 
