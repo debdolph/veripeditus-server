@@ -19,8 +19,7 @@ Never used directly, only inherited by other framework classes.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from wand.image import Image
-from veripeditus.framework.util import get_game_data_file_name
+from veripeditus.framework.util import get_game_data_object
 
 class GameObject(object):
     """
@@ -42,5 +41,4 @@ class GameObject(object):
         if "name" in kwargs:
             self.name = kwargs["name"]
         if "image" in kwargs:
-            _filename = get_game_data_file_name("image", kwargs["image"])
-            self.image = Image(filename=_filename)
+            self.image = get_game_data_object("image", kwargs["image"])
