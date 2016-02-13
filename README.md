@@ -44,11 +44,11 @@ assessment.
 
 The authors and lead developers of Veripeditus are…
 
- * … Eike Time Jesinghaus <eike@naturalnet.de>, a young Python and PyGame
+ * … Eike Time Jesinghaus <<eike@naturalnet.de>>, a young Python and PyGame
    developer, born 2001 (14 years old at the time the project started)
    and an expert Python and PyGame developer and tutor since his 11ᵗʰ
    birthday, and …
- * … Dominik George <nik@naturalnet.de>, formerly teacher of Eike, now
+ * … Dominik George <<nik@naturalnet.de>>, formerly teacher of Eike, now
    at times his trainee regarding Python magic.
 
 ## Licence
@@ -57,5 +57,5 @@ The project is licenced under the GNU Affero GeneralPublic License
 version 3 or later. All artwork and other non-code parts are also
 dual-licenced under the Creative Commons-Attribution-Share Alike 4.0
 Unported licence (or later). See the
-[COPYING](https://github.com/Veripeditus/veripeditus-server/COPYING)
+[COPYING](https://github.com/Veripeditus/veripeditus-server/blob/master/COPYING)
 file for more details.
