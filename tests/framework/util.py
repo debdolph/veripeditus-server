@@ -193,3 +193,17 @@ class GameDataTests(unittest.TestCase):
 
         # Verify size
         self.assertEqual(len(obj), 3)
+
+    def test_get_game_names(self):
+        """ Test getting a list of names of available game packages """
+
+        from veripeditus.framework.util import get_game_names
+
+        # Get game names
+        games = get_game_names()
+
+        # Returned object should be a list
+        self.assertIsInstance(games, list)
+
+        # Returned object should contain the test game
+        self.assertIn("test", games)
