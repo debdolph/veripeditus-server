@@ -216,9 +216,12 @@ class GameDataTests(unittest.TestCase):
         # Get game module objects
         games = get_games()
 
-        # Returned object should be a list
-        self.assertIsInstance(games, list)
+        # Returned object should be a dict
+        self.assertIsInstance(games, dict)
 
-        # Returned object should contain the test game
+        # test should be a key
+        self.assertIn("test", games)
+
+        # The test key should refer to the test game module
         import veripeditus.game.test as testgame
-        self.assertIn(testgame, games)
+        self.assertIs(games["test"], testgame)
