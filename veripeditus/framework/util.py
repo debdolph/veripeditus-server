@@ -18,6 +18,7 @@ Utility functions for framework components
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import importlib
 import inspect
 import os
 import pkgutil
@@ -149,5 +150,18 @@ def get_game_names():
     # strip veripeditus.game. and construct list
     _pkgs = [i[1].split(".")[2] for i in pkgutil.walk_packages()
              if i[1].startswith("veripeditus.game.")]
+
+    return _pkgs
+
+def get_games():
+    """
+    Get a list of installed game modules
+
+    Returns a dictionary like {name: module}
+    """
+
+    # Get game names and import modules, build dict
+    _pkgs = {i: importlib.import_module("veripeditus.game." + i)
+             for i in get_game_names()}
 
     return _pkgs
