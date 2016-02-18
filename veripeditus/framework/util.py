@@ -20,6 +20,7 @@ Utility functions for framework components
 
 import inspect
 import os
+import pkgutil
 import sys
 from wand.image import Image
 
@@ -135,3 +136,18 @@ def get_game_data_object(restype, basename):
     # Close file and return
     _file.close()
     return _obj
+
+def get_game_names():
+    """
+    Get a list of names of installed games.
+
+    Returns only the base name, i.e. the third part of the package name
+    veripeditus.game.foo.
+    """
+
+    # Get all accessible packages that start with veripeditus.game.,
+    # strip veripeditus.game. and construct list
+    _pkgs = [i[1].split(".")[2] for i in pkgutil.walk_packages()
+             if i[1].startswith("veripeditus.game.")]
+
+    return _pkgs
