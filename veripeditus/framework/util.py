@@ -137,31 +137,3 @@ def get_game_data_object(restype, basename):
     # Close file and return
     _file.close()
     return _obj
-
-def get_game_names():
-    """
-    Get a list of names of installed games.
-
-    Returns only the base name, i.e. the third part of the package name
-    veripeditus.game.foo.
-    """
-
-    # Get all accessible packages that start with veripeditus.game.,
-    # strip veripeditus.game. and construct list
-    _pkgs = [i[1].split(".")[2] for i in pkgutil.walk_packages()
-             if i[1].startswith("veripeditus.game.")]
-
-    return _pkgs
-
-def get_games():
-    """
-    Get a list of installed game modules
-
-    Returns a dictionary like {name: module}
-    """
-
-    # Get game names and import modules, build dict
-    _pkgs = {i: importlib.import_module("veripeditus.game." + i)
-             for i in get_game_names()}
-
-    return _pkgs
