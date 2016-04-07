@@ -1,7 +1,10 @@
-#!/usr/bin/env python3
+"""
+Main server application
+"""
 
 # veripeditus-server - Server component for the Veripeditus game framework
 # Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+# Copyright (c) 2015  Mirko Hoffmann <m.hoffmann@tarent.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -16,20 +19,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from setuptools import setup
+from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.restless import APIManager
 
-setup(
-    name='Veripeditus',
-    version='0.1',
-    long_description=__doc__,
-    packages=['veripeditus'],
-    include_package_data=True,
-    zip_safe=False,
-    install_requires=[
-                      'Flask',
-                      'Flask-Restless',
-                      'Flask-SQLAlchemy',
-                      'Wand',
-                     ],
-    test_suite = 'tests'
-)
+app = Flask(__name__)
+version = '0.1'
+
+# FIXME allow modification after module import
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+
+cfglist = ['/etc/veripeditus/server.cfg']
+for cfg in cfglist:
+    app.config.from_pyfile(cfg, silent=True)
+
+db = SQLAlchemy(app)
+manager = APIManager(app, flask_sqlalchemy_db=db)
+
+import veripeditus.server.model as model
+
+db.create_all()
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
