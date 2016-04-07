@@ -30,11 +30,11 @@ class Player(db.Model):
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    package = db.Column(db.String(128))
     name = db.Column(db.String(32))
     version = db.Column(db.String(16))
     description = db.Column(db.String(1024))
     author = db.Column(db.String(32))
     license = db.Column(db.String(32))
-    language = db.Column(db.String(32))
 
-    __table_args__ = (db.UniqueConstraint('name', 'version', name='_name_version_uc'),)
+    __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)

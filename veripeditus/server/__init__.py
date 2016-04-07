@@ -37,8 +37,10 @@ db = SQLAlchemy(app)
 manager = APIManager(app, flask_sqlalchemy_db=db)
 
 from veripeditus.server import model
-
 db.create_all()
+
+from veripeditus.server import control
+control.init()
 
 if __name__ == '__main__':
     app.debug = True
