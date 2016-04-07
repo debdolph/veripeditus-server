@@ -22,7 +22,12 @@ setup(
     name='Veripeditus',
     version='0.1',
     long_description=__doc__,
-    packages=['veripeditus'],
+    packages=[
+              'veripeditus',
+              'veripeditus.framework',
+              'veripeditus.game.test',
+              'veripeditus.server',
+             ],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

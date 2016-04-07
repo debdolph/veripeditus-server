@@ -36,7 +36,7 @@ for cfg in cfglist:
 db = SQLAlchemy(app)
 manager = APIManager(app, flask_sqlalchemy_db=db)
 
-import veripeditus.server.model as model
+from veripeditus.server import model
 
 db.create_all()
 
