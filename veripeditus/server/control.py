@@ -28,7 +28,9 @@ def init():
     games = get_games()
 
     # Iterate over package names and modules
-    for package, module in games:
+    for package in games.keys():
+        module = games[package]
+
         # Check if game is in database
         game = Game.query.filter_by(package=package, name=module.NAME,
                                             version=module.VERSION).first()
