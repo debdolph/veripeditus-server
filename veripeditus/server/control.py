@@ -37,7 +37,7 @@ def init():
 
         # Create new object if nonexistent
         if game == None:
-            game = model.Game()
+            game = Game()
 
         # Sync metadata to database class
         game.package = package

@@ -19,4 +19,4 @@ from veripeditus.framework import VERSION
 NAME = 'Veripeditus Test Game'
 DESCRIPTION = 'A useless test game bundled with the server framework'
 AUTHOR = 'Dominik George <nik@naturalnet.de>'
-LICERNSE = 'AGPL'
+LICENSE = 'AGPL'
