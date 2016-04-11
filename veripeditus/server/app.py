@@ -24,7 +24,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.restless import APIManager, url_for
 
 app = Flask(__name__)
-version = '0.1'
 
 # FIXME allow modification after module import
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
