@@ -1,5 +1,5 @@
 """
-API endpoint definitions
+Main server application
 """
 
 # veripeditus-server - Server component for the Veripeditus game framework
@@ -19,12 +19,26 @@ API endpoint definitions
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server.app import manager
+from flask import Flask, jsonify
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.restless import APIManager, url_for
+
+app = Flask(__name__)
+version = '0.1'
+
+# FIXME allow modification after module import
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+
+cfglist = ['/etc/veripeditus/server.cfg']
+for cfg in cfglist:
+    app.config.from_pyfile(cfg, silent=True)
+
+db = SQLAlchemy(app)
 from veripeditus.server.model import *
+db.create_all()
 
-manager.create_api(Player, include_columns=['id', 'username', 'name', 'email'],
-    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+manager = APIManager(app, flask_sqlalchemy_db=db)
+from veripeditus.server.rest import *
 
-manager.create_api(Game, include_columns=['id', 'package', 'name', 'version',
-                                                'description', 'author', 'license'],
-    methods=['GET'])
+from veripeditus.server.control import *
+init()

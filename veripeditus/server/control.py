@@ -19,7 +19,8 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server import db, model
+from veripeditus.server.app import db
+from veripeditus.server.model import Game
 from veripeditus.server.util import get_games
 
 def init():
@@ -29,7 +30,7 @@ def init():
     # Iterate over package names and modules
     for package, module in games:
         # Check if game is in database
-        game = model.Game.query.filter_by(package=package, name=module.NAME,
+        game = Game.query.filter_by(package=package, name=module.NAME,
                                             version=module.VERSION).first()
 
         # Create new object if nonexistent

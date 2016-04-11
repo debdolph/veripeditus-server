@@ -19,7 +19,7 @@ Main server data model
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server import db
+from veripeditus.server.app import db
 
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key = True)
