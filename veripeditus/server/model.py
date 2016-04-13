@@ -45,4 +45,5 @@ class Game(db.Model):
 class World(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    game = db.relationship("Game")
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
+    game = db.relationship('Game', backref=db.backref('worlds', lazy='dynamic'))
