@@ -43,8 +43,6 @@ class Group(db.Model):
     name = db.Column(db.String(64))
     players = db.relationship('Player', secondary=playergroup,
                               backref=db.backref('groups', lazy='dynamic'))
-    worlds = db.relationship('World', secondary=worldgroup,
-                             backref=db.backref('worlds', lazy='dynamic'))
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,4 +61,4 @@ class World(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
     game = db.relationship('Game', backref=db.backref('worlds', lazy='dynamic'))
     groups = db.relationship('Group', secondary=worldgroup,
-                             backref=db.backref('groups', lazy='dynamic')
+                             backref=db.backref('groups', lazy='dynamic'))
