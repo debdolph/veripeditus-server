@@ -28,8 +28,16 @@ class Player(db.Model):
     name = db.Column(db.String(64))
     email = db.Column(db.String(128))
 
-class PlayerGroup(db.Model):
+playergroup = db.Table('playergroup',  
+    db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))                       
+)
+
+class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    players = db.relationship('Player', secondary=playergroup,
+                              backref=db.backref('groups', lazy='dynamic'))
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
