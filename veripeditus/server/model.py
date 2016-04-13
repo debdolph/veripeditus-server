@@ -28,6 +28,9 @@ class Player(db.Model):
     name = db.Column(db.String(64))
     email = db.Column(db.String(128))
 
+class PlayerGroup(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     package = db.Column(db.String(128))
