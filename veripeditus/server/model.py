@@ -22,14 +22,14 @@ Main server data model
 from veripeditus.server.app import db
 
 class Player(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(32), unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), unique=True)
     password = db.Column(db.String(128))
-    name = db.Column(db.String(100))
-    email = db.Column(db.String(100))
+    name = db.Column(db.String(64))
+    email = db.Column(db.String(128))
 
 class Game(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     package = db.Column(db.String(128))
     name = db.Column(db.String(32))
     version = db.Column(db.String(16))
