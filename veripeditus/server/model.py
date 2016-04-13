@@ -38,3 +38,8 @@ class Game(db.Model):
     license = db.Column(db.String(32))
 
     __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
+
+class World(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    game = db.relationship("Game")
