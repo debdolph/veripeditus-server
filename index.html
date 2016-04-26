@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="Veripeditus">
+ <head>
+  <title>Veripeditus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="lib/bootstrap/css/bootstrap.min.css"  rel="stylesheet" media="screen" />
+  <link href="styles/main.css"  rel="stylesheet" media="screen" />
+ </head>
+
+ <body ng-controller="VeripeditusController">
+  <div ng-view class="content-wrapper"></div>
+
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="lib/angular.js/angular.min.js"></script>
+  <script src="lib/angular.js/angular-route.min.js"></script>
+  <script src="lib/lodash.min.js"></script>
+  <script src="{{ url_for('static', filename='src/main.js') }}"></script>
+ </body>
+</html>
