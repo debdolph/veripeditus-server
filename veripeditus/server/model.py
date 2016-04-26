@@ -35,7 +35,7 @@ playergroup = db.Table('playergroup',
 
 worldgroup = db.Table('worldgroup',
     db.Column('world_id', db.Integer, db.ForeignKey('world.id')),
-    db.Column('group_id', db.Integer, db.FOreignKay('group.id'))
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
 )
 
 class Group(db.Model):
