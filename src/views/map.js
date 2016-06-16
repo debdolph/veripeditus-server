@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var veripeditusMain = angular.module('Veripeditus', [
-    'ngRoute',
-    'ngResource',
-]);
-
-veripeditusMain.factory("Player", function($resource) {
-    return $resource("http://127.0.0.1:5000/api/player/:id");
-});
-
-veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
+angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/map', {
+    templateUrl: 'src/views/map.html',
+    controller: 'ViewMapController'
+  });
+}]).controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
+  alert("foo");
+  Player.query(function(data) {
+    $scope.players = data;
+  });
 }]);
