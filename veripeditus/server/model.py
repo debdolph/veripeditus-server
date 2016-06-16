@@ -27,6 +27,8 @@ class Player(db.Model):
     password = db.Column(db.String(128))
     name = db.Column(db.String(64))
     email = db.Column(db.String(128))
+    longitute = db.Column(db.Float)
+    latitude = db.Column(db.Float)
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
