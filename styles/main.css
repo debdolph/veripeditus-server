@@ -1,0 +1,7 @@
+html, body, div.content-wrapper {
+	height: 100%;
+}
+
+div#map {
+	height: 100%;
+}
