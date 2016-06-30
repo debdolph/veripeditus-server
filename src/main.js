@@ -21,13 +21,5 @@ var veripeditusMain = angular.module('Veripeditus', [
     'ngResource',
 ]);
 
-veripeditusMain.config(function($logProvider){
-  $logProvider.debugEnabled(true);
-});
-
-veripeditusMain.factory("Player", function($resource) {
-    return $resource("http://127.0.0.1:5000/api/player/:id");
-});
-
 veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
 }]);
