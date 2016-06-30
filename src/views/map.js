@@ -22,7 +22,6 @@ angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$rout
     controller: 'ViewMapController'
   });
 }]).controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
-  alert("foo");
   Player.query(function(data) {
     $scope.players = data;
   });

@@ -19,6 +19,7 @@
 var veripeditusMain = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
+    'Veripeditus.view_map',
 ]);
 
 veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
