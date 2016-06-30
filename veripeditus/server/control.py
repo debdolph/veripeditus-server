@@ -23,7 +23,7 @@ from veripeditus.server.app import db
 from veripeditus.server.model import Game
 from veripeditus.server.util import get_games
 
-def init():
+def _sync_games():
     # Get all installed games
     games = get_games()
 
@@ -50,3 +50,6 @@ def init():
         # Write to database
         db.session.add(game)
         db.session.commit()
+
+def init():
+    _sync_games()
