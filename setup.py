@@ -36,5 +36,10 @@ setup(
                       'Flask-SQLAlchemy',
                       'Wand',
                      ],
-    test_suite = 'tests'
+    test_suite = 'tests',
+    entry_points         = {
+                            'console_scripts': [
+                                                'veripeditus-standalone = veripeditus.server:server_main'
+                                               ]
+                           },
 )

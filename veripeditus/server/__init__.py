@@ -21,6 +21,8 @@ Main server application
 
 from veripeditus.server.app import app
 
-if __name__ == '__main__':
-    app.debug = True
+def server_main():
     app.run()
+
+if __name__ == '__main__':
+    server_main()
