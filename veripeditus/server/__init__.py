@@ -20,7 +20,8 @@ Main server application
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-import os
+from flask import send_from_directory
+from os.path import realpath
 
 from veripeditus.server.app import app
 
@@ -35,9 +36,11 @@ def server_main():
         app.debug = True
 
     if args.webapp:
+        app.config['PATH_WEBAPP'] = realpath(args.webapp)
+        @app.route('/')
         @app.route('/<path:path>')
-        def _serve_webapp(path):
-            return app.send_static_file(os.path.join(args.webapp, path))
+        def _serve_webapp(path='index.html'):
+            return send_from_directory(app.config['PATH_WEBAPP'], path)
 
     app.run()
 
