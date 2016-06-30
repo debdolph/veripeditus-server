@@ -19,9 +19,26 @@ Main server application
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
+import os
+
 from veripeditus.server.app import app
 
 def server_main():
+    # parse arguments
+    aparser = argparse.ArgumentParser()
+    aparser.add_argument("-w", "--webapp", help="path to the webapp files")
+    aparser.add_argument("-d", "--debug", help="enable debug in Flask app", action="store_true")
+    args = aparser.parse_args()
+
+    if args.debug:
+        app.debug = True
+
+    if args.webapp:
+        @app.route('/<path:path>')
+        def _serve_webapp(path):
+            return app.send_static_file(os.path.join(args.webapp, path))
+
     app.run()
 
 if __name__ == '__main__':
