@@ -31,7 +31,16 @@ def get_game_names():
 
     # Get all accessible packages that start with veripeditus.game.,
     # strip veripeditus.game. and construct list
-    _pkgs = [i[1].split(".")[2] for i in pkgutil.walk_packages()
+    _pkg_iter = pkgutil.walk_packages()
+    _pkgs = []
+    while True:
+        try:
+            _pkgs.append(next(_pkg_iter))
+        except StopIteration:
+            break
+        except:
+            pass
+    _pkgs = [i[1].split(".")[2] for i in _pkgs
              if i[1].startswith("veripeditus.game.")]
 
     return _pkgs
