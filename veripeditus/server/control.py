@@ -19,8 +19,10 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import random
+
 from veripeditus.server.app import db
-from veripeditus.server.model import Game
+from veripeditus.server.model import Game, Player
 from veripeditus.server.util import get_games
 
 def _sync_games():
@@ -51,5 +53,26 @@ def _sync_games():
         db.session.add(game)
         db.session.commit()
 
+def _add_data():
+    # Create example data (only if database was unused, e.g. no Player
+    # exists)
+
+    # Return if a Player exists
+    if len(Player.query.all()) > 0:
+        return
+
+    # Create new player
+    player = Player()
+    player.username = "admin"
+    player.password = "admin"
+    player.name = "The Boss"
+    player.email = "theboss@example.com"
+    player.longitude = random.uniform(-180.0, 180.0)
+    player.latitude = random.uniform(-90.0, 90.0)
+    # Add player to database
+    db.session.add(player)
+    db.session.commit()
+
 def init():
     _sync_games()
+    _add_data()
