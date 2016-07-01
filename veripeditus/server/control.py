@@ -58,20 +58,18 @@ def _add_data():
     # exists)
 
     # Return if a Player exists
-    if len(Player.query.all()) > 0:
-        return
-
-    # Create new player
-    player = Player()
-    player.username = "admin"
-    player.password = "admin"
-    player.name = "The Boss"
-    player.email = "theboss@example.com"
-    player.longitude = random.uniform(-180.0, 180.0)
-    player.latitude = random.uniform(-90.0, 90.0)
-    # Add player to database
-    db.session.add(player)
-    db.session.commit()
+    if len(Player.query.all()) == 0:
+        # Create new player
+        player = Player()
+        player.username = "admin"
+        player.password = "admin"
+        player.name = "The Boss"
+        player.email = "theboss@example.com"
+        player.longitude = random.uniform(-180.0, 180.0)
+        player.latitude = random.uniform(-90.0, 90.0)
+        # Add player to database
+        db.session.add(player)
+        db.session.commit()
 
 def init():
     _sync_games()
