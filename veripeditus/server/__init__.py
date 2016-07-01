@@ -24,7 +24,7 @@ from os.path import realpath
 
 from veripeditus.server.app import app
 
-def server_main():
+def server_main(): # pragma: no cover
     # parse arguments
     aparser = argparse.ArgumentParser()
     aparser.add_argument("-w", "--webapp", help="path to the webapp files")
@@ -43,5 +43,5 @@ def server_main():
 
     app.run()
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     server_main()
