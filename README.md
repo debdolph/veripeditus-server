@@ -39,6 +39,7 @@ The CI state represents the results from unit tests, pylint and coverage
 assessment.
 
 [![Build Status](https://travis-ci.org/Veripeditus/veripeditus-server.svg?branch=master)](https://travis-ci.org/Veripeditus/veripeditus-server)
+[![Coverage Status](https://coveralls.io/repos/github/Veripeditus/veripeditus-server/badge.svg?branch=master)](https://coveralls.io/github/Veripeditus/veripeditus-server?branch=master)
 
 ## Authors
 
