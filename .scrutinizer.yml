@@ -1,12 +1,16 @@
 build:
     tests:
         before:
-            - pip install pylint-flask
+            - pip3 install pylint pylint-flask
+        override:
+            command: 'pylint --output-format=parseable --reports=n --include-naming-hint=y veripeditus | tee pylint-data'
+                analysis:
+                    file: 'pylint-data'
+                    format: 'pylint-parseable'
 checks:
     python:
         code_rating: true
         duplicate_code: true
-tools:
     pylint:
         python_version: '3'
         config_file: pylintrc
