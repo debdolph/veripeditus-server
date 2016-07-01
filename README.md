@@ -21,7 +21,7 @@ While developing the framework, two reference games are developed:
 ## Development
 
 The server component, the framework and the games are developed in pure
-Python. There are a few design/development principals:
+Python. There are a few design/development principles:
 
  * Game cartridges must be easy to develop with basic Python skills
  * The framework and engine must be dynamic enough to allow a large
