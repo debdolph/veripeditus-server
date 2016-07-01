@@ -38,3 +38,19 @@ class ServerUtilTests(unittest.TestCase):
         self.assertEqual(first_game.author, first_game_module.AUTHOR)
         self.assertEqual(first_game.license, first_game_module.LICENSE)
         self.assertEqual(first_game.version, first_game_module.VERSION)
+
+    def test_app_init_add_data_user(self):
+        """ Test whether a test user is known in the database """
+
+        # Get first known admin user from ORM
+        from veripeditus.server.model import Player
+        player = Player.query.filter_by(username="admin").first()
+
+        self.assertEqual(player.username, "admin")
+        self.assertEqual(player.password, "admin")
+        self.assertEqual(player.name, "The Boss")
+        self.assertEqual(player.email, "theboss@example.com")
+        self.assertLessEqual(player.longitude, 180.0)
+        self.assertGreaterEqual(player.longitude, -180.0)
+        self.assertLessEqual(player.latitude, 90.0)
+        self.assertGreaterEqual(player.latitude, -90.0)
