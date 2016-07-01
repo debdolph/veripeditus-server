@@ -9,5 +9,5 @@ install:
  - pip install pylint pylint-flask Coverage
 script:
  - coverage run --include="*veripeditus*" setup.py test
- - pylint --load-plugins=pylint_flask -E veripeditus
+ - pylint -E veripeditus
  - coverage report --fail-under=100 -m
