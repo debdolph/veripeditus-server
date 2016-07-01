@@ -1,7 +1,7 @@
 build:
-    tests:
+    dependencies:
         before:
-            - pip install pylint-flask
+            - pip3 install pylint-flask
 checks:
     python:
         code_rating: true
