@@ -4,7 +4,7 @@ build:
             - pip3 install pylint pylint-flask
         override:
             -
-                command: 'pylint --output-format=parseable --reports=n --include-naming-hint=y veripeditus | tee pylint-data'
+	        command: 'pylint --output-format=parseable --reports=n --include-naming-hint=y veripeditus | tee pylint-data'
                 analysis:
                     file: 'pylint-data'
                     format: 'pylint-parseable'
