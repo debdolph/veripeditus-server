@@ -6,8 +6,8 @@ python:
  - "nightly"
 install:
  - python setup.py install
- - pip install pylint Coverage
+ - pip install pylint pylint-flask Coverage
 script:
  - coverage run --include="*veripeditus*" setup.py test
- - pylint -E veripeditus
+ - pylint --load-plugins=pylint_flask -E veripeditus
  - coverage report --fail-under=100 -m
