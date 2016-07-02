@@ -50,8 +50,10 @@ class ServerModelTests(unittest.TestCase):
         # Set the password on the test_player object
         self.test_player.password = test_pw
 
-        # Check that the retrieved password is not the clear texzt string
-        self.assertNotEqual(self.test_player.password, test_pw)
+        # Check that the retrieved password is not the clear text string.
+        # We need to retrieve it first to circumvent auto coercion.
+        test_pw_hash = str(self.test_player.password.hash)
+        self.assertNotEqual(test_pw_hash, test_pw)
 
     def test_player_password_verifies(self):
         """ Tests whether the hashed password verifies """
@@ -64,8 +66,6 @@ class ServerModelTests(unittest.TestCase):
         # Set the password on the test_player object
         self.test_player.password = test_pw
 
-        # We must compare the two directly because of the Pythonic
-        # interface - assertEquals() would first retrieve the
-        # value, which yields the hash
-        res = (self.test_player.password == test_pw)
-        self.assertTrue(res)
+        # Check that, through auto coercion, the password can be verified
+        # by direct comparison
+        self.assertEqual(self.test_player.password, test_pw)
