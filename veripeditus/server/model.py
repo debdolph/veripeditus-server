@@ -32,6 +32,9 @@ class Base(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(UUIDType(binary=False), unique=True, default=uuid.uuid4)
 
+    created = db.Column(db.DateTime, default=db.func.now())
+    updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+
 class Player(Base):
     username = db.Column(db.String(32), unique=True)
     password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']))
