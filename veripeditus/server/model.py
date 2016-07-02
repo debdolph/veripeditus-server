@@ -18,12 +18,14 @@ Main server data model
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server.app import db
+from veripeditus.server.app import app, db
+
+from sqlalchemy_utils.types.password import PasswordType
 
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
-    password = db.Column(db.String(128))
+    password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']))
     name = db.Column(db.String(64))
     email = db.Column(db.String(128))
     longitude = db.Column(db.Float)

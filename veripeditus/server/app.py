@@ -26,6 +26,7 @@ app = Flask(__name__)
 
 # FIXME allow modification after module import
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+app.config['PASSWORD_SCHEMES'] = ['pbkdf2_sha512', 'md5_crypt']
 
 cfglist = ['/etc/veripeditus/server.cfg']
 for cfg in cfglist:

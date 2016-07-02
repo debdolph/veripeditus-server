@@ -31,6 +31,8 @@ setup(
                       'Flask>=0.10',
                       'Flask-Restless',
                       'Flask-SQLAlchemy',
+                      'SQLAlchemy-Utils',
+                      'passlib',
                       'Wand',
                      ],
     test_suite = 'tests',
