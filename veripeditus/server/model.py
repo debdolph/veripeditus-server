@@ -30,18 +30,18 @@ class Base(db.Model):
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(UUIDType(binary=False), unique=True, default=uuid.uuid4)
+    uuid = db.Column(UUIDType(binary=False), unique=True, default=uuid.uuid4, nullable=False)
 
     created = db.Column(db.DateTime, default=db.func.now())
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
 class Player(Base):
-    username = db.Column(db.String(32), unique=True)
-    password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']))
+    username = db.Column(db.String(32), unique=True, nullable=False)
+    password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']), nullable=False)
     name = db.Column(db.String(64))
     email = db.Column(EmailType)
-    longitude = db.Column(db.Float)
-    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float, default=0.0, nullable=False)
+    latitude = db.Column(db.Float, default=0.0, nullable=False)
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
@@ -54,14 +54,14 @@ worldgroup = db.Table('worldgroup',
 )
 
 class Group(Base):
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64), unique=True, nullable=False)
     players = db.relationship('Player', secondary=playergroup,
                               backref=db.backref('groups', lazy='dynamic'))
 
 class Game(Base):
-    package = db.Column(db.String(128))
-    name = db.Column(db.String(32))
-    version = db.Column(db.String(16))
+    package = db.Column(db.String(128), nullable=False)
+    name = db.Column(db.String(32), nullable=False)
+    version = db.Column(db.String(16), nullable=False)
     description = db.Column(db.String(1024))
     author = db.Column(db.String(32))
     license = db.Column(db.String(32))
@@ -69,7 +69,7 @@ class Game(Base):
     __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
 
 class World(Base):
-    name = db.Column(db.String(32))
+    name = db.Column(db.String(32), unique=True, nullable=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
     game = db.relationship('Game', backref=db.backref('worlds', lazy='dynamic'))
     groups = db.relationship('Group', secondary=worldgroup,
