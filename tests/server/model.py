@@ -52,3 +52,20 @@ class ServerModelTests(unittest.TestCase):
 
         # Check that the retrieved password is not the clear texzt string
         self.assertNotEqual(self.test_player.password, test_pw)
+
+    def test_player_password_verifies(self):
+        """ Tests whether the hashed password verifies """
+
+        # The password to use for testing
+        import random, string
+        test_pw_len = random.randint(8, 16)
+        test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(test_pw_len))
+
+        # Set the password on the test_player object
+        self.test_player.password = test_pw
+
+        # We must compare the two directly because of the Pythonic
+        # interface - assertEquals() would first retrieve the
+        # value, which yields the hash
+        res = (self.test_player.password == test_pw)
+        self.assertTrue(res)
