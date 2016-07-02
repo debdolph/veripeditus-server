@@ -30,6 +30,10 @@ class Base(db.Model):
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(UUIDType(binary=False), unique=True)
+
+    def __init__(self):
+        self.uuid = uuid.uuid4()
 
 class Player(Base):
     username = db.Column(db.String(32), unique=True)
