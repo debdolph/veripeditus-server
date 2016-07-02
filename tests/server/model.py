@@ -52,8 +52,7 @@ class ServerModelTests(unittest.TestCase):
 
         # Check that the retrieved password is not the clear text string.
         # We need to retrieve it first to circumvent auto coercion.
-        test_pw_hash = str(self.test_player.password.hash)
-        self.assertNotEqual(test_pw_hash, test_pw)
+        self.assertNotEqual(str(self.test_player.password.hash), test_pw)
 
     def test_player_password_verifies(self):
         """ Tests whether the hashed password verifies """
