@@ -20,7 +20,7 @@ Main server data model
 
 from veripeditus.server.app import app, db
 
-from sqlalchemy_utils import PasswordType, UUIDType, force_auto_coercion
+from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
 import uuid
 
 # Activiate auto coercion of data types
@@ -39,7 +39,7 @@ class Player(Base):
     username = db.Column(db.String(32), unique=True)
     password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']))
     name = db.Column(db.String(64))
-    email = db.Column(db.String(128))
+    email = db.Column(EmailType)
     longitude = db.Column(db.Float)
     latitude = db.Column(db.Float)
 
