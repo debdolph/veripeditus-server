@@ -20,7 +20,10 @@ Main server data model
 
 from veripeditus.server.app import app, db
 
-from sqlalchemy_utils.types.password import PasswordType
+from sqlalchemy_utils import PasswordType, force_auto_coercion
+
+# Activiate auto coercion of data types
+force_auto_coercion()
 
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
