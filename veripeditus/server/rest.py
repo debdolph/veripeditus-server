@@ -21,9 +21,12 @@ API endpoint definitions
 from veripeditus.server.app import manager
 from veripeditus.server.model import *
 
-manager.create_api(Player, include_columns=['id', 'username', 'name', 'email', 'longitude', 'latitude'],
+# Global includes for all collections
+_include = ['id', 'uuid', 'created', 'updated']
+
+manager.create_api(Player, include_columns=_include+['username', 'name', 'email', 'longitude', 'latitude'],
     methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
-manager.create_api(Game, include_columns=['id', 'package', 'name', 'version',
+manager.create_api(Game, include_columns=_include+['package', 'name', 'version',
                                                 'description', 'author', 'license'],
     methods=['GET'])
