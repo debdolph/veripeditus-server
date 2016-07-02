@@ -20,13 +20,18 @@ Main server data model
 
 from veripeditus.server.app import app, db
 
-from sqlalchemy_utils import PasswordType, force_auto_coercion
+from sqlalchemy_utils import PasswordType, UUIDType, force_auto_coercion
+import uuid
 
 # Activiate auto coercion of data types
 force_auto_coercion()
 
-class Player(db.Model):
+class Base(db.Model):
+    __abstract__ = True
+
     id = db.Column(db.Integer, primary_key=True)
+
+class Player(Base):
     username = db.Column(db.String(32), unique=True)
     password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']))
     name = db.Column(db.String(64))
@@ -44,14 +49,12 @@ worldgroup = db.Table('worldgroup',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
 )
 
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Group(Base):
     name = db.Column(db.String(64))
     players = db.relationship('Player', secondary=playergroup,
                               backref=db.backref('groups', lazy='dynamic'))
 
-class Game(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Game(Base):
     package = db.Column(db.String(128))
     name = db.Column(db.String(32))
     version = db.Column(db.String(16))
@@ -61,8 +64,7 @@ class Game(db.Model):
 
     __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
 
-class World(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class World(Base):
     name = db.Column(db.String(32))
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
     game = db.relationship('Game', backref=db.backref('worlds', lazy='dynamic'))
