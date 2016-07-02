@@ -17,7 +17,7 @@
 import unittest
 
 class ServerUtilTests(unittest.TestCase):
-    """ Tests that check game data handling in framework.util """
+    """ Tests that check game data handling in server.util """
 
     def test_get_game_names(self):
         """ Test getting a list of names of available game packages """

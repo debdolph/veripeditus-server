@@ -18,7 +18,7 @@ import unittest
 
 from veripeditus.server.app import app
 
-class ServerUtilTests(unittest.TestCase):
+class ServerAppTests(unittest.TestCase):
     """ Tests that check game data handling in server.app """
 
     def test_app_init_sync_games(self):
