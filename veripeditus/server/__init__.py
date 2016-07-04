@@ -29,6 +29,8 @@ def server_main(): # pragma: no cover
     aparser = argparse.ArgumentParser()
     aparser.add_argument("-w", "--webapp", help="path to the webapp files")
     aparser.add_argument("-d", "--debug", help="enable debug in Flask app", action="store_true")
+    aparser.add_argument("-H", "--host", help="the host address to listen on", default="127.0.0.1")
+    aparser.add_argument("-P", "--port", help="the port to listen on", default="5000")
     args = aparser.parse_args()
 
     if args.debug:
@@ -41,7 +43,7 @@ def server_main(): # pragma: no cover
         def _serve_webapp(path='index.html'):
             return send_from_directory(app.config['PATH_WEBAPP'], path)
 
-    app.run()
+    app.run(host=args.host, port=int(args.port))
 
 if __name__ == '__main__': # pragma: no cover
     server_main()
