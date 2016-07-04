@@ -6,5 +6,5 @@ COPY . /app
 WORKDIR /app
 RUN python3 setup.py install
 RUN python3 setup.py install
-CMD ["veripeditus-standalone", "-H", "0.0.0.0", "-P", "80"]
+CMD ["veripeditus-standalone", "-H", "0.0.0.0", "-P", "80", "-w", "/app/www"]
 EXPOSE 80
