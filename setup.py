@@ -24,6 +24,9 @@ setup(
     long_description=__doc__,
     packages=[
               'veripeditus',
+              'veripeditus.framework',
+              'veripeditus.server',
+              'veripeditus.game.test',
              ],
     include_package_data=True,
     zip_safe=False,
