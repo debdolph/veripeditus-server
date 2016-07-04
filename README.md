@@ -42,6 +42,14 @@ assessment.
 [![Code Coverage](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
 
+## Testing system
+
+A testing system is available at http://nightly.veripeditus.org/ . This
+machine is a Docker container that is auto-deployed from the latest Git
+commit.
+
+It is unstable and might be broken. It will also lose data regularly.
+
 ## Authors
 
 The authors and lead developers of Veripeditus are…
