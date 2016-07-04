@@ -38,9 +38,9 @@ Python. There are a few design/development principles:
 The CI state represents the results from unit tests, pylint and coverage
 assessment.
 
-[![Build Status](https://travis-ci.org/Veripeditus/veripeditus-server.svg?branch=master)](https://travis-ci.org/Veripeditus/veripeditus-server)
-[![Coverage Status](https://coveralls.io/repos/github/Veripeditus/veripeditus-server/badge.svg?branch=master)](https://coveralls.io/github/Veripeditus/veripeditus-server?branch=master)
-[![Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
 
 ## Authors
 
