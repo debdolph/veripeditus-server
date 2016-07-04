@@ -8,3 +8,7 @@ build:
               analysis:
                   file: 'pylint-data'
                   format: 'pylint-parseable'
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true
