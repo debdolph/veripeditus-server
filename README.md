@@ -40,6 +40,7 @@ assessment.
 
 [![Build Status](https://travis-ci.org/Veripeditus/veripeditus-server.svg?branch=master)](https://travis-ci.org/Veripeditus/veripeditus-server)
 [![Coverage Status](https://coveralls.io/repos/github/Veripeditus/veripeditus-server/badge.svg?branch=master)](https://coveralls.io/github/Veripeditus/veripeditus-server?branch=master)
+[![Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
 
 ## Authors
 
