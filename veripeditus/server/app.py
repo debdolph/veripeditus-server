@@ -18,9 +18,12 @@ Main server application
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify
+from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.restless import APIManager, url_for
+from flask.ext.restless import APIManager
+from veripeditus.server.model import *
+from veripeditus.server.control import *
+from veripeditus.server.rest import *
 
 app = Flask(__name__)
 
@@ -33,11 +36,9 @@ for cfg in cfglist:
     app.config.from_pyfile(cfg, silent=True)
 
 db = SQLAlchemy(app)
-from veripeditus.server.model import *
+
 db.create_all()
 
 manager = APIManager(app, flask_sqlalchemy_db=db)
-from veripeditus.server.rest import *
 
-from veripeditus.server.control import *
 init()

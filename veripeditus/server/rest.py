@@ -22,11 +22,12 @@ from veripeditus.server.app import manager
 from veripeditus.server.model import *
 
 # Global includes for all collections
-_include = ['id', 'uuid', 'created', 'updated']
+__include__ = ['id', 'uuid', 'created', 'updated']
 
-manager.create_api(Player, include_columns=_include+['username', 'name', 'email', 'longitude', 'latitude'],
+manager.create_api(Player, include_columns=__include__+['username', 'name', 'email', 'longitude',
+                                                        'latitude'],
     methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
-manager.create_api(Game, include_columns=_include+['package', 'name', 'version',
-                                                'description', 'author', 'license'],
-    methods=['GET'])
+manager.create_api(Game, include_columns=__include__+['package', 'name', 'version',
+                                                      'description', 'author', 'license'],
+                   methods=['GET'])

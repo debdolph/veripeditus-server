@@ -35,10 +35,10 @@ def _sync_games():
 
         # Check if game is in database
         game = Game.query.filter_by(package=package, name=module.NAME,
-                                            version=module.VERSION).first()
+                                    version=module.VERSION).first()
 
         # Create new object if nonexistent
-        if game == None:
+        if game is None:
             game = Game()
 
         # Sync metadata to database class
