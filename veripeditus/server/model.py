@@ -148,6 +148,22 @@ class Game(Base):
 
     __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
 
+    @classmethod
+    def _auth_pre_get_single(cls, instance_id=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_post_get_single(cls, result=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_pre_get_many(cls, search_params=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_post_get_many(cls, result=None, search_params=None, **kw):
+        pass
+
 class World(Base):
     name = db.Column(db.String(32), unique=True, nullable=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
