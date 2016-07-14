@@ -39,7 +39,8 @@ angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$rout
     for (var i=0; i < $scope.players.length; i++) {
         var player = $scope.players[i];
 	var picon = L.icon({
-                            iconUrl: 'data:image/png;base64,' + player.avatar_base64
+                            'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
+                            'iconSize': [32, 32]
                            }
         );
 	var marker = L.marker([player.latitude, player.longitude], {
