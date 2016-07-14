@@ -22,6 +22,7 @@ from veripeditus.server.app import app, db
 from veripeditus.server.util import get_data_path
 
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
+import os
 import uuid
 
 # Activiate auto coercion of data types

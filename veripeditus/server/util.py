@@ -19,7 +19,9 @@ Utility functions for framework components
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib
+import os
 import pkgutil
+import sys
 
 def get_game_names():
     """
