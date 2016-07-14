@@ -107,6 +107,14 @@ class Player(Base):
     def avatar_base64(self):
         return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
 
+    @staticmethod
+    def get_authenticated(username, password):
+        player = Player.query.filter_by(username=username).first()
+        if player and player.password == password:
+            return player
+        else:
+            return None
+
     @classmethod
     def _auth_pre_get_single(cls, instance_id=None, **kw):
         pass

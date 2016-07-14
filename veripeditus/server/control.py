@@ -19,9 +19,10 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from flask import request, Response, g
 import random
 
-from veripeditus.server.app import db
+from veripeditus.server.app import db, app
 from veripeditus.server.model import Game, Player
 from veripeditus.server.util import get_games
 
@@ -74,3 +75,12 @@ def _add_data():
 def init():
     _sync_games()
     _add_data()
+
+@app.before_request
+def _check_auth():
+    if not request.authorization:
+        g.player = None
+    else:
+        g.player = Player.get_authenticated(request.authorization.username, request.authorization.password)
+        if not g.player:
+            return Response('Authentication failed.', 401, {'WWW-Authenticate': 'Basic realm="%s"' % app.config['BASIC_REALM']})
