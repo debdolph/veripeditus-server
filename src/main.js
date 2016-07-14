@@ -23,7 +23,15 @@ var veripeditusMain = angular.module('Veripeditus', [
 ]);
 
 veripeditusMain.factory("Player", function($resource) {
-    return $resource("/api/player/:id");
+    return $resource("/api/player/:id", {}, {
+        query: {
+                method: 'GET',
+                transformResponse: function (data){
+                    return angular.fromJson(data).objects;
+                },
+                isArray: true
+               }
+    });
 });
 
 veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
