@@ -25,7 +25,7 @@ from veripeditus.server.model import *
 _include = ['id', 'uuid', 'created', 'updated']
 
 manager.create_api(Player, include_columns=_include+['username', 'name', 'email', 'longitude', 'latitude'],
-    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+    include_methods=['avatar_base64'], methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 manager.create_api(Game, include_columns=_include+['package', 'name', 'version',
                                                 'description', 'author', 'license'],

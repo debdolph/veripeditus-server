@@ -22,6 +22,7 @@ from veripeditus.server.app import app, db
 from veripeditus.server.util import get_data_path
 
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
+import base64
 import os
 import uuid
 
@@ -45,6 +46,9 @@ class Player(Base):
     longitude = db.Column(db.Float, default=0.0, nullable=False)
     latitude = db.Column(db.Float, default=0.0, nullable=False)
     avatar = db.Column(db.LargeBinary, default=open(os.path.join(get_data_path(), 'default_player_icon.png'), 'rb').read())
+
+    def avatar_base64(self):
+        return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
