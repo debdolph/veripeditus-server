@@ -42,6 +42,7 @@ class Player(Base):
     email = db.Column(EmailType)
     longitude = db.Column(db.Float, default=0.0, nullable=False)
     latitude = db.Column(db.Float, default=0.0, nullable=False)
+    avatar = db.Column(db.LargeBinary)
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
