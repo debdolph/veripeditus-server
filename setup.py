@@ -29,6 +29,9 @@ setup(
               'veripeditus.game.test',
              ],
     include_package_data=True,
+    package_data={
+                  'veripeditus.server': ['data'],
+                 },
     zip_safe=False,
     install_requires=[
                       'Flask>=0.10',
