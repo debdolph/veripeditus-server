@@ -21,5 +21,8 @@ angular.module('Veripeditus.view_login', ['ngRoute', 'ngResource']).config(['$ro
     templateUrl: 'src/views/login.html',
     controller: 'ViewLoginController'
   });
-}]).controller('ViewLoginController', ['$scope', function($scope) {
+}]).controller('ViewLoginController', ['$scope', 'APIService', function($scope, APIService) {
+  $scope.login = function() {
+   APIService.login($scope.username, $scope.password);
+  };
 }]);

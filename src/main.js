@@ -35,5 +35,18 @@ veripeditusMain.factory("Player", function($resource) {
     });
 });
 
-veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
+veripeditusMain.factory('APIService', function($http) {
+  return {
+    login: function(username, password) {
+      // Encode HTTP basic auth string
+      // FIXME Do we need compatibility with old/broken browsers?
+      var auth_string = "Basic " + window.btoa(username + ":" + password);
+
+      // Reconfigure HTTP service
+      $http.defaults.headers.common['Authorization'] = auth_string;
+    }
+  };
+});
+
+veripeditusMain.controller('veripeditusController', ['$scope', '$http', function ($scope, $http) {
 }]);
