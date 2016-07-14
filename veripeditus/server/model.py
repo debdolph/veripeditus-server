@@ -39,59 +39,59 @@ class Base(db.Model):
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     @classmethod
-    def _auth_pre_get_single(instance_id=None, **kw):
+    def _auth_pre_get_single(cls, instance_id=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_get_single(result=None, **kw):
+    def _auth_post_get_single(cls, result=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_get_many(search_params=None, **kw):
+    def _auth_pre_get_many(cls, search_params=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_get_many(result=None, search_params=None, **kw):
+    def _auth_post_get_many(cls, result=None, search_params=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_patch_single(instance_id=None, **kw):
+    def _auth_pre_patch_single(cls, instance_id=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_patch_single(result=None, **kw):
+    def _auth_post_patch_single(cls, result=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_patch_many(search_params=None, data=None, **kw):
+    def _auth_pre_patch_many(cls, search_params=None, data=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_patch_many(query=None, data=None, search_params=None, **kw):
+    def _auth_post_patch_many(cls, query=None, data=None, search_params=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_post(data=None, **kw):
+    def _auth_pre_post(cls, data=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_post(result=None, **kw):
+    def _auth_post_post(cls, result=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_delete_single(instance_id=None, **kw):
+    def _auth_pre_delete_single(cls, instance_id=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_delete_single(was_deleted=None, **kw):
+    def _auth_post_delete_single(cls, was_deleted=None, **kw):
         pass
 
     @classmethod
-    def _auth_pre_delete_many(search_params=None, **kw):
+    def _auth_pre_delete_many(cls, search_params=None, **kw):
         pass
 
     @classmethod
-    def _auth_post_delete_many(result=None, search_params=None, **kw):
+    def _auth_post_delete_many(cls, result=None, search_params=None, **kw):
         pass
 
 class Player(Base):
