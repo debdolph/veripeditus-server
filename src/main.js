@@ -23,7 +23,7 @@ var veripeditusMain = angular.module('Veripeditus', [
     'Veripeditus.view_map',
 ]);
 
-veripeditusMain.factory("Player", function($resource) {
+veripeditusMain.factory("Player", function($resource, $location) {
     return $resource("/api/player/:id", {}, {
         query: {
                 method: 'GET',
@@ -47,6 +47,21 @@ veripeditusMain.factory('APIService', function($http) {
     }
   };
 });
+
+// FIXME This sure needs to be overhauled.
+veripeditusMain.factory('APILoginInterceptor', function($location) {
+  return {
+    responseError: function(response) {
+      if (response.status == 401) {
+        $location.url("/login");
+      }
+      return false;
+    }
+  };
+});
+veripeditusMain.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('APILoginInterceptor');
+}]);
 
 veripeditusMain.controller('veripeditusController', ['$scope', '$http', function ($scope, $http) {
 }]);
