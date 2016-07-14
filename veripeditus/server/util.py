@@ -48,3 +48,15 @@ def get_games():
              for i in get_game_names()}
 
     return _pkgs
+
+def get_data_path():
+    """
+    Get the full path of the server module data directory.
+    """
+
+    # Get the path of the module implementation
+    _modpath = os.path.dirname(sys.modules["veripeditus.server"].__file__)
+    # Get path of data directory
+    _respath = os.path.join(_modpath, "data")
+
+    return _respath
