@@ -23,13 +23,14 @@ angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$rout
   });
 }]).controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
   // Set up map view
-  var map = L.map("map").setView([51.2106, 7.23498], 16);
+  var map = L.map("map");
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
-//  Player.query(function(data) {
-//    $scope.players = data;
-//  });
+  Player.query(function(data) {
+    $scope.players = data;
+    map.setView([$scope.players[0].latitude, $scope.players[0].longitude], 16);
+  });
 }]);
