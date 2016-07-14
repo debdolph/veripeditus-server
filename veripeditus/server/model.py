@@ -43,15 +43,15 @@ class Player(Base):
     longitude = db.Column(db.Float, default=0.0, nullable=False)
     latitude = db.Column(db.Float, default=0.0, nullable=False)
 
-playergroup = db.Table('playergroup',
-                       db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
-                       db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
-                      )
+playergroup = db.Table('playergroup',  
+    db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))                       
+)
 
 worldgroup = db.Table('worldgroup',
-                      db.Column('world_id', db.Integer, db.ForeignKey('world.id')),
-                      db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
-                     )
+    db.Column('world_id', db.Integer, db.ForeignKey('world.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
+)
 
 class Group(Base):
     name = db.Column(db.String(64), unique=True, nullable=False)
