@@ -41,59 +41,59 @@ class Base(db.Model):
 
     @classmethod
     def _auth_pre_get_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_get_single(cls, result=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_get_many(cls, search_params=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_get_many(cls, result=None, search_params=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_patch_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_patch_single(cls, result=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_patch_many(cls, search_params=None, data=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_patch_many(cls, query=None, data=None, search_params=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_post(cls, data=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_post(cls, result=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_delete_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_delete_single(cls, was_deleted=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_pre_delete_many(cls, search_params=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
     @classmethod
     def _auth_post_delete_many(cls, result=None, search_params=None, **kw):
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Forbidden', code=403)
 
 class Player(Base):
     username = db.Column(db.String(32), unique=True, nullable=False)
