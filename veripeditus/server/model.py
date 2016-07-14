@@ -107,6 +107,22 @@ class Player(Base):
     def avatar_base64(self):
         return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
 
+    @classmethod
+    def _auth_pre_get_single(cls, instance_id=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_post_get_single(cls, result=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_pre_get_many(cls, search_params=None, **kw):
+        pass
+
+    @classmethod
+    def _auth_post_get_many(cls, result=None, search_params=None, **kw):
+        pass
+
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
     db.Column('group_id', db.Integer, db.ForeignKey('group.id'))                       
