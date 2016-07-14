@@ -16,24 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var veripeditusMain = angular.module('Veripeditus', [
-    'ngRoute',
-    'ngResource',
-    'Veripeditus.view_login',
-    'Veripeditus.view_map',
-]);
-
-veripeditusMain.factory("Player", function($resource) {
-    return $resource("/api/player/:id", {}, {
-        query: {
-                method: 'GET',
-                transformResponse: function (data){
-                    return angular.fromJson(data).objects;
-                },
-                isArray: true
-               }
-    });
-});
-
-veripeditusMain.controller('veripeditusController', ['$scope', function ($scope) {
+angular.module('Veripeditus.view_login', ['ngRoute', 'ngResource']).config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/login', {
+    templateUrl: 'src/views/login.html',
+    controller: 'ViewLoginController'
+  });
+}]).controller('ViewLoginController', ['$scope', function($scope) {
 }]);
