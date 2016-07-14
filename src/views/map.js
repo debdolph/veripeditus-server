@@ -40,13 +40,14 @@ angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$rout
         var player = $scope.players[i];
 	var picon = L.icon({
                             'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
-                            'iconSize': [32, 32]
+                            'iconSize': [32, 32],
                            }
         );
 	var marker = L.marker([player.latitude, player.longitude], {
 	                                                            'icon': picon
                                                                    }
                              );
+        marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
 	marker.addTo(map);
     }
   });
