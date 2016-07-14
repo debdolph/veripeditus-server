@@ -31,6 +31,7 @@ angular.module('Veripeditus.view_map', ['ngRoute', 'ngResource']).config(['$rout
 
   Player.query(function(data) {
     $scope.players = data;
+    // FIXME: Use a more intelligent way to find map center!
     map.setView([$scope.players[0].latitude, $scope.players[0].longitude], 16);
   });
 }]);
