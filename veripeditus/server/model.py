@@ -21,6 +21,7 @@ Main server data model
 from veripeditus.server.app import app, db
 from veripeditus.server.util import get_data_path
 
+from flask import g
 from flask.ext.restless import ProcessingException
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
 import base64
@@ -130,6 +131,22 @@ class Player(Base):
     @classmethod
     def _auth_post_get_many(cls, result=None, search_params=None, **kw):
         pass
+
+    @classmethod
+    def _auth_pre_post(cls, data=None, **kw):
+        # Only grant if player is not logged-in
+        if g.player == None:
+            pass
+        else:
+            raise ProcessingException(description='Forbidden', code=403)
+
+    @classmethod
+    def _auth_post_post(cls, result=None, **kw):
+        # Only grant if player is not logged-in
+        if g.player == None:
+            pass
+        else:
+            raise ProcessingException(description='Forbidden', code=403)
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
