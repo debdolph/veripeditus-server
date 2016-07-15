@@ -21,6 +21,7 @@ var veripeditusMain = angular.module('Veripeditus', [
     'ngResource',
     'Veripeditus.view_login',
     'Veripeditus.view_map',
+    'Veripeditus.view_register',
 ]);
 
 veripeditusMain.factory("Player", function($resource, $location) {
