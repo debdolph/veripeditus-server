@@ -60,6 +60,7 @@ veripeditusMain.factory('APILoginInterceptor', function($location) {
     }
   };
 });
+
 veripeditusMain.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
