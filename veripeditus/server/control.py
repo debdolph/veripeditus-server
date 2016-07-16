@@ -96,5 +96,7 @@ def get_server_info():
     info["user"] = {}
     if not g.player == None:
         info["user"]["id"] = g.player.id
+        info["user"]["name"] = g.player.name
+        info["user"]["username"] = g.player.username
 
     return info
