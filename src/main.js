@@ -24,15 +24,23 @@ var veripeditusMain = angular.module('Veripeditus', [
     'Veripeditus.view_register',
 ]);
 
-veripeditusMain.factory("Player", function($resource, $location) {
+veripeditusMain.factory("Player", function($resource, $location, $rootScope) {
     return $resource("/api/player/:id", {}, {
         query: {
                 method: 'GET',
                 transformResponse: function (data){
+                    $rootScope.server_info = angular.copy(angular.fromJson(data).server_info);
                     return angular.fromJson(data).objects;
                 },
                 isArray: true
-               }
+               },
+        get: {
+              method: 'GET',
+              transformResponse: function (data){
+                  $rootScope.server_info = angular.copy(angular.fromJson(data).server_info);
+              },
+              isArray: true
+             }
     });
 });
 
@@ -65,5 +73,6 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
 
-veripeditusMain.controller('veripeditusController', ['$scope', '$http', function ($scope, $http) {
+veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+  $scope.server_info = $rootScope.server_info;
 }]);
