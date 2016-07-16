@@ -1,7 +1,21 @@
 html, body, div.content-wrapper {
 	height: 100%;
+	position: relative;
+}
+
+body {
+	margin-bottom: 60px;
 }
 
 div#map {
 	height: 100%;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+	background-color: #f5f5f5;
+	border-top: 1px solid #939393;
 }
