@@ -87,7 +87,7 @@ $(function () {
 	var resizeFunction = function () {
 		var header = document.getElementById("navbar-header").offsetHeight;
 		var footer = document.getElementById("footer").offsetHeight;
-		$("#css-sucks-wrapper").css("top", header).height($(window).height() - header - footer);
+		$("#content-outer").css("top", header).height($(window).height() - header - footer);
 	    };
 	resizeFunction();
 	$(window).on('resize', resizeFunction);

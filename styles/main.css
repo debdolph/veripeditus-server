@@ -37,7 +37,7 @@ div#content-wrapper {
 	width: 100%;
 }
 
-div#css-sucks-wrapper {
+div#content-outer {
 	position: fixed;
 	top: 60px;
 	height: 100%;
