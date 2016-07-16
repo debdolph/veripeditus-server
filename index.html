@@ -28,6 +28,13 @@
      <ul class="nav navbar-nav">
       <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> Map</a></li>
      </ul>
+     <ul class="nav navbar-nav navbar-right" ng-if="! root.server_info.user.id">
+      <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> Login</a></li>
+      <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> Register</a></li>
+     </ul>
+     <ul class="nav navbar-nav navbar-right" ng-if="root.server_info.user.id">
+      <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+     </ul>
     </div>
    </div>
   </nav>
