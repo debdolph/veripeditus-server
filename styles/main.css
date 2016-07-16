@@ -9,6 +9,18 @@ html, body, div#map {
 	margin-bottom: 0px;
 }
 
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a, #footer > .text-muted {
+	color: #F3F3F3;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #F3F3F3;
+}
+
+.nav {
+	font-size: 18px;
+}
+
 #logo {
 	height: 100%;
 }
