@@ -20,7 +20,7 @@ Main server application
 
 from flask import Flask, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.restless import APIManager, url_for
+from flask.ext.restless import url_for
 
 app = Flask(__name__)
 
@@ -37,7 +37,6 @@ db = SQLAlchemy(app)
 from veripeditus.server.model import *
 db.create_all()
 
-manager = APIManager(app, flask_sqlalchemy_db=db)
 from veripeditus.server.rest import *
 
 from veripeditus.server.control import *

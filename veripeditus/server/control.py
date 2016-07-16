@@ -20,8 +20,10 @@ Main server control code
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import request, Response, g
+from datetime import datetime
 import random
 
+from veripeditus.framework import VERSION
 from veripeditus.server.app import db, app
 from veripeditus.server.model import Game, Player
 from veripeditus.server.util import get_games
@@ -84,3 +86,15 @@ def _check_auth():
         g.player = Player.get_authenticated(request.authorization.username, request.authorization.password)
         if not g.player:
             return Response('Authentication failed.', 401, {'WWW-Authenticate': 'Basic realm="%s"' % app.config['BASIC_REALM']})
+
+def get_server_info():
+    info = {}
+
+    info["date"] = datetime.now().isoformat()
+    info["version"] = VERSION
+
+    info["user"] = {}
+    if not g.player == None:
+        info["user"]["id"] = g.player.id
+
+    return info
