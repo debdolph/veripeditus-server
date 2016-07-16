@@ -75,7 +75,7 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
 }]);
 
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', function ($scope, $rootScope) {
-  $scope.server_info = $rootScope.server_info;
+  $scope.root = $rootScope;
 }]);
 
 $(function () {
