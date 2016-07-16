@@ -31,6 +31,7 @@ def server_main(): # pragma: no cover
     aparser.add_argument("-d", "--debug", help="enable debug in Flask app", action="store_true")
     aparser.add_argument("-H", "--host", help="the host address to listen on", default="127.0.0.1")
     aparser.add_argument("-P", "--port", help="the port to listen on", default="5000")
+    aparser.add_argument("-z", "--gzip", help="enable GZip compression for HTTP", action="store_true")
     args = aparser.parse_args()
 
     if args.debug:
@@ -42,6 +43,10 @@ def server_main(): # pragma: no cover
         @app.route('/<path:path>')
         def _serve_webapp(path='index.html'):
             return send_from_directory(app.config['PATH_WEBAPP'], path)
+
+    if args.gzip:
+        from flask.ext.compress import Compress
+        Compress(app)
 
     app.run(host=args.host, port=int(args.port))
 
