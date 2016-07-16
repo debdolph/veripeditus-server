@@ -21,6 +21,7 @@ var veripeditusMain = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
     'Veripeditus.view_login',
+    'Veripeditus.view_logout',
     'Veripeditus.view_map',
     'Veripeditus.view_register',
 ]);
@@ -54,6 +55,10 @@ veripeditusMain.factory('APIService', function($http) {
 
       // Reconfigure HTTP service
       $http.defaults.headers.common['Authorization'] = auth_string;
+    },
+    logout: function() {
+      // Reconfigure HTTP service
+      $http.defaults.headers.common['Authorization'] = "";
     }
   };
 });
