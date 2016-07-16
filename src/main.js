@@ -81,9 +81,12 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
 
-veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
   $rootScope.VERSION = VERSION;
   $scope.root = $rootScope;
+
+  // Default to /map for now
+  $location.url("/map");
 }]);
 
 $(function () {
