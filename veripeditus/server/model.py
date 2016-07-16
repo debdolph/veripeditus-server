@@ -46,7 +46,7 @@ class Player(Base):
     email = db.Column(EmailType)
     longitude = db.Column(db.Float, default=0.0, nullable=False)
     latitude = db.Column(db.Float, default=0.0, nullable=False)
-    avatar = db.Column(db.LargeBinary, default=open(os.path.join(get_data_path(), 'default_player_icon.png'), 'rb').read())
+    avatar = db.Column(db.LargeBinary, default=open(os.path.join(get_data_path(), 'icon_player_default.png'), 'rb').read())
 
     def avatar_base64(self):
         return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
