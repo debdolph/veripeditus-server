@@ -7,10 +7,6 @@ body {
 	margin-bottom: 60px;
 }
 
-.navbar.navbar-default, .footer {
-	color: #f3f3f3;
-}
-
 .navbar.navbar-default {
 	background-color: #ff5050;;
 	border-top: 1px solid #e60000;
