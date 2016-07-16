@@ -60,6 +60,12 @@
   </nav>
 
   <div id="content-outer">
+    <div id="floating-messages" class="col-xs-12 col-md-3 col-md-push-9">
+      <div class="alert alert-{{ msg.class }}" ng-repeat="msg in root.msgs">
+        {{ msg.message }}
+      </div>
+    </div>
+
     <div ng-view id="content-wrapper"></div>
   </div>
 

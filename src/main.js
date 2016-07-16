@@ -48,7 +48,7 @@ veripeditusMain.factory("Player", function($resource, $location, $rootScope) {
     });
 });
 
-veripeditusMain.factory('APIService', function($http) {
+veripeditusMain.factory('APIService', function($http, $rootScope) {
   return {
     login: function(username, password) {
       // Encode HTTP basic auth string
@@ -61,6 +61,9 @@ veripeditusMain.factory('APIService', function($http) {
     logout: function() {
       // Reconfigure HTTP service
       $http.defaults.headers.common['Authorization'] = "";
+
+      // Add message to root scope
+      $rootScope.msgs.push({class: 'info', message: 'You have been logged out.'});
     }
   };
 });
@@ -83,6 +86,9 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
 
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
   $rootScope.VERSION = VERSION;
+
+  $rootScope.msgs = []
+
   $scope.root = $rootScope;
 
   // Default to /map for now

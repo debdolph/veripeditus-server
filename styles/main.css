@@ -45,6 +45,11 @@ div#content-outer {
 	z-index: 1;
 }
 
+div#floating-messages {
+	position: fixed;
+	z-index: 9999;
+}
+
 #footer {
 	position: fixed;
 	bottom: 0px;
