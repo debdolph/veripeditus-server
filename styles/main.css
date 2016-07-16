@@ -14,9 +14,10 @@ html, body, div#map {
 }
 
 #navbar {
-	position: relative;
+	position: absolute;
 	top: 0px;
 	width: 100%;
+	z-index: 2003;
 }
 
 div#content-wrapper {
@@ -26,8 +27,10 @@ div#content-wrapper {
 
 div#css-sucks-wrapper {
 	position: fixed;
-	width: 100%;
+	top: 60px;
 	height: 100%;
+	width: 100%;
+	z-index: 1;
 }
 
 #footer {
@@ -37,4 +40,5 @@ div#css-sucks-wrapper {
 	text-align: center;
 	background-color: #003cb3;
 	border-top: 1px solid #939393;
+	z-index: 2002;
 }

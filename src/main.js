@@ -1,6 +1,7 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
  * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (c) 2016  mirabilos <m@mirbsd.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -76,3 +77,13 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', function ($scope, $rootScope) {
   $scope.server_info = $rootScope.server_info;
 }]);
+
+$(function () {
+	var resizeFunction = function () {
+		var header = document.getElementById("navbar-header").offsetHeight;
+		var footer = document.getElementById("footer").offsetHeight;
+		$("#css-sucks-wrapper").css("top", header).height($(window).height() - header - footer);
+	    };
+	resizeFunction();
+	$(window).on('resize', resizeFunction);
+    });
