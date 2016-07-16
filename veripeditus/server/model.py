@@ -22,7 +22,6 @@ from veripeditus.server.app import app, db
 from veripeditus.server.util import get_data_path
 
 from flask import g
-from flask.ext.restless import ProcessingException
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
 import base64
 import os
@@ -39,62 +38,6 @@ class Base(db.Model):
 
     created = db.Column(db.DateTime, default=db.func.now())
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
-
-    @classmethod
-    def _auth_pre_get_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_get_single(cls, result=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_get_many(cls, search_params=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_get_many(cls, result=None, search_params=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_patch_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_patch_single(cls, result=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_patch_many(cls, search_params=None, data=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_patch_many(cls, query=None, data=None, search_params=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_post(cls, data=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_post(cls, result=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_delete_single(cls, instance_id=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_delete_single(cls, was_deleted=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_pre_delete_many(cls, search_params=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_delete_many(cls, result=None, search_params=None, **kw):
-        raise ProcessingException(description='Forbidden', code=403)
 
 class Player(Base):
     username = db.Column(db.String(32), unique=True, nullable=False)
@@ -115,38 +58,6 @@ class Player(Base):
             return player
         else:
             return None
-
-    @classmethod
-    def _auth_pre_get_single(cls, instance_id=None, **kw):
-        pass
-
-    @classmethod
-    def _auth_post_get_single(cls, result=None, **kw):
-        pass
-
-    @classmethod
-    def _auth_pre_get_many(cls, search_params=None, **kw):
-        pass
-
-    @classmethod
-    def _auth_post_get_many(cls, result=None, search_params=None, **kw):
-        pass
-
-    @classmethod
-    def _auth_pre_post(cls, data=None, **kw):
-        # Only grant if player is not logged-in
-        if g.player == None:
-            pass
-        else:
-            raise ProcessingException(description='Forbidden', code=403)
-
-    @classmethod
-    def _auth_post_post(cls, result=None, **kw):
-        # Only grant if player is not logged-in
-        if g.player == None:
-            pass
-        else:
-            raise ProcessingException(description='Forbidden', code=403)
 
 playergroup = db.Table('playergroup',  
     db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
