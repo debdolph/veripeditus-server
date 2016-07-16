@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+var VERSION = "0.1";
+
 var veripeditusMain = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
@@ -80,6 +82,7 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
 }]);
 
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+  $rootScope.VERSION = VERSION;
   $scope.root = $rootScope;
 }]);
 
