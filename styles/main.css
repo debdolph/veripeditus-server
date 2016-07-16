@@ -1,10 +1,6 @@
-html, body, div.content-wrapper {
+html, body, div#map {
 	height: 100%;
-	position: relative;
-}
-
-body {
-	margin-bottom: 60px;
+	width: 100%;
 }
 
 .navbar.navbar-default {
@@ -17,13 +13,28 @@ body {
 	height: 100%;
 }
 
-div#map {
-	height: 100%;
+#navbar {
+	position: absolute;
+	top: 0px;
+	height: 70px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 100%;
 }
 
-.footer {
+div#content-wrapper {
 	position: absolute;
-	bottom: 0;
+	top: 70px;
+	bottom: 70px;
+	width: 100%;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0px;
+	height: 70px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 	width: 100%;
 	text-align: center;
 	background-color: #003cb3;
