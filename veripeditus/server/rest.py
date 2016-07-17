@@ -19,7 +19,7 @@ API endpoint definitions
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask.ext.restless import APIManager
-from veripeditus.server.app import app
+from veripeditus.server.app import app, db
 from veripeditus.server.control import get_server_info
 from veripeditus.server.model import *
 
