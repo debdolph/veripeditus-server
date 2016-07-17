@@ -22,6 +22,7 @@ var VERSION = "0.1";
 var veripeditusMain = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
+    'gettext',
     'Veripeditus.view_login',
     'Veripeditus.view_logout',
     'Veripeditus.view_map',

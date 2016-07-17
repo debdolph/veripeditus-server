@@ -32,7 +32,7 @@
    <div class="container-fluid">
     <div id="navbar-header" class="navbar-header">
      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-      <span class="sr-only">Toggle navigation</span>
+      <span class="sr-only" translate>Toggle navigation</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -45,15 +45,15 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
      <ul class="nav navbar-nav">
-      <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> Map</a></li>
+      <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> <translate>Map</translate></a></li>
      </ul>
      <ul class="nav navbar-nav navbar-right" ng-if="! root.server_info.user.id">
-      <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> Login</a></li>
-      <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> Register</a></li>
+      <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> <translate>Login</translate></a></li>
+      <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> <translate>Register</translate></a></li>
      </ul>
      <ul class="nav navbar-nav navbar-right" ng-if="root.server_info.user.id">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ root.server_info.user.name }}</a></li>
-      <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+      <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> <translate>Logout</translate></a></li>
      </ul>
     </div>
    </div>
@@ -73,7 +73,7 @@
   <footer id="footer">
     <p class="text-muted">
      Veripeditus v{{ root.server_info.version }} (server) / v{{ root.VERSION }} (webapp)<br/>
-     © 2015,2016 Dominik George, Eike Tim Jesinghaus · Licensed under AGPL-3+
+     © 2015,2016 Dominik George, Eike Tim Jesinghaus · <translate>Licensed under</translate> AGPL-3+
     </p>
   </footer>
 
@@ -82,11 +82,13 @@
   <script src="lib/angular.js/angular.min.js"></script>
   <script src="lib/angular.js/angular-route.min.js"></script>
   <script src="lib/angular.js/angular-resource.min.js"></script>
+  <script src="lib/angular.js/angular-gettext.min.js"></script>
   <script src="lib/leaflet/leaflet.js"></script>
   <script src="src/main.js"></script>
   <script src="src/views/login.js"></script>
   <script src="src/views/logout.js"></script>
   <script src="src/views/register.js"></script>
   <script src="src/views/map.js"></script>
+  <script src="i18n/i18n.js"></script>
  </body>
 </html>
