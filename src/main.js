@@ -28,8 +28,12 @@ var veripeditusMain = angular.module('Veripeditus', [
     'Veripeditus.view_register',
 ]);
 
+var default_update = {
+    'update': { method:'PUT' }
+};
+
 veripeditusMain.factory("Player", function($resource) {
-    return $resource("/api/player/:id");
+    return $resource("/api/player/:id", {id: '@id'}, default_update);
 });
 
 veripeditusMain.factory('APIService', function($http, Messages) {
