@@ -97,7 +97,9 @@ veripeditusMain.factory('APILoginInterceptor', function($location, $rootScope) {
 
       try {
         // If response is a JSON object with an objects entry, extract the objects entry
-        response.data = angular.fromJson(response.data).objects;
+        if ('objects' in response.data) {
+          response.data = angular.fromJson(response.data).objects;
+        }
       } catch(err) {
       }
 
