@@ -36,11 +36,22 @@ def _api_add_server_info(*args, **kwargs):
 
     tbm["server_info"] = get_server_info()
 
+def _api_strip_server_info(*args, **kwargs):
+    if "data" in kwargs:
+        tbm = kwargs["data"]
+    else:
+        return
+
+    if "server_info" in tbm:
+        del tbm["server_info"]
+
+_global_general_pre_processors = [_api_strip_server_info]
 _global_general_post_processors = [_api_add_server_info]
 _methods = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE', 'DELETE_MANY', 'DELETE_SINGLE', 'POST']
+_global_pre_processors = {m: _global_general_pre_processors for m in _methods}
 _global_post_processors = {m: _global_general_post_processors for m in _methods}
 
-manager = APIManager(app, flask_sqlalchemy_db=db, postprocessors=_global_post_processors)
+manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=_global_pre_processors, postprocessors=_global_post_processors)
 
 manager.create_api(Player, include_columns=_include+['username', 'name', 'email', 'longitude', 'latitude'],
     include_methods=['avatar_base64'], methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
