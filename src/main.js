@@ -99,7 +99,7 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
 
-veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
+veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', 'Messages', function ($scope, $rootScope, $location, Messages) {
   $rootScope.VERSION = VERSION;
 
   // Object to hold all the floating messages
@@ -109,6 +109,11 @@ veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$l
   // Bind $rootScope into controller scope to make it available
   // in data bindings
   $scope.root = $rootScope;
+
+  // Function that passes closing of a floating alert to the Messages service
+  $scope.closeAlert = function(id) {
+    Messages.remove(id);
+  };
 
   // Default to /map for now
   $location.url("/map");
