@@ -9,6 +9,10 @@
     <label for="password">Password</label>
     <input type="password" ng-model="password" class="form-control" id="password" placeholder="Enter your password">
   </fieldset>
+  <fieldset class="form-group">
+    <input type="checkbox" ng-model="remember" class="form-control" id="remember">
+    <label for="remember">Remember login</label>
+  </fieldset>
   <button type="submit" ng-click="login()" class="btn btn-primary">Login</button>
   <a href="#/register">
    <button class="btn">Register</button>

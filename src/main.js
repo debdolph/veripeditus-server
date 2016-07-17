@@ -50,13 +50,20 @@ veripeditusMain.factory("Player", function($resource, $location, $rootScope) {
 
 veripeditusMain.factory('APIService', function($http, Messages) {
   return {
-    login: function(username, password) {
+    login: function(username, password, remember) {
       // Encode HTTP basic auth string
       // FIXME Do we need compatibility with old/broken browsers?
       var auth_string = "Basic " + window.btoa(username + ":" + password);
 
       // Reconfigure HTTP service
       $http.defaults.headers.common['Authorization'] = auth_string;
+
+      // Store auth string in session storage
+      sessionStorage.auth_string = auth_string;
+      // Also store in local persistent storage if desired
+      if (remember) {
+        localStorage.auth_string = auth_string;
+      }
     },
     logout: function() {
       // Reconfigure HTTP service
@@ -64,6 +71,10 @@ veripeditusMain.factory('APIService', function($http, Messages) {
 
       // Add floating message
       Messages.add('info', 'You have been logged out.');
+
+      // Remove auth string from all storages
+      delete sessionStorage['auth_string'];
+      delete localStorage['auth_string'];
     }
   };
 });
@@ -107,7 +118,7 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
 
-veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', 'Messages', function ($scope, $rootScope, $location, Messages) {
+veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', '$http', 'Messages', function ($scope, $rootScope, $location, $http, Messages) {
   $rootScope.VERSION = VERSION;
 
   // Object to hold all the floating messages
@@ -122,6 +133,13 @@ veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$l
   $scope.closeAlert = function(id) {
     Messages.remove(id);
   };
+
+  // Look for auth string in session storage, then local storage
+  var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
+  // Set to HTTP service if auth string was stored
+  if (s_auth_string) {
+    $http.defaults.headers.common['Authorization'] = s_auth_string;
+  }
 
   // Default to /map for now
   $location.url("/map");
