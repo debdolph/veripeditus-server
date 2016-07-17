@@ -1,3 +1,5 @@
-#!/bin/sh
+#!/bin/mksh
 
-git commit -m "Update www submodule.\n\n$(git submodule summary www)" www
+git commit -m "Update www submodule.
+
+$(git submodule summary www)" www
