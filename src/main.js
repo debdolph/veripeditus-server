@@ -81,14 +81,20 @@ veripeditusMain.factory('APILoginInterceptor', function($location) {
 });
 
 veripeditusMain.config(['$httpProvider', function($httpProvider) {
+  // Add a global interceptor that watches for a 401 status
+  // and redirects to /login if necessary
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
 
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
   $rootScope.VERSION = VERSION;
 
+  // Array to hold all the floating messages
+  // contains a list of {class: 'alert class', message: 'foo'} objects
   $rootScope.msgs = []
 
+  // Bind $rootScope into controller scope to make it available
+  // in data bindings
   $scope.root = $rootScope;
 
   // Default to /map for now
@@ -96,6 +102,8 @@ veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$l
 }]);
 
 $(function () {
+	// Used to automatically restyle content area when window size changes,
+	// because that might resize the header and footer areas as well
 	var resizeFunction = function () {
 		var header = document.getElementById("navbar-header").offsetHeight;
 		var footer = document.getElementById("footer").offsetHeight;
