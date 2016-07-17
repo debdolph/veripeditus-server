@@ -48,7 +48,7 @@ veripeditusMain.factory("Player", function($resource, $location, $rootScope) {
     });
 });
 
-veripeditusMain.factory('APIService', function($http, $rootScope) {
+veripeditusMain.factory('APIService', function($http, Messages) {
   return {
     login: function(username, password) {
       // Encode HTTP basic auth string
@@ -62,8 +62,21 @@ veripeditusMain.factory('APIService', function($http, $rootScope) {
       // Reconfigure HTTP service
       $http.defaults.headers.common['Authorization'] = "";
 
-      // Add message to root scope
-      $rootScope.msgs.push({class: 'info', message: 'You have been logged out.'});
+      // Add floating message
+      Messages.add('info', 'You have been logged out.');
+    }
+  };
+});
+
+// Service for floating messages
+veripeditusMain.factory('Messages', function($rootScope) {
+  return {
+    add: function(cls, message) {
+      var id = Math.max.apply(null, Object.keys($rootScope.msgs)) + 1;
+      $rootScope.msgs[id] = {'class': cls, 'message': message};
+    },
+    remove: function(id) {
+      delete $rootScope.msgs[id];
     }
   };
 });
@@ -89,9 +102,9 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
 veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
   $rootScope.VERSION = VERSION;
 
-  // Array to hold all the floating messages
-  // contains a list of {class: 'alert class', message: 'foo'} objects
-  $rootScope.msgs = []
+  // Object to hold all the floating messages
+  // contains a set of id: {class: 'alert class', message: 'foo'} objects
+  $rootScope.msgs = {}
 
   // Bind $rootScope into controller scope to make it available
   // in data bindings
