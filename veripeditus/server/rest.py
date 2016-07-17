@@ -34,12 +34,18 @@ def _api_add_server_info(*args, **kwargs):
     else:
         return
 
+    if type(tbm) is not dict:
+        return
+
     tbm["server_info"] = get_server_info()
 
 def _api_strip_server_info(*args, **kwargs):
     if "data" in kwargs:
         tbm = kwargs["data"]
     else:
+        return
+
+    if type(tbm) is not dict:
         return
 
     if "server_info" in tbm:
