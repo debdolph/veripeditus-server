@@ -155,4 +155,9 @@ $(function () {
 	    };
 	resizeFunction();
 	$(window).on('resize', resizeFunction);
+
+	// Collapse navbar on menu click
+	$('.nav a').click(function () {
+	    $('.navbar-collapse').collapse('hide');
+	});
     });
