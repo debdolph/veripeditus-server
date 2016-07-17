@@ -28,24 +28,8 @@ var veripeditusMain = angular.module('Veripeditus', [
     'Veripeditus.view_register',
 ]);
 
-veripeditusMain.factory("Player", function($resource, $location, $rootScope) {
-    return $resource("/api/player/:id", {}, {
-        query: {
-                method: 'GET',
-                transformResponse: function (data){
-                    $rootScope.server_info = angular.copy(angular.fromJson(data).server_info);
-                    return angular.fromJson(data).objects;
-                },
-                isArray: true
-               },
-        get: {
-              method: 'GET',
-              transformResponse: function (data){
-                  $rootScope.server_info = angular.copy(angular.fromJson(data).server_info);
-              },
-              isArray: true
-             }
-    });
+veripeditusMain.factory("Player", function($resource) {
+    return $resource("/api/player/:id");
 });
 
 veripeditusMain.factory('APIService', function($http, Messages) {
@@ -101,13 +85,30 @@ veripeditusMain.factory('Messages', function($rootScope, $timeout) {
 });
 
 // FIXME This sure needs to be overhauled.
-veripeditusMain.factory('APILoginInterceptor', function($location) {
+veripeditusMain.factory('APILoginInterceptor', function($location, $rootScope) {
   return {
+    response: function(response) {
+      try {
+        // Copy server info if it is inside the response
+        // Doing this for every response that has it for live migrations on server-side
+        $rootScope.server_info = angular.copy(angular.fromJson(response.data).server_info);
+      } catch(err) {
+      }
+
+      try {
+        // If response is a JSON object with an objects entry, extract the objects entry
+        response.data = angular.fromJson(response.data).objects;
+      } catch(err) {
+      }
+
+      // Return (possibly modified) response
+      return response;
+    },
     responseError: function(response) {
       if (response.status == 401) {
         $location.url("/login");
       }
-      return false;
+      return response;
     }
   };
 });
