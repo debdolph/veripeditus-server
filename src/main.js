@@ -152,6 +152,15 @@ $(function () {
 	var resizeFunction = function () {
 		var header = document.getElementById("navbar-header").offsetHeight;
 		var footer = document.getElementById("footer").offsetHeight;
+
+		// Hide footer if display is too small
+		if ($(window).height() < header * 6) {
+			$("#footer").hide();
+			footer = 0;
+		} else {
+			$("#footer").show();
+		}
+
 		$("#content-outer").css("top", header).height($(window).height() - header - footer);
 	    };
 	resizeFunction();
