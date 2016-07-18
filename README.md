@@ -27,3 +27,7 @@ geolocation of a user.
 Mozilla Firefox is available in any serious Linux distribution, as well
 as for Android from the free [F-Droid](https://f-droid.org) app store.
 Rumour has it that there is also a version for iOS.
+
+## Code state
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/?branch=master)
