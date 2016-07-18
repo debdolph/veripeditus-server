@@ -17,6 +17,9 @@
  */
 
 veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/', {
+    redirectTo: '/map'
+  });
   $routeProvider.when('/login', {
     templateUrl: 'html/login.html',
     controller: 'ViewLoginController'

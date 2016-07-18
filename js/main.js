@@ -42,9 +42,6 @@ veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$l
   if (s_auth_string) {
     $http.defaults.headers.common['Authorization'] = s_auth_string;
   }
-
-  // Default to /map for now
-  $location.url("/map");
 }]);
 
 veripeditusMain.controller('ViewLoginController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
