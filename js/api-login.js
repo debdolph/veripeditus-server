@@ -83,3 +83,12 @@ veripeditusMain.config(['$httpProvider', function($httpProvider) {
   // and redirects to /login if necessary
   $httpProvider.interceptors.push('APILoginInterceptor');
 }]);
+
+veripeditusMain.run(function($http) {
+  // Look for auth string in session storage, then local storage
+  var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
+  // Set to HTTP service if auth string was stored
+  if (s_auth_string) {
+    $http.defaults.headers.common['Authorization'] = s_auth_string;
+  }
+});

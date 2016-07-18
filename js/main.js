@@ -26,11 +26,4 @@ var veripeditusMain = angular.module('Veripeditus', [
 
 veripeditusMain.run(function ($rootScope, $location, $http, Messages) {
   $rootScope.VERSION = VERSION;
-
-  // Look for auth string in session storage, then local storage
-  var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
-  // Set to HTTP service if auth string was stored
-  if (s_auth_string) {
-    $http.defaults.headers.common['Authorization'] = s_auth_string;
-  }
 });
