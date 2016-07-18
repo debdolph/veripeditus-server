@@ -89,7 +89,7 @@ app.factory('APILoginInterceptor', function($location, $rootScope) {
         },
         responseError: function(response) {
             if (response.status == 401) {
-                $location.url("/login");
+                $location.path("/login");
             }
             return response;
         }
