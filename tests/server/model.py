@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from veripeditus.server.model import Player
-from veripeditus.server.app import db
+from veripeditus.server.app import DB
 
 import unittest
 
@@ -30,14 +30,14 @@ class ServerModelTests(unittest.TestCase):
         self.test_player.password = "test"
         self.test_player.name = "test Player"
         self.test_player.email = "test@example.com"
-        db.session.add(self.test_player)
-        db.session.commit()
+        DB.session.add(self.test_player)
+        DB.session.commit()
 
     def tearDown(self):
         """ Remove test object """
 
-        db.session.delete(self.test_player)
-        db.session.commit()
+        DB.session.delete(self.test_player)
+        DB.session.commit()
 
     def test_player_password_unrecoverable(self):
         """ Tests whether the password is hashed on setting it """

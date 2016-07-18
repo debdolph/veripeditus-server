@@ -22,20 +22,20 @@ from flask import Flask, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.restless import url_for
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
 # FIXME allow modification after module import
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-app.config['PASSWORD_SCHEMES'] = ['pbkdf2_sha512', 'md5_crypt']
-app.config['BASIC_REALM'] = "Veripeditus"
+APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+APP.config['PASSWORD_SCHEMES'] = ['pbkdf2_sha512', 'md5_crypt']
+APP.config['BASIC_REALM'] = "Veripeditus"
 
-cfglist = ['/etc/veripeditus/server.cfg']
-for cfg in cfglist:
-    app.config.from_pyfile(cfg, silent=True)
+CFGLIST = ['/etc/veripeditus/server.cfg']
+for cfg in CFGLIST:
+    APP.config.from_pyfile(cfg, silent=True)
 
-db = SQLAlchemy(app)
+DB = SQLAlchemy(APP)
 from veripeditus.server.model import *
-db.create_all()
+DB.create_all()
 
 from veripeditus.server.rest import *
 

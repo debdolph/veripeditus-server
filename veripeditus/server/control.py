@@ -19,12 +19,13 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import request, Response, g
 from datetime import datetime
 import random
+from flask import request, Response, g
+
 
 from veripeditus.framework import VERSION
-from veripeditus.server.app import db, app
+from veripeditus.server.app import DB, APP
 from veripeditus.server.model import Game, Player
 from veripeditus.server.util import get_games
 
@@ -38,10 +39,10 @@ def _sync_games():
 
         # Check if game is in database
         game = Game.query.filter_by(package=package, name=module.NAME,
-                                            version=module.VERSION).first()
+                                    version=module.VERSION).first()
 
         # Create new object if nonexistent
-        if game == None:
+        if game is None:
             game = Game()
 
         # Sync metadata to database class
@@ -53,8 +54,8 @@ def _sync_games():
         game.license = module.LICENSE
 
         # Write to database
-        db.session.add(game)
-        db.session.commit()
+        DB.session.add(game)
+        DB.session.commit()
 
 def _add_data():
     # Create example data (only if database was unused, e.g. no Player
@@ -71,21 +72,23 @@ def _add_data():
         player.longitude = random.uniform(-180.0, 180.0)
         player.latitude = random.uniform(-90.0, 90.0)
         # Add player to database
-        db.session.add(player)
-        db.session.commit()
+        DB.session.add(player)
+        DB.session.commit()
 
 def init():
     _sync_games()
     _add_data()
 
-@app.before_request
+@APP.before_request
 def _check_auth():
     if not request.authorization:
         g.player = None
     else:
-        g.player = Player.get_authenticated(request.authorization.username, request.authorization.password)
+        g.player = Player.get_authenticated(request.authorization.username,
+                                            request.authorization.password)
         if not g.player:
-            return Response('Authentication failed.', 401, {'WWW-Authenticate': 'Basic realm="%s"' % app.config['BASIC_REALM']})
+            return Response('Authentication failed.', 401,
+                            {'WWW-Authenticate':'Basic realm="%s"' % APP.config['BASIC_REALM']})
 
 def get_server_info():
     info = {}
@@ -94,7 +97,7 @@ def get_server_info():
     info["version"] = VERSION
 
     info["user"] = {}
-    if not g.player == None:
+    if not g.player is None:
         info["user"]["id"] = g.player.id
         info["user"]["name"] = g.player.name
         info["user"]["username"] = g.player.username

@@ -22,7 +22,7 @@ import argparse
 from flask import send_from_directory
 from os.path import realpath
 
-from veripeditus.server.app import app
+from veripeditus.server.app import APP
 
 def server_main(): # pragma: no cover
     # parse arguments
@@ -31,24 +31,25 @@ def server_main(): # pragma: no cover
     aparser.add_argument("-d", "--debug", help="enable debug in Flask app", action="store_true")
     aparser.add_argument("-H", "--host", help="the host address to listen on", default="127.0.0.1")
     aparser.add_argument("-P", "--port", help="the port to listen on", default="5000")
-    aparser.add_argument("-z", "--gzip", help="enable GZip compression for HTTP", action="store_true")
+    aparser.add_argument("-z", "--gzip", help="enable GZip compression for HTTP",
+                         action="store_true")
     args = aparser.parse_args()
 
     if args.debug:
-        app.debug = True
+        APP.debug = True
 
     if args.webapp:
-        app.config['PATH_WEBAPP'] = realpath(args.webapp)
-        @app.route('/')
-        @app.route('/<path:path>')
+        APP.config['PATH_WEBAPP'] = realpath(args.webapp)
+        @APP.route('/')
+        @APP.route('/<path:path>')
         def _serve_webapp(path='index.html'):
-            return send_from_directory(app.config['PATH_WEBAPP'], path)
+            return send_from_directory(APP.config['PATH_WEBAPP'], path)
 
     if args.gzip:
         from flask.ext.compress import Compress
-        Compress(app)
+        Compress(APP)
 
-    app.run(host=args.host, port=int(args.port))
+    APP.run(host=args.host, port=int(args.port))
 
 if __name__ == '__main__': # pragma: no cover
     server_main()

@@ -18,35 +18,35 @@ Main server data model
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server.app import app, db
+from veripeditus.server.app import APP, DB
 from veripeditus.server.util import get_data_path
 
 from flask import g
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
 import base64
 import os
-import uuid
+from uuid import uuid4
 
 # Activiate auto coercion of data types
 force_auto_coercion()
 
-class Base(db.Model):
+class Base(DB.Model):
     __abstract__ = True
 
-    id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(UUIDType(binary=False), unique=True, default=uuid.uuid4, nullable=False)
+    id = DB.Column(DB.Integer, primary_key=True)
+    uuid = DB.Column(UUIDType(binary=False), unique=True, default=uuid4, nullable=False)
 
-    created = db.Column(db.DateTime, default=db.func.now())
-    updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    created = DB.Column(DB.DateTime, default=DB.func.now())
+    updated = DB.Column(DB.DateTime, default=DB.func.now(), onupdate=DB.func.now())
 
 class Player(Base):
-    username = db.Column(db.String(32), unique=True, nullable=False)
-    password = db.Column(PasswordType(schemes=app.config['PASSWORD_SCHEMES']), nullable=False)
-    name = db.Column(db.String(64))
-    email = db.Column(EmailType)
-    longitude = db.Column(db.Float, default=0.0, nullable=False)
-    latitude = db.Column(db.Float, default=0.0, nullable=False)
-    avatar = db.Column(db.LargeBinary, default=open(os.path.join(get_data_path(), 'icon_player_default.png'), 'rb').read())
+    username = DB.Column(DB.String(32), unique=True, nullable=False)
+    password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
+    name = DB.Column(DB.String(64))
+    email = DB.Column(EmailType)
+    longitude = DB.Column(DB.Float, default=0.0, nullable=False)
+    latitude = DB.Column(DB.Float, default=0.0, nullable=False)
+    avatar = DB.Column(DB.LargeBinary, default=open(os.path.join(get_data_path(), 'icon_player_default.png'), 'rb').read())
 
     def avatar_base64(self):
         return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
@@ -59,30 +59,30 @@ class Player(Base):
         else:
             return None
 
-playergroup = db.Table('playergroup',  
-    db.Column('player_id', db.Integer, db.ForeignKey('player.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))                       
+playergroup = DB.Table('playergroup',
+    DB.Column('player_id', DB.Integer, DB.ForeignKey('player.id')),
+    DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
 )
 
-worldgroup = db.Table('worldgroup',
-    db.Column('world_id', db.Integer, db.ForeignKey('world.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
+worldgroup = DB.Table('worldgroup',
+    DB.Column('world_id', DB.Integer, DB.ForeignKey('world.id')),
+    DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
 )
 
 class Group(Base):
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    players = db.relationship('Player', secondary=playergroup,
-                              backref=db.backref('groups', lazy='dynamic'))
+    name = DB.Column(DB.String(64), unique=True, nullable=False)
+    players = DB.relationship('Player', secondary=playergroup,
+                              backref=DB.backref('groups', lazy='dynamic'))
 
 class Game(Base):
-    package = db.Column(db.String(128), nullable=False)
-    name = db.Column(db.String(32), nullable=False)
-    version = db.Column(db.String(16), nullable=False)
-    description = db.Column(db.String(1024))
-    author = db.Column(db.String(32))
-    license = db.Column(db.String(32))
+    package = DB.Column(DB.String(128), nullable=False)
+    name = DB.Column(DB.String(32), nullable=False)
+    version = DB.Column(DB.String(16), nullable=False)
+    description = DB.Column(DB.String(1024))
+    author = DB.Column(DB.String(32))
+    license = DB.Column(DB.String(32))
 
-    __table_args__ = (db.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
+    __table_args__ = (DB.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
 
     @classmethod
     def _auth_pre_get_single(cls, instance_id=None, **kw):
@@ -101,8 +101,8 @@ class Game(Base):
         pass
 
 class World(Base):
-    name = db.Column(db.String(32), unique=True, nullable=False)
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
-    game = db.relationship('Game', backref=db.backref('worlds', lazy='dynamic'))
-    groups = db.relationship('Group', secondary=worldgroup,
-                             backref=db.backref('groups', lazy='dynamic'))
+    name = DB.Column(DB.String(32), unique=True, nullable=False)
+    game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
+    game = DB.relationship('Game', backref=DB.backref('worlds', lazy='dynamic'))
+    groups = DB.relationship('Group', secondary=worldgroup,
+                             backref=DB.backref('groups', lazy='dynamic'))

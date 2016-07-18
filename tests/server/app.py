@@ -16,7 +16,7 @@
 
 import unittest
 
-from veripeditus.server.app import app
+from veripeditus.server.app import APP
 
 class ServerAppTests(unittest.TestCase):
     """ Tests that check game data handling in server.app """

@@ -19,12 +19,12 @@ API endpoint definitions
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask.ext.restless import APIManager
-from veripeditus.server.app import app, db
+from veripeditus.server.app import APP, DB
 from veripeditus.server.control import get_server_info
 from veripeditus.server.model import *
 
 # Global includes for all collections
-_include = ['id', 'uuid', 'created', 'updated']
+_INCLUDE = ['id', 'uuid', 'created', 'updated']
 
 def _api_add_server_info(*args, **kwargs):
     if "data" in kwargs:
@@ -34,7 +34,7 @@ def _api_add_server_info(*args, **kwargs):
     else:
         return
 
-    if type(tbm) is not dict:
+    if not isinstance(tbm, dict):
         return
 
     tbm["server_info"] = get_server_info()
@@ -45,23 +45,25 @@ def _api_strip_server_info(*args, **kwargs):
     else:
         return
 
-    if type(tbm) is not dict:
+    if not isinstance(tbm, dict):
         return
 
     if "server_info" in tbm:
         del tbm["server_info"]
 
-_global_general_pre_processors = [_api_strip_server_info]
-_global_general_post_processors = [_api_add_server_info]
-_methods = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE', 'DELETE_MANY', 'DELETE_SINGLE', 'POST']
-_global_pre_processors = {m: _global_general_pre_processors for m in _methods}
-_global_post_processors = {m: _global_general_post_processors for m in _methods}
+_GLOBAL_GENERAL_PRE_PROCESSORS = [_api_strip_server_info]
+_GLOBAL_GENERAL_POST_PROCESSORS = [_api_add_server_info]
+_METHODS = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE', 'DELETE_MANY', 'DELETE_SINGLE', 'POST']
+_GLOBAL_PRE_PROCESSORS = {m: _GLOBAL_GENERAL_PRE_PROCESSORS for m in _METHODS}
+_GLOBAL_POST_PROCESSORS = {m: _GLOBAL_GENERAL_POST_PROCESSORS for m in _METHODS}
 
-manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=_global_pre_processors, postprocessors=_global_post_processors)
+MANAGER = APIManager(APP, flask_sqlalchemy_db=DB, preprocessors=_GLOBAL_PRE_PROCESSORS,
+                     postprocessors=_GLOBAL_POST_PROCESSORS)
 
-manager.create_api(Player, include_columns=_include+['username', 'name', 'email', 'longitude', 'latitude'],
-    include_methods=['avatar_base64'], methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+MANAGER.create_api(Player,
+                   include_columns=_INCLUDE+['username', 'name', 'email', 'longitude', 'latitude'],
+                   include_methods=['avatar_base64'], methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
-manager.create_api(Game, include_columns=_include+['package', 'name', 'version',
-                                                'description', 'author', 'license'],
-    methods=['GET'])
+MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
+                                                   'description', 'author', 'license'],
+                   methods=['GET'])
