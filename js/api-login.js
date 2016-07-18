@@ -36,7 +36,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('APIService', function($http, Messages) {
+app.factory('APIService', function($http, $log, Messages) {
     return {
         login: function(username, password, remember) {
             // Encode HTTP basic auth string
@@ -52,6 +52,8 @@ app.factory('APIService', function($http, Messages) {
             if (remember) {
                 localStorage.auth_string = auth_string;
             }
+
+            $log.log("APIService: Stored new HTTP Basic Auth string");
         },
         logout: function() {
             // Reconfigure HTTP service
@@ -63,12 +65,14 @@ app.factory('APIService', function($http, Messages) {
             // Remove auth string from all storages
             delete sessionStorage['auth_string'];
             delete localStorage['auth_string'];
+
+            $log.log("APIService: Removed HTTP Basic Auth string");
         }
     };
 });
 
 // FIXME This sure needs to be overhauled.
-app.factory('APILoginInterceptor', function($location, $rootScope) {
+app.factory('APILoginInterceptor', function($location, $rootScope, $log) {
     return {
         response: function(response) {
             try {
@@ -89,6 +93,7 @@ app.factory('APILoginInterceptor', function($location, $rootScope) {
         },
         responseError: function(response) {
             if (response.status == 401) {
+                $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
                 $location.path("/login");
             }
             return response;
@@ -102,11 +107,12 @@ app.config(function($httpProvider) {
     $httpProvider.interceptors.push('APILoginInterceptor');
 });
 
-app.run(function($http) {
+app.run(function($http, $log) {
     // Look for auth string in session storage, then local storage
     var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
     // Set to HTTP service if auth string was stored
     if (s_auth_string) {
         $http.defaults.headers.common['Authorization'] = s_auth_string;
+        $log.info("APIService: Loaded known HTTP Basic Auth string");
     }
 });
