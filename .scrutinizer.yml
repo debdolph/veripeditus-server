@@ -1,12 +1,12 @@
 build:
     tests:
         before:
-            - pip3 install pylint pylint-flask Coverage
+            - 'pip3 install pylint pylint-flask Coverage'
         override:
             -
               command:
-                  - coverage run --include="*veripeditus*" setup.py test
-                  - pylint veripeditus --output-format=parseable --reports=n --include-naming-hint=y | tee pylint-data
+                  - 'coverage run --include="*veripeditus*" setup.py test'
+                  - 'pylint veripeditus --output-format=parseable --reports=n --include-naming-hint=y | tee pylint-data'
               analysis:
                   file: 'pylint-data'
                   format: 'pylint-parseable'
