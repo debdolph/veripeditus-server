@@ -18,19 +18,19 @@
 
 veripeditusMain.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
-    templateUrl: 'views/login.html',
+    templateUrl: 'html/login.html',
     controller: 'ViewLoginController'
   });
   $routeProvider.when('/logout', {
-    templateUrl: 'views/logout.html',
+    templateUrl: 'html/logout.html',
     controller: 'ViewLogoutController'
   });
   $routeProvider.when('/map', {
-    templateUrl: 'views/map.html',
+    templateUrl: 'html/map.html',
     controller: 'ViewMapController'
   });
   $routeProvider.when('/register', {
-    templateUrl: 'views/register.html',
+    templateUrl: 'html/register.html',
     controller: 'ViewRegisterController'
   });
 }]);
