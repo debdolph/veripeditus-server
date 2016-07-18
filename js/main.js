@@ -23,10 +23,6 @@ var veripeditusMain = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
     'gettext',
-    'Veripeditus.view_login',
-    'Veripeditus.view_logout',
-    'Veripeditus.view_map',
-    'Veripeditus.view_register',
 ]);
 
 var default_update = {
@@ -178,3 +174,83 @@ $(function () {
 	    $('.navbar-collapse').collapse('hide');
 	});
     });
+
+veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/login', {
+    templateUrl: 'views/login.html',
+    controller: 'ViewLoginController'
+  });
+}]).controller('ViewLoginController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
+  $scope.login = function() {
+   APIService.login($scope.username, $scope.password, $scope.remember);
+   // FIXME: Only on success
+   $window.history.back();
+  };
+}]);
+
+veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/logout', {
+    templateUrl: 'views/logout.html',
+    controller: 'ViewLogoutController'
+  });
+}]).controller('ViewLogoutController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
+   APIService.logout();
+   $window.history.back();
+}]);
+
+veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/map', {
+    templateUrl: 'views/map.html',
+    controller: 'ViewMapController'
+  });
+}]).controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
+  // Set up map view
+  var map = L.map("map");
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  Player.query(function(data) {
+    $scope.players = data;
+
+    // FIXME: Use a more intelligent way to find map center!
+    map.setView([$scope.players[0].latitude, $scope.players[0].longitude], 16);
+
+    // Iterate over players and add map markers
+    for (var i=0; i < $scope.players.length; i++) {
+        var player = $scope.players[i];
+	var picon = L.icon({
+                            'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
+                            'iconSize': [32, 32],
+                           }
+        );
+	var marker = L.marker([player.latitude, player.longitude], {
+	                                                            'icon': picon
+                                                                   }
+                             );
+        marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
+	marker.addTo(map);
+    }
+  });
+}]);
+
+veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/register', {
+    templateUrl: 'views/register.html',
+    controller: 'ViewRegisterController'
+  });
+}]).controller('ViewRegisterController', ['$scope', 'Player', function($scope, Player) {
+  $scope.register = function() {
+   // Create and fill Player object
+   var player = new Player({
+     username: $scope.username,
+     name: $scope.name,
+     email: $scope.email,
+     password: $scope.password,
+   });
+
+   // Submit Player object via REST API
+   player.$save();
+  };
+}]);
