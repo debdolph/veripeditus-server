@@ -75,7 +75,7 @@ app.factory('APIService', function($log, Messages) {
     };
 });
 
-app.factory('APILoginInterceptor', function($location, $rootScope, $log, Messages, APIService) {
+app.factory('APILoginInterceptor', function($q, $location, $rootScope, $log, Messages, APIService) {
     return {
         request: function(request) {
             if (APIService.auth_string) {
@@ -129,9 +129,9 @@ app.factory('APILoginInterceptor', function($location, $rootScope, $log, Message
                     // If not, tell the user they need to log in now
                     Messages.add('info', 'You need to login for this to work.');
                 }
-                $location.path("/login");
+                return $location.path("/login");
             }
-            return response;
+            return $q.reject(response);
         }
     };
 });
