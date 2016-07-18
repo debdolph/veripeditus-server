@@ -24,15 +24,11 @@ var veripeditusMain = angular.module('Veripeditus', [
     'gettext',
 ]);
 
-veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$location', '$http', 'Messages', function ($scope, $rootScope, $location, $http, Messages) {
+veripeditusMain.run(function ($rootScope, $location, $http, Messages) {
   $rootScope.VERSION = VERSION;
 
-  // Bind $rootScope into controller scope to make it available
-  // in data bindings
-  $scope.root = $rootScope;
-
   // Function that passes closing of a floating alert to the Messages service
-  $scope.closeAlert = function(id) {
+  $rootScope.closeAlert = function(id) {
     Messages.remove(id);
   };
 
@@ -42,4 +38,4 @@ veripeditusMain.controller('veripeditusController', ['$scope', '$rootScope', '$l
   if (s_auth_string) {
     $http.defaults.headers.common['Authorization'] = s_auth_string;
   }
-}]);
+});

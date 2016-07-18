@@ -27,7 +27,7 @@
   <link href="styles/main.css"  rel="stylesheet" media="screen" />
  </head>
 
- <body ng-controller="veripeditusController">
+ <body>
   <nav id="navbar" class="navbar navbar-default" role="navigation">
    <div class="container-fluid">
     <div id="navbar-header" class="navbar-header">
@@ -47,12 +47,12 @@
      <ul class="nav navbar-nav">
       <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> <translate>Map</translate></a></li>
      </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="! root.server_info.user.id">
+     <ul class="nav navbar-nav navbar-right" ng-if="! server_info.user.id">
       <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> <translate>Login</translate></a></li>
       <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> <translate>Register</translate></a></li>
      </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="root.server_info.user.id">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ root.server_info.user.name }}</a></li>
+     <ul class="nav navbar-nav navbar-right" ng-if="server_info.user.id">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ server_info.user.name }}</a></li>
       <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> <translate>Logout</translate></a></li>
      </ul>
     </div>
@@ -61,7 +61,7 @@
 
   <div id="content-outer">
     <div id="floating-messages" class="col-xs-12 col-md-3 col-md-push-9">
-      <div class="alert alert-{{ msg.class }}" ng-repeat="(id, msg) in root.msgs">
+      <div class="alert alert-{{ msg.class }}" ng-repeat="(id, msg) in msgs">
         <a ng-click="closeAlert(id)" class="close">&times;</a>
         {{ msg.message }}
       </div>
@@ -72,7 +72,7 @@
 
   <footer id="footer">
     <p class="text-muted">
-     Veripeditus v{{ root.server_info.version }} (server) / v{{ root.VERSION }} (webapp)<br/>
+     Veripeditus v{{ server_info.version }} (server) / v{{ VERSION }} (webapp)<br/>
      © 2015,2016 Dominik George, Eike Tim Jesinghaus · <translate>Licensed under</translate> AGPL-3+
     </p>
   </footer>
