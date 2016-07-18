@@ -78,11 +78,11 @@ veripeditusMain.factory('APILoginInterceptor', function($location, $rootScope) {
   };
 });
 
-veripeditusMain.config(['$httpProvider', function($httpProvider) {
+veripeditusMain.config(function($httpProvider) {
   // Add a global interceptor that watches for a 401 status
   // and redirects to /login if necessary
   $httpProvider.interceptors.push('APILoginInterceptor');
-}]);
+});
 
 veripeditusMain.run(function($http) {
   // Look for auth string in session storage, then local storage

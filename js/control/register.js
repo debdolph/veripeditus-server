@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-veripeditusMain.controller('ViewRegisterController', ['$scope', 'Player', function($scope, Player) {
+veripeditusMain.controller('ViewRegisterController', function($scope, Player) {
   $scope.register = function() {
    // Create and fill Player object
    var player = new Player({
@@ -29,4 +29,4 @@ veripeditusMain.controller('ViewRegisterController', ['$scope', 'Player', functi
    // Submit Player object via REST API
    player.$save();
   };
-}]);
+});

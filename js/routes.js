@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-veripeditusMain.config(['$routeProvider', function($routeProvider) {
+veripeditusMain.config(function($routeProvider) {
   $routeProvider.when('/', {
     redirectTo: '/map'
   }).when('/login', {
@@ -32,4 +32,4 @@ veripeditusMain.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'html/register.html',
     controller: 'ViewRegisterController'
   });
-}]);
+});

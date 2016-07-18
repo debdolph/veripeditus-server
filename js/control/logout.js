@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-veripeditusMain.controller('ViewLogoutController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
+veripeditusMain.controller('ViewLogoutController', function($scope, $window, APIService) {
    APIService.logout();
    $window.history.back();
-}]);
+});
