@@ -175,12 +175,7 @@ $(function () {
 	});
     });
 
-veripeditusMain.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/login', {
-    templateUrl: 'views/login.html',
-    controller: 'ViewLoginController'
-  });
-}]).controller('ViewLoginController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
+veripeditusMain.controller('ViewLoginController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
   $scope.login = function() {
    APIService.login($scope.username, $scope.password, $scope.remember);
    // FIXME: Only on success
@@ -188,22 +183,12 @@ veripeditusMain.config(['$routeProvider', function($routeProvider) {
   };
 }]);
 
-veripeditusMain.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/logout', {
-    templateUrl: 'views/logout.html',
-    controller: 'ViewLogoutController'
-  });
-}]).controller('ViewLogoutController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
+veripeditusMain.controller('ViewLogoutController', ['$scope', '$window', 'APIService', function($scope, $window, APIService) {
    APIService.logout();
    $window.history.back();
 }]);
 
-veripeditusMain.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/map', {
-    templateUrl: 'views/map.html',
-    controller: 'ViewMapController'
-  });
-}]).controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
+veripeditusMain.controller('ViewMapController', ['$scope', 'Player', function($scope, Player) {
   // Set up map view
   var map = L.map("map");
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -235,12 +220,7 @@ veripeditusMain.config(['$routeProvider', function($routeProvider) {
   });
 }]);
 
-veripeditusMain.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/register', {
-    templateUrl: 'views/register.html',
-    controller: 'ViewRegisterController'
-  });
-}]).controller('ViewRegisterController', ['$scope', 'Player', function($scope, Player) {
+veripeditusMain.controller('ViewRegisterController', ['$scope', 'Player', function($scope, Player) {
   $scope.register = function() {
    // Create and fill Player object
    var player = new Player({
@@ -253,4 +233,23 @@ veripeditusMain.config(['$routeProvider', function($routeProvider) {
    // Submit Player object via REST API
    player.$save();
   };
+}]);
+
+veripeditusMain.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/login', {
+    templateUrl: 'views/login.html',
+    controller: 'ViewLoginController'
+  });
+  $routeProvider.when('/logout', {
+    templateUrl: 'views/logout.html',
+    controller: 'ViewLogoutController'
+  });
+  $routeProvider.when('/map', {
+    templateUrl: 'views/map.html',
+    controller: 'ViewMapController'
+  });
+  $routeProvider.when('/register', {
+    templateUrl: 'views/register.html',
+    controller: 'ViewRegisterController'
+  });
 }]);
