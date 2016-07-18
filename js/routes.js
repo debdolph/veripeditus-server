@@ -19,20 +19,16 @@
 veripeditusMain.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {
     redirectTo: '/map'
-  });
-  $routeProvider.when('/login', {
+  }).when('/login', {
     templateUrl: 'html/login.html',
     controller: 'ViewLoginController'
-  });
-  $routeProvider.when('/logout', {
+  }).when('/logout', {
     templateUrl: 'html/logout.html',
     controller: 'ViewLogoutController'
-  });
-  $routeProvider.when('/map', {
+  }).when('/map', {
     templateUrl: 'html/map.html',
     controller: 'ViewMapController'
-  });
-  $routeProvider.when('/register', {
+  }).when('/register', {
     templateUrl: 'html/register.html',
     controller: 'ViewRegisterController'
   });
