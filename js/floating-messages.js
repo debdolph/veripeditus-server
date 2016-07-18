@@ -49,15 +49,21 @@ app.factory('Messages', function($timeout) {
 
     return {
         add: function(cls, message) {
-            var id = Math.max.apply(null, Object.keys(msgs)) + 1;
-            msgs[id] = {
+            // Find next numeric id
+            if (Object.keys(msgs).length > 0) {
+                var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
+            } else {
+                id = 0;
+            }
+
+            this.msgs[id] = {
                 'class': cls,
                 'message': message
             };
 
             // Add timer to auto-close the message
             var tid = $timeout(remove, 10000, true, id);
-            msgs[id].tid = tid;
+            this.msgs[id].tid = tid;
         },
         'remove': remove,
         'msgs': msgs
