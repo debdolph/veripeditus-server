@@ -71,15 +71,40 @@ app.factory('APIService', function($http, $log, Messages) {
     };
 });
 
+app.factory('APIServerService', function() {
+    // Store server_info here
+    var server_info = {}
+
+    return {
+        server_info: server_info
+    };
+});
+
 // FIXME This sure needs to be overhauled.
-app.factory('APILoginInterceptor', function($location, $rootScope, $log) {
+app.factory('APILoginInterceptor', function($location, $rootScope, $log, Messages, APIServerService) {
     return {
         response: function(response) {
             try {
                 // Copy server info if it is inside the response
                 // Doing this for every response that has it for live migrations on server-side
-                $rootScope.server_info = angular.copy(angular.fromJson(response.data).server_info);
+                var new_server_info = angular.copy(angular.fromJson(response.data).server_info);
             } catch(err) {}
+
+            // Did a user entry appear?
+            if (new_server_info) {
+                // Get old and new usernames
+                var old_user = ('user' in APIServerService.server_info) && ('username' in APIServerService.server_info.user) ? APIServerService.server_info.user.username : "";
+                var new_user = ('user' in new_server_info) && ('username' in new_server_info.user) ? new_server_info.user.username : "";
+
+                if (old_user != new_user && new_user != "") {
+                    // Obviously we just logged in successfully
+                    $log.info("APIService: Successful login with HTTP Basic Auth string");
+                    Messages.add('success', 'Login successful.');
+                }
+
+                // Store new server info
+                APIServerService.server_info = angular.copy(new_server_info);
+            }
 
             try {
                 // If response is a JSON object with an objects entry, extract the objects entry
@@ -94,6 +119,15 @@ app.factory('APILoginInterceptor', function($location, $rootScope, $log) {
         responseError: function(response) {
             if (response.status == 401) {
                 $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
+
+                // Check if we were using authentication
+                if (sessionStorage.auth_string) {
+                    // If yes, tell user their credentials are wrong
+                    Messages.add('danger', 'Login failed.');
+                } else {
+                    // If not, tell the user they need to log in now
+                    Messages.add('info', 'You need to login for this to work.');
+                }
                 $location.path("/login");
             }
             return response;
@@ -115,4 +149,8 @@ app.run(function($http, $log) {
         $http.defaults.headers.common['Authorization'] = s_auth_string;
         $log.info("APIService: Loaded known HTTP Basic Auth string");
     }
+});
+
+app.run(function($rootScope, APIServerService) {
+    $rootScope.APIServerService = APIServerService;
 });

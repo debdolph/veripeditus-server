@@ -47,12 +47,12 @@
      <ul class="nav navbar-nav">
       <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> <translate>Map</translate></a></li>
      </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="! server_info.user.id">
+     <ul class="nav navbar-nav navbar-right" ng-if="! APIServerService.server_info.user.id">
       <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> <translate>Login</translate></a></li>
       <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> <translate>Register</translate></a></li>
      </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="server_info.user.id">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ server_info.user.name }}</a></li>
+     <ul class="nav navbar-nav navbar-right" ng-if="APIServerService.server_info.user.id">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ APIServerService.server_info.user.name }}</a></li>
       <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> <translate>Logout</translate></a></li>
      </ul>
     </div>
@@ -72,7 +72,7 @@
 
   <footer id="footer">
     <p class="text-muted">
-     Veripeditus v{{ server_info.version }} (server) / v{{ VERSION }} (webapp)<br/>
+     Veripeditus v{{ APIServerService.server_info.version }} (server) / v{{ VERSION }} (webapp)<br/>
      © 2015,2016 Dominik George, Eike Tim Jesinghaus · <translate>Licensed under</translate> AGPL-3+
     </p>
   </footer>
