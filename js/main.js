@@ -27,11 +27,6 @@ var veripeditusMain = angular.module('Veripeditus', [
 veripeditusMain.run(function ($rootScope, $location, $http, Messages) {
   $rootScope.VERSION = VERSION;
 
-  // Function that passes closing of a floating alert to the Messages service
-  $rootScope.closeAlert = function(id) {
-    Messages.remove(id);
-  };
-
   // Look for auth string in session storage, then local storage
   var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
   // Set to HTTP service if auth string was stored

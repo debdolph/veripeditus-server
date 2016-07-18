@@ -17,26 +17,30 @@
  */
 
 // Service for floating messages
-veripeditusMain.factory('Messages', function($rootScope, $timeout) {
-  // Object to hold all the floating messages
+veripeditusMain.factory('Messages', function($timeout) {
   // contains a set of id: {class: 'alert class', message: 'foo'} objects
-  $rootScope.msgs = {}
+  msgs = {}
 
   function remove(id) {
     // Clear the timer first
-    $timeout.cancel($rootScope.msgs[id].tid);
-    delete $rootScope.msgs[id];
+    $timeout.cancel(msgs[id].tid);
+    delete msgs[id];
   }
 
   return {
     add: function(cls, message) {
-      var id = Math.max.apply(null, Object.keys($rootScope.msgs)) + 1;
-      $rootScope.msgs[id] = {'class': cls, 'message': message};
+      var id = Math.max.apply(null, Object.keys(msgs)) + 1;
+      msgs[id] = {'class': cls, 'message': message};
 
       // Add timer to auto-close the message
       var tid = $timeout(remove, 10000, true, id);
-      $rootScope.msgs[id].tid = tid;
+      msgs[id].tid = tid;
     },
-    'remove': remove
+    'remove': remove,
+    'msgs': msgs
   };
+});
+
+veripeditusMain.run(function($rootScope, Messages) {
+  $rootScope.Messages = Messages;
 });
