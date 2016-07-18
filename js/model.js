@@ -28,3 +28,25 @@ app.factory("Player", function($resource) {
     },
     default_update);
 });
+
+app.factory('APIModelInterceptor', function($q) {
+    return {
+        response: function(response) {
+            try {
+                // If response is a JSON object with an objects entry, extract the objects entry
+                if ('objects' in response.data) {
+                    response.data = angular.fromJson(response.data).objects;
+                }
+            } catch(err) {}
+
+            // Return (possibly modified) response
+            return response;
+        }
+    };
+});
+
+// FIXME Ensure that this is the last interceptor to be called!
+app.config(function($httpProvider) {
+    // Add a global interceptor to unwrap JSON data on query
+    $httpProvider.interceptors.push('APIModelInterceptor');
+});

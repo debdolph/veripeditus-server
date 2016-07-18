@@ -107,13 +107,6 @@ app.factory('APILoginInterceptor', function($q, $location, $rootScope, $log, Mes
                 APIService.server_info = angular.copy(new_server_info);
             }
 
-            try {
-                // If response is a JSON object with an objects entry, extract the objects entry
-                if ('objects' in response.data) {
-                    response.data = angular.fromJson(response.data).objects;
-                }
-            } catch(err) {}
-
             // Return (possibly modified) response
             return response;
         },
