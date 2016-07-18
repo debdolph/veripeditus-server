@@ -17,7 +17,7 @@
  */
 
 // Service for floating messages
-veripeditusMain.factory('Messages', function($timeout) {
+app.factory('Messages', function($timeout) {
   // contains a set of id: {class: 'alert class', message: 'foo'} objects
   msgs = {}
 
@@ -41,6 +41,6 @@ veripeditusMain.factory('Messages', function($timeout) {
   };
 });
 
-veripeditusMain.run(function($rootScope, Messages) {
+app.run(function($rootScope, Messages) {
   $rootScope.Messages = Messages;
 });

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-veripeditusMain.config(function($routeProvider) {
+app.config(function($routeProvider) {
   $routeProvider.when('/', {
     redirectTo: '/map'
   }).when('/login', {

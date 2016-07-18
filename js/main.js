@@ -18,12 +18,12 @@
 
 var VERSION = "0.1";
 
-var veripeditusMain = angular.module('Veripeditus', [
+var app = angular.module('Veripeditus', [
     'ngRoute',
     'ngResource',
     'gettext',
 ]);
 
-veripeditusMain.run(function ($rootScope, $location, $http, Messages) {
+app.run(function ($rootScope, $location, $http, Messages) {
   $rootScope.VERSION = VERSION;
 });

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-veripeditusMain.controller('ViewMapController', function($scope, Player) {
+app.controller('ViewMapController', function($scope, Player) {
   // Set up map view
   var map = L.map("map");
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

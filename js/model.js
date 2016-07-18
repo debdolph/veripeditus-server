@@ -20,6 +20,6 @@ var default_update = {
     'update': { method:'PUT' }
 };
 
-veripeditusMain.factory("Player", function($resource) {
+app.factory("Player", function($resource) {
     return $resource("/api/player/:id", {id: '@id'}, default_update);
 });

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-veripeditusMain.factory('APIService', function($http, Messages) {
+app.factory('APIService', function($http, Messages) {
   return {
     login: function(username, password, remember) {
       // Encode HTTP basic auth string
@@ -48,7 +48,7 @@ veripeditusMain.factory('APIService', function($http, Messages) {
 });
 
 // FIXME This sure needs to be overhauled.
-veripeditusMain.factory('APILoginInterceptor', function($location, $rootScope) {
+app.factory('APILoginInterceptor', function($location, $rootScope) {
   return {
     response: function(response) {
       try {
@@ -78,13 +78,13 @@ veripeditusMain.factory('APILoginInterceptor', function($location, $rootScope) {
   };
 });
 
-veripeditusMain.config(function($httpProvider) {
+app.config(function($httpProvider) {
   // Add a global interceptor that watches for a 401 status
   // and redirects to /login if necessary
   $httpProvider.interceptors.push('APILoginInterceptor');
 });
 
-veripeditusMain.run(function($http) {
+app.run(function($http) {
   // Look for auth string in session storage, then local storage
   var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
   // Set to HTTP service if auth string was stored
