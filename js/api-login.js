@@ -36,15 +36,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('APIService', function($http, $log, Messages) {
+app.factory('APIService', function($log, Messages) {
+    var server_info = {};
+
+    // Look for auth string in session storage, then local storage
+    var auth_string = sessionStorage.auth_string || localStorage.auth_string || "";
+    if (auth_string) {
+        $log.info("APIService: Loaded known HTTP Basic Auth string");
+    }
+
     return {
         login: function(username, password, remember) {
             // Encode HTTP basic auth string
-            // FIXME Do we need compatibility with old/broken browsers?
-            var auth_string = "Basic " + window.btoa(username + ":" + password);
-
-            // Reconfigure HTTP service
-            $http.defaults.headers.common['Authorization'] = auth_string;
+            this.auth_string = "Basic " + window.btoa(username + ":" + password);
 
             // Store auth string in session storage
             sessionStorage.auth_string = auth_string;
@@ -56,33 +60,30 @@ app.factory('APIService', function($http, $log, Messages) {
             $log.log("APIService: Stored new HTTP Basic Auth string");
         },
         logout: function() {
-            // Reconfigure HTTP service
-            $http.defaults.headers.common['Authorization'] = "";
-
             // Add floating message
             Messages.add('info', 'You have been logged out.');
 
-            // Remove auth string from all storages
+            // Unset and emove auth string from all storages
+            this.auth_string = "";
             delete sessionStorage['auth_string'];
             delete localStorage['auth_string'];
 
             $log.log("APIService: Removed HTTP Basic Auth string");
-        }
+        },
+        server_info: server_info,
+        auth_string: auth_string
     };
 });
 
-app.factory('APIServerService', function() {
-    // Store server_info here
-    var server_info = {}
-
+app.factory('APILoginInterceptor', function($location, $rootScope, $log, Messages, APIService) {
     return {
-        server_info: server_info
-    };
-});
+        request: function(request) {
+            if (APIService.auth_string) {
+                request.headers.Authorization = APIService.auth_string;
+            }
 
-// FIXME This sure needs to be overhauled.
-app.factory('APILoginInterceptor', function($location, $rootScope, $log, Messages, APIServerService) {
-    return {
+            return request;
+        },
         response: function(response) {
             try {
                 // Copy server info if it is inside the response
@@ -93,7 +94,7 @@ app.factory('APILoginInterceptor', function($location, $rootScope, $log, Message
             // Did a user entry appear?
             if (new_server_info) {
                 // Get old and new usernames
-                var old_user = ('user' in APIServerService.server_info) && ('username' in APIServerService.server_info.user) ? APIServerService.server_info.user.username : "";
+                var old_user = ('user' in APIService.server_info) && ('username' in APIService.server_info.user) ? APIService.server_info.user.username : "";
                 var new_user = ('user' in new_server_info) && ('username' in new_server_info.user) ? new_server_info.user.username : "";
 
                 if (old_user != new_user && new_user != "") {
@@ -103,7 +104,7 @@ app.factory('APILoginInterceptor', function($location, $rootScope, $log, Message
                 }
 
                 // Store new server info
-                APIServerService.server_info = angular.copy(new_server_info);
+                APIService.server_info = angular.copy(new_server_info);
             }
 
             try {
@@ -121,7 +122,7 @@ app.factory('APILoginInterceptor', function($location, $rootScope, $log, Message
                 $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
 
                 // Check if we were using authentication
-                if (sessionStorage.auth_string) {
+                if (APIService.auth_string) {
                     // If yes, tell user their credentials are wrong
                     Messages.add('danger', 'Login failed.');
                 } else {
@@ -141,16 +142,6 @@ app.config(function($httpProvider) {
     $httpProvider.interceptors.push('APILoginInterceptor');
 });
 
-app.run(function($http, $log) {
-    // Look for auth string in session storage, then local storage
-    var s_auth_string = sessionStorage.auth_string || localStorage.auth_string;
-    // Set to HTTP service if auth string was stored
-    if (s_auth_string) {
-        $http.defaults.headers.common['Authorization'] = s_auth_string;
-        $log.info("APIService: Loaded known HTTP Basic Auth string");
-    }
-});
-
-app.run(function($rootScope, APIServerService) {
-    $rootScope.APIServerService = APIServerService;
+app.run(function($rootScope, APIService) {
+    $rootScope.APIService = APIService;
 });
