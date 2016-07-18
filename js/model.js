@@ -17,9 +17,14 @@
  */
 
 var default_update = {
-    'update': { method:'PUT' }
+    'update': {
+        method: 'PUT'
+    }
 };
 
 app.factory("Player", function($resource) {
-    return $resource("/api/player/:id", {id: '@id'}, default_update);
+    return $resource("/api/player/:id", {
+        id: '@id'
+    },
+    default_update);
 });

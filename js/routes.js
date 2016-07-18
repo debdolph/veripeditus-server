@@ -17,19 +17,19 @@
  */
 
 app.config(function($routeProvider) {
-  $routeProvider.when('/', {
-    redirectTo: '/map'
-  }).when('/login', {
-    templateUrl: 'html/login.html',
-    controller: 'ViewLoginController'
-  }).when('/logout', {
-    templateUrl: 'html/logout.html',
-    controller: 'ViewLogoutController'
-  }).when('/map', {
-    templateUrl: 'html/map.html',
-    controller: 'ViewMapController'
-  }).when('/register', {
-    templateUrl: 'html/register.html',
-    controller: 'ViewRegisterController'
-  });
+    $routeProvider.when('/', {
+        redirectTo: '/map'
+    }).when('/login', {
+        templateUrl: 'html/login.html',
+        controller: 'ViewLoginController'
+    }).when('/logout', {
+        templateUrl: 'html/logout.html',
+        controller: 'ViewLogoutController'
+    }).when('/map', {
+        templateUrl: 'html/map.html',
+        controller: 'ViewMapController'
+    }).when('/register', {
+        templateUrl: 'html/register.html',
+        controller: 'ViewRegisterController'
+    });
 });

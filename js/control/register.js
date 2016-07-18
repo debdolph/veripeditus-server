@@ -15,18 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-app.controller('ViewRegisterController', function($scope, Player) {
-  $scope.register = function() {
-   // Create and fill Player object
-   var player = new Player({
-     username: $scope.username,
-     name: $scope.name,
-     email: $scope.email,
-     password: $scope.password,
-   });
 
-   // Submit Player object via REST API
-   player.$save();
-  };
+app.controller('ViewRegisterController', function($scope, Player) {
+    $scope.register = function() {
+        // Create and fill Player object
+        var player = new Player({
+            username: $scope.username,
+            name: $scope.name,
+            email: $scope.email,
+            password: $scope.password,
+        });
+
+        // Submit Player object via REST API
+        player.$save();
+    };
 });

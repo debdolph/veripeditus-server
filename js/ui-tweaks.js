@@ -17,28 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(function () {
-	// Used to automatically restyle content area when window size changes,
-	// because that might resize the header and footer areas as well
-	var resizeFunction = function () {
-		var header = document.getElementById("navbar-header").offsetHeight;
-		var footer = document.getElementById("footer").offsetHeight;
+$(function() {
+    // Used to automatically restyle content area when window size changes,
+    // because that might resize the header and footer areas as well
+    var resizeFunction = function() {
+        var header = document.getElementById("navbar-header").offsetHeight;
+        var footer = document.getElementById("footer").offsetHeight;
 
-		// Hide footer if display is too small
-		if ($(window).height() < header * 6) {
-			$("#footer").hide();
-			footer = 0;
-		} else {
-			$("#footer").show();
-		}
+        // Hide footer if display is too small
+        if ($(window).height() < header * 6) {
+            $("#footer").hide();
+            footer = 0;
+        } else {
+            $("#footer").show();
+        }
 
-		$("#content-outer").css("top", header).height($(window).height() - header - footer);
-	    };
-	resizeFunction();
-	$(window).on('resize', resizeFunction);
+        $("#content-outer").css("top", header).height($(window).height() - header - footer);
+    };
+    resizeFunction();
+    $(window).on('resize', resizeFunction);
 
-	// Collapse navbar on menu click
-	$('.nav a').click(function () {
-	    $('.navbar-collapse').collapse('hide');
-	});
+    // Collapse navbar on menu click
+    $('.nav a').click(function() {
+        $('.navbar-collapse').collapse('hide');
     });
+});

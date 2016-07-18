@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 app.controller('ViewLoginController', function($scope, $window, APIService) {
-  $scope.login = function() {
-   APIService.login($scope.username, $scope.password, $scope.remember);
-   // FIXME: Only on success
-   $window.history.back();
-  };
+    $scope.login = function() {
+        APIService.login($scope.username, $scope.password, $scope.remember);
+        // FIXME: Only on success
+        $window.history.back();
+    };
 });

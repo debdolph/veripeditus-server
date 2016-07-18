@@ -18,29 +18,32 @@
 
 // Service for floating messages
 app.factory('Messages', function($timeout) {
-  // contains a set of id: {class: 'alert class', message: 'foo'} objects
-  msgs = {}
+    // contains a set of id: {class: 'alert class', message: 'foo'} objects
+    msgs = {}
 
-  function remove(id) {
-    // Clear the timer first
-    $timeout.cancel(msgs[id].tid);
-    delete msgs[id];
-  }
+    function remove(id) {
+        // Clear the timer first
+        $timeout.cancel(msgs[id].tid);
+        delete msgs[id];
+    }
 
-  return {
-    add: function(cls, message) {
-      var id = Math.max.apply(null, Object.keys(msgs)) + 1;
-      msgs[id] = {'class': cls, 'message': message};
+    return {
+        add: function(cls, message) {
+            var id = Math.max.apply(null, Object.keys(msgs)) + 1;
+            msgs[id] = {
+                'class': cls,
+                'message': message
+            };
 
-      // Add timer to auto-close the message
-      var tid = $timeout(remove, 10000, true, id);
-      msgs[id].tid = tid;
-    },
-    'remove': remove,
-    'msgs': msgs
-  };
+            // Add timer to auto-close the message
+            var tid = $timeout(remove, 10000, true, id);
+            msgs[id].tid = tid;
+        },
+        'remove': remove,
+        'msgs': msgs
+    };
 });
 
 app.run(function($rootScope, Messages) {
-  $rootScope.Messages = Messages;
+    $rootScope.Messages = Messages;
 });
