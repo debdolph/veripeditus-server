@@ -29,15 +29,13 @@ app.factory("Player", function($resource) {
     default_update);
 });
 
-app.factory('APIModelInterceptor', function($q) {
+app.factory('APIModelInterceptor', function() {
     return {
         response: function(response) {
-            try {
-                // If response is a JSON object with an objects entry, extract the objects entry
-                if ('objects' in response.data) {
-                    response.data = angular.fromJson(response.data).objects;
-                }
-            } catch(err) {}
+            // If response is a JSON object with an objects entry, extract the objects entry
+            if (typeof response.data === "object" && 'objects' in response.data) {
+                response.data = angular.fromJson(response.data).objects;
+            }
 
             // Return (possibly modified) response
             return response;

@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** global: L */
+
 app.controller('ViewMapController', function($scope, Player) {
     // Set up map view
     var map = L.map("map");

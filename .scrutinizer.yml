@@ -1,5 +1,5 @@
 checks:
     javascript: true
 filter:
-    exclude_paths:
+    excluded_paths:
         - 'dev/*'

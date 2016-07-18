@@ -36,11 +36,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('APIService', function($log, Messages) {
+app.factory('APIService', function($log, $window, Messages) {
     var server_info = {};
 
     // Look for auth string in session storage, then local storage
-    var auth_string = sessionStorage.auth_string || localStorage.auth_string || "";
+    var auth_string = $window.sessionStorage.auth_string || $window.localStorage.auth_string || "";
     if (auth_string) {
         $log.info("APIService: Loaded known HTTP Basic Auth string");
     }
@@ -51,10 +51,10 @@ app.factory('APIService', function($log, Messages) {
             this.auth_string = "Basic " + window.btoa(username + ":" + password);
 
             // Store auth string in session storage
-            sessionStorage.auth_string = auth_string;
+            $window.sessionStorage.auth_string = auth_string;
             // Also store in local persistent storage if desired
             if (remember) {
-                localStorage.auth_string = auth_string;
+                $window.localStorage.auth_string = auth_string;
             }
 
             $log.log("APIService: Stored new HTTP Basic Auth string");
@@ -65,8 +65,8 @@ app.factory('APIService', function($log, Messages) {
 
             // Unset and emove auth string from all storages
             this.auth_string = "";
-            delete sessionStorage['auth_string'];
-            delete localStorage['auth_string'];
+            delete $window.sessionStorage['auth_string'];
+            delete $window.localStorage['auth_string'];
 
             $log.log("APIService: Removed HTTP Basic Auth string");
         },
@@ -85,11 +85,11 @@ app.factory('APILoginInterceptor', function($q, $location, $rootScope, $log, Mes
             return request;
         },
         response: function(response) {
-            try {
+            if (typeof response.data === "object" && 'server_info' in response.data) {
                 // Copy server info if it is inside the response
                 // Doing this for every response that has it for live migrations on server-side
                 var new_server_info = angular.copy(angular.fromJson(response.data).server_info);
-            } catch(err) {}
+            }
 
             // Did a user entry appear?
             if (new_server_info) {

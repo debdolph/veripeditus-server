@@ -39,7 +39,7 @@
 // Service for floating messages
 app.factory('Messages', function($timeout) {
     // contains a set of id: {class: 'alert class', message: 'foo'} objects
-    msgs = {}
+    var msgs = {}
 
     function remove(id) {
         // Clear the timer first
