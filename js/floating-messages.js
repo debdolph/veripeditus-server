@@ -51,9 +51,6 @@
  * Messages are also given a timeout of 10 seconds, after which they are
  * removed automatically.
  *
- * The service is bound to the root scope so messages can be accessed
- * directly.
- *
  * This snippet, for example, can be used to display the messages:
  *
  *  <div id="floating-messages" class="col-xs-12 col-md-3 col-md-push-9">
@@ -63,39 +60,37 @@
  *    </div>
  *  </div>
  */
-app.factory('Messages', function($timeout) {
-    // contains a set of id: {class: 'alert class', message: 'foo'} objects
-    var msgs = {}
+angular.module('ngFloatingMessages', []).factory('Messages',
+    function($timeout) {
+        // contains a set of id: {class: 'alert class', message: 'foo'} objects
+        var msgs = {}
 
-    function remove(id) {
-        // Clear the timer first
-        $timeout.cancel(msgs[id].tid);
-        delete msgs[id];
+        function remove(id) {
+            // Clear the timer first
+            $timeout.cancel(msgs[id].tid);
+            delete msgs[id];
+        }
+
+        return {
+            add: function(cls, message) {
+                // Find next numeric id
+                if (Object.keys(msgs).length > 0) {
+                    var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
+                } else {
+                    id = 0;
+                }
+
+                this.msgs[id] = {
+                    'class': cls,
+                    'message': message
+                };
+
+                // Add timer to auto-close the message
+                var tid = $timeout(remove, 10000, true, id);
+                this.msgs[id].tid = tid;
+            },
+            'remove': remove,
+            'msgs': msgs
+        };
     }
-
-    return {
-        add: function(cls, message) {
-            // Find next numeric id
-            if (Object.keys(msgs).length > 0) {
-                var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
-            } else {
-                id = 0;
-            }
-
-            this.msgs[id] = {
-                'class': cls,
-                'message': message
-            };
-
-            // Add timer to auto-close the message
-            var tid = $timeout(remove, 10000, true, id);
-            this.msgs[id].tid = tid;
-        },
-        'remove': remove,
-        'msgs': msgs
-    };
-});
-
-app.run(function($rootScope, Messages) {
-    $rootScope.Messages = Messages;
-});
+);

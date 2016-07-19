@@ -47,4 +47,7 @@ app.factory('APIModelInterceptor', function() {
 app.config(function($httpProvider) {
     // Add a global interceptor to unwrap JSON data on query
     $httpProvider.interceptors.push('APIModelInterceptor');
+    // Add a global interceptor that watches for a 401 status
+    // and redirects to /login if necessary
+    $httpProvider.interceptors.push('APILoginInterceptor');
 });
