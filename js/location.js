@@ -24,7 +24,9 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
         maximumAge: 0
     };
 
+    // Stores the id of the watchPosition() service
     var watchId;
+    // Stores the last position from the Geolocation service
     var position = {
         coords: {
             latitude: 0.0,
@@ -34,16 +36,23 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
 
     // Callback for Geolocation's watchPosition()
     function onLocationUpdate(newpos) {
+        // Get this function back into scope after being called from navigator
         $rootScope.$apply(function() {
+            // Store coords and timestamp from Geolocation service
             position.coords = newpos.coords;
             position.timestamp = newpos.timestamp;
+
+            // Broadcast event that position changed
             $rootScope.$broadcast('Geolocation.changed', position);
         });
     }
 
     // Callback for Geolocation errors
     function onLocationError(error) {
+        // Stores message after finding out what caused the error
         var msg;
+
+        // Check error code and select own message
         if (error.code == error.PERMISSION_DENIED) {
             msg = "Permission for tracking location denied.";
         } else if (error.code == error.POSITION_UNAVAILABLE) {
@@ -53,22 +62,28 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
         } else {
             msg = "Unknown error acquiring location.";
         }
+
+        // Add floating message
         Messages.add("danger", msg);
     }
 
     // Start watching Geolocation
     function start() {
+        // Store watchId for later clearing
         this.watchId = $window.navigator.geolocation.watchPosition(onLocationUpdate, onLocationError, locationOptions);
     }
 
     // Stop watching Geolocation
     function stop() {
+        // Only clear if a watch is actually active
         if (this.watchId) {
+            // Clear previously stored watchId
             $window.navigator.geolocation.clearWatch(this.watchId);
             this.watchId = undefined;
         }
     }
 
+    // Publish service API
     return {
         start: start,
         stop: stop,
