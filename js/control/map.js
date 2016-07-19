@@ -19,7 +19,7 @@
 
 /** global: L */
 
-app.controller('ViewMapController', function($scope, Player, LocationService) {
+app.controller('ViewMapController', function($log, $scope, Player, LocationService) {
     // Set up map view
     $scope.map = L.map("map");
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -34,6 +34,52 @@ app.controller('ViewMapController', function($scope, Player, LocationService) {
 
     $scope.map.setView($scope.marker_self.getLatLng(), 16);
 
+    $scope.player_markers = {};
+
+    function getPlayersOnMap() {
+        // Get bounds of map
+        var bounds = $scope.map.getBounds();
+        // Construct JSON query filter for REST API
+        var query = {'and': [
+                             {'name': 'latitude', 'op': 'ge', 'val': bounds.getSouth()},
+                             {'name': 'latitude', 'op': 'le', 'val': bounds.getNorth()},
+                             {'name': 'longitude', 'op': 'ge', 'val': bounds.getWest()},
+                             {'name': 'longitude', 'op': 'le', 'val': bounds.getEast()}
+                            ]
+                     };
+
+        $log.debug("Querying players within (" + bounds.getSouth() + ", " + bounds.getWest() + ") (" + bounds.getNorth() + ", " + bounds.getEast() + ")");
+
+        // FIXME returns all players for some reason
+        Player.query({q: angular.toJson(query)}, function(data) {
+            $scope.players = data;
+
+            // Iterate over players and add map markers
+            for (var i = 0; i < $scope.players.length; i++) {
+                var player = $scope.players[i];
+
+                var marker = $scope.player_markers[player.id];
+                if (marker) {
+                    $log.debug("Map: Reusing marker for player id " + player.id);
+                } else {
+                    $log.debug("Map: Creating new marker for player id " + player.id);
+
+                    var picon = L.icon({
+                        'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
+                        'iconSize': [32, 32],
+                    });
+                    marker = L.marker([player.latitude, player.longitude], {
+                        'icon': picon
+                    });
+                    marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
+                    marker.addTo($scope.map);
+                }
+
+                $scope.player_markers[player.id] = marker;
+            }
+        });
+    }
+
     $scope.$on('Geolocation.changed', function(event, position) {
         $scope.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
         $scope.circle_self.setLatLng($scope.marker_self.getLatLng());
@@ -41,21 +87,9 @@ app.controller('ViewMapController', function($scope, Player, LocationService) {
         $scope.map.setView($scope.marker_self.getLatLng());
     });
 
-    Player.query(function(data) {
-        $scope.players = data;
-
-        // Iterate over players and add map markers
-        for (var i = 0; i < $scope.players.length; i++) {
-            var player = $scope.players[i];
-            var picon = L.icon({
-                'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
-                'iconSize': [32, 32],
-            });
-            var marker = L.marker([player.latitude, player.longitude], {
-                'icon': picon
-            });
-            marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
-            marker.addTo($scope.map);
-        }
+    $scope.map.on('moveend', function(event) {
+        getPlayersOnMap();
     });
+
+    getPlayersOnMap();
 });
