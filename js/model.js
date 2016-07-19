@@ -17,33 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Declare a new update() method for all services, passed to $resource in factories
 var default_update = {
     'update': {
+        // PATCH method allows partial updates
         method: 'PATCH'
     }
 };
 
+// Service for the Player API object
 app.factory("Player", function($rootScope, $resource, APIService) {
+    // Define $resource service to API endpoint
     var res = $resource("/api/player/:id", {
         id: '@id'
     },
     default_update);
 
+    // Subscribe to broadcast event from LocationService
     $rootScope.$on('Geolocation.changed', function(event, position) {
+        // Update own location on server if logged in
         if (APIService.loggedin()) {
             res.update({
+                // Player.id from user in server_info (currently logged in)
                 id: APIService.server_info.user.id
             },
             {
+                // Position from LocationService
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
             });
         }
     });
 
+    // Publish $resource service
     return res;
 });
 
+// Interceptor to transform API requests and responses
 app.factory('APIModelInterceptor', function() {
     return {
         response: function(response) {
@@ -58,6 +68,7 @@ app.factory('APIModelInterceptor', function() {
     };
 });
 
+// Configure HTTP provider
 app.config(function($httpProvider) {
     // Add a global interceptor to unwrap JSON data on query
     $httpProvider.interceptors.push('APIModelInterceptor');
