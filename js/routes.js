@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// All route definitions for app views
 app.config(function($routeProvider) {
     $routeProvider.when('/', {
         redirectTo: '/map'
