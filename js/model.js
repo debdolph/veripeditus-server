@@ -31,7 +31,13 @@ app.factory("Player", function($rootScope, $resource, APIService) {
 
     $rootScope.$on('Geolocation.changed', function(event, position) {
         if (APIService.loggedin()) {
-            res.update({id: APIService.server_info.user.id}, {latitude: position.coords.latitude, longitude: position.coords.longitude});
+            res.update({
+                id: APIService.server_info.user.id
+            },
+            {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            });
         }
     });
 
