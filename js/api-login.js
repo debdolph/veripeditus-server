@@ -96,23 +96,25 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
     }
 
     var server_info = {};
+    var data = {}
 
     // Look for auth string in session storage, then local storage
     var auth_string = $window.sessionStorage.auth_string || $window.localStorage.auth_string || "";
     if (auth_string) {
+        data.auth_string = auth_string;
         $log.info("APIService: Loaded known HTTP Basic Auth string");
     }
 
     return {
         login: function(username, password, remember) {
             // Encode HTTP basic auth string
-            this.auth_string = "Basic " + window.btoa(username + ":" + password);
+            data.auth_string = "Basic " + window.btoa(username + ":" + password);
 
             // Store auth string in session storage
-            $window.sessionStorage.auth_string = auth_string;
+            $window.sessionStorage.auth_string = data.auth_string;
             // Also store in local persistent storage if desired
             if (remember) {
-                $window.localStorage.auth_string = auth_string;
+                $window.localStorage.auth_string = data.auth_string;
             }
 
             $log.log("APIService: Stored new HTTP Basic Auth string");
@@ -122,7 +124,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
             Messages.add('info', 'You have been logged out.');
 
             // Unset and emove auth string from all storages
-            this.auth_string = "";
+            delete data['auth_string'];
             delete $window.sessionStorage['auth_string'];
             delete $window.localStorage['auth_string'];
 
@@ -132,7 +134,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
             return 'user' in this.server_info && 'id' in this.server_info.user;
         },
         server_info: server_info,
-        auth_string: auth_string
+        data: data
     };
 }).factory('APILoginInterceptor', function($q, $location, $rootScope, $log, $injector, APIService) {
     // Try to get Messages service
@@ -151,8 +153,8 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
 
     return {
         request: function(request) {
-            if (APIService.auth_string) {
-                request.headers.Authorization = APIService.auth_string;
+            if ('auth_string' in APIService.data) {
+                request.headers.Authorization = APIService.data.auth_string;
             }
 
             return request;
@@ -188,7 +190,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
                 $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
 
                 // Check if we were using authentication
-                if (APIService.auth_string) {
+                if ('auth_string' in APIService.data) {
                     // If yes, tell user their credentials are wrong
                     Messages.add('danger', 'Login failed.');
                 } else {
