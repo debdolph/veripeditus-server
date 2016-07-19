@@ -36,6 +36,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This service provides very basic authentication functionality by
+ * using nothing more than HTTP Basic Auth. It makes some assumptions:
+ *
+ *  1. All HTTP requests go to the same endpoint or, at least, endpints
+ *     expecting the same credentials.
+ *  2. Endpoints reliably return a status of 401 iff a request needs
+ *     authentication or the provided credentials could not be verified.
+ *  3. There is an ngRoute matching /login that this service redirects
+ *     to when it receives a 401 status.
+ *
+ * We deliberately decided to not use OAUth, any other token-based or
+ * session based authentication or anything else. The strategy of this
+ * authentication method is a radicalisation of RESTful combined with
+ * the KISS principle - HTTP Basic Auth is well-known, a mature
+ * standard, enough to authenticate a client and does not need any other
+ * state maintenance on the server or the client.
+ *
+ * To use the service, all you need to do is create a view, routed to
+ * from /login, that, after collecting credentials from the user, calls
+ * APIService.login(username, password, remember). If remember is
+ * truthy, the authentication string will be stored in localStorage and
+ * retrieved on instantiation of the service. If not, it will be stored
+ * in sessionStorage in order to survive page reloads.
+ *
+ * To get rid of the stored credentials, call APIService.logout().
+ *
+ * The service also extracts an object called server_info from JSON
+ * replies to any HTTP request. The idea is that every REST response
+ * conveys information about the server. This removes the need for
+ * separate retrieval of that information and allows the application to
+ * react to any changes immediately (like API version on updates, easing
+ * live migrations).
+ *
+ * If this server_info object contains an object named user, then this
+ * is taken to represent the user authenticated through HTTP Basic auth
+ * and is used by the service to determine successful login.
+ *
+ * The service is bound to the root scope, so you can directly access
+ * user information within the app.
+ *
+ * The Messages service is used to add floating messages on login,
+ * logout or error.
+ */
+
 app.factory('APIService', function($log, $window, Messages) {
     var server_info = {};
 
