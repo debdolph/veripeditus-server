@@ -74,9 +74,8 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
                     });
                     marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
                     marker.addTo($scope.map);
+                    $scope.player_markers[player.id] = marker;
                 }
-
-                $scope.player_markers[player.id] = marker;
             }
         });
     }
