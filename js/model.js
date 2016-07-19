@@ -43,7 +43,6 @@ app.factory('APIModelInterceptor', function() {
     };
 });
 
-// FIXME Ensure that this is the last interceptor to be called!
 app.config(function($httpProvider) {
     // Add a global interceptor to unwrap JSON data on query
     $httpProvider.interceptors.push('APIModelInterceptor');
