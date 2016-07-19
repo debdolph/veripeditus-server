@@ -83,13 +83,14 @@
 
 app.factory('APIService', function($log, $window, $injector) {
     // Try to get Messages service
+    var Messages;
     try {
-        var Messages = $injector.get('Messages');
+        Messages = $injector.get('Messages');
     } catch(error) {
         $log.warn("APIService: Messages service not available, adding stub.");
 
         // Add a stub making Messages calls no-op
-        var Messages = {add: function() {}}
+        Messages = {add: function() {}}
     }
 
     var server_info = {};
