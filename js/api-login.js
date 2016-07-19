@@ -132,7 +132,18 @@ angular.module('ngBasicAuth', []).factory('APIService',
         };
     }
 ).factory('APILoginInterceptor',
-    function($q, $location, $rootScope, $log, Messages, APIService) {
+    function($q, $location, $rootScope, $log, $injector, APIService) {
+        // Try to get Messages service
+        var Messages;
+        try {
+            Messages = $injector.get('Messages');
+        } catch(error) {
+            $log.warn("APIService: Messages service not available, adding stub.");
+
+            // Add a stub making Messages calls no-op
+            Messages = {add: function() {}, remove: function() {}}
+        }
+
         return {
             request: function(request) {
                 if (APIService.auth_string) {
