@@ -81,119 +81,120 @@
  * logout or error (optionally, if it is available).
  */
 
-angular.module('ngBasicAuth', []).factory('APIService',
-    function($log, $window, $injector) {
-        // Try to get Messages service
-        var Messages;
-        try {
-            Messages = $injector.get('Messages');
-        } catch(error) {
-            $log.warn("APIService: Messages service not available, adding stub.");
+angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, $injector) {
+    // Try to get Messages service
+    var Messages;
+    try {
+        Messages = $injector.get('Messages');
+    } catch(error) {
+        $log.warn("APIService: Messages service not available, adding stub.");
 
-            // Add a stub making Messages calls no-op
-            Messages = {add: function() {}}
+        // Add a stub making Messages calls no-op
+        Messages = {
+            add: function() {}
         }
-
-        var server_info = {};
-
-        // Look for auth string in session storage, then local storage
-        var auth_string = $window.sessionStorage.auth_string || $window.localStorage.auth_string || "";
-        if (auth_string) {
-            $log.info("APIService: Loaded known HTTP Basic Auth string");
-        }
-
-        return {
-            login: function(username, password, remember) {
-                // Encode HTTP basic auth string
-                this.auth_string = "Basic " + window.btoa(username + ":" + password);
-
-                // Store auth string in session storage
-                $window.sessionStorage.auth_string = auth_string;
-                // Also store in local persistent storage if desired
-                if (remember) {
-                    $window.localStorage.auth_string = auth_string;
-                }
-
-                $log.log("APIService: Stored new HTTP Basic Auth string");
-            },
-            logout: function() {
-                // Add floating message
-                Messages.add('info', 'You have been logged out.');
-
-                // Unset and emove auth string from all storages
-                this.auth_string = "";
-                delete $window.sessionStorage['auth_string'];
-                delete $window.localStorage['auth_string'];
-
-                $log.log("APIService: Removed HTTP Basic Auth string");
-            },
-            server_info: server_info,
-            auth_string: auth_string
-        };
     }
-).factory('APILoginInterceptor',
-    function($q, $location, $rootScope, $log, $injector, APIService) {
-        // Try to get Messages service
-        var Messages;
-        try {
-            Messages = $injector.get('Messages');
-        } catch(error) {
-            $log.warn("APIService: Messages service not available, adding stub.");
 
-            // Add a stub making Messages calls no-op
-            Messages = {add: function() {}, remove: function() {}}
-        }
+    var server_info = {};
 
-        return {
-            request: function(request) {
-                if (APIService.auth_string) {
-                    request.headers.Authorization = APIService.auth_string;
-                }
+    // Look for auth string in session storage, then local storage
+    var auth_string = $window.sessionStorage.auth_string || $window.localStorage.auth_string || "";
+    if (auth_string) {
+        $log.info("APIService: Loaded known HTTP Basic Auth string");
+    }
 
-                return request;
-            },
-            response: function(response) {
-                if (typeof response.data === "object" && 'server_info' in response.data) {
-                    // Copy server info if it is inside the response
-                    // Doing this for every response that has it for live migrations on server-side
-                    var new_server_info = angular.copy(angular.fromJson(response.data).server_info);
-                }
+    return {
+        login: function(username, password, remember) {
+            // Encode HTTP basic auth string
+            this.auth_string = "Basic " + window.btoa(username + ":" + password);
 
-                // Did a user entry appear?
-                if (new_server_info) {
-                    // Get old and new usernames
-                    var old_user = ('user' in APIService.server_info) && ('username' in APIService.server_info.user) ? APIService.server_info.user.username : "";
-                    var new_user = ('user' in new_server_info) && ('username' in new_server_info.user) ? new_server_info.user.username : "";
-
-                    if (old_user != new_user && new_user != "") {
-                        // Obviously we just logged in successfully
-                        $log.info("APIService: Successful login with HTTP Basic Auth string");
-                        Messages.add('success', 'Login successful.');
-                    }
-
-                    // Store new server info
-                    APIService.server_info = angular.copy(new_server_info);
-                }
-
-                // Return (possibly modified) response
-                return response;
-            },
-            responseError: function(response) {
-                if (response.status == 401) {
-                    $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
-
-                    // Check if we were using authentication
-                    if (APIService.auth_string) {
-                        // If yes, tell user their credentials are wrong
-                        Messages.add('danger', 'Login failed.');
-                    } else {
-                        // If not, tell the user they need to log in now
-                        Messages.add('info', 'You need to login for this to work.');
-                    }
-                    return $location.path("/login");
-                }
-                return $q.reject(response);
+            // Store auth string in session storage
+            $window.sessionStorage.auth_string = auth_string;
+            // Also store in local persistent storage if desired
+            if (remember) {
+                $window.localStorage.auth_string = auth_string;
             }
-        };
+
+            $log.log("APIService: Stored new HTTP Basic Auth string");
+        },
+        logout: function() {
+            // Add floating message
+            Messages.add('info', 'You have been logged out.');
+
+            // Unset and emove auth string from all storages
+            this.auth_string = "";
+            delete $window.sessionStorage['auth_string'];
+            delete $window.localStorage['auth_string'];
+
+            $log.log("APIService: Removed HTTP Basic Auth string");
+        },
+        server_info: server_info,
+        auth_string: auth_string
+    };
+}).factory('APILoginInterceptor', function($q, $location, $rootScope, $log, $injector, APIService) {
+    // Try to get Messages service
+    var Messages;
+    try {
+        Messages = $injector.get('Messages');
+    } catch(error) {
+        $log.warn("APIService: Messages service not available, adding stub.");
+
+        // Add a stub making Messages calls no-op
+        Messages = {
+            add: function() {},
+            remove: function() {}
+        }
     }
-);
+
+    return {
+        request: function(request) {
+            if (APIService.auth_string) {
+                request.headers.Authorization = APIService.auth_string;
+            }
+
+            return request;
+        },
+        response: function(response) {
+            if (typeof response.data === "object" && 'server_info' in response.data) {
+                // Copy server info if it is inside the response
+                // Doing this for every response that has it for live migrations on server-side
+                var new_server_info = angular.copy(angular.fromJson(response.data).server_info);
+            }
+
+            // Did a user entry appear?
+            if (new_server_info) {
+                // Get old and new usernames
+                var old_user = ('user' in APIService.server_info) && ('username' in APIService.server_info.user) ? APIService.server_info.user.username : "";
+                var new_user = ('user' in new_server_info) && ('username' in new_server_info.user) ? new_server_info.user.username : "";
+
+                if (old_user != new_user && new_user != "") {
+                    // Obviously we just logged in successfully
+                    $log.info("APIService: Successful login with HTTP Basic Auth string");
+                    Messages.add('success', 'Login successful.');
+                }
+
+                // Store new server info
+                APIService.server_info = angular.copy(new_server_info);
+            }
+
+            // Return (possibly modified) response
+            return response;
+        },
+        responseError: function(response) {
+            if (response.status == 401) {
+                $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
+
+                // Check if we were using authentication
+                if (APIService.auth_string) {
+                    // If yes, tell user their credentials are wrong
+                    Messages.add('danger', 'Login failed.');
+                } else {
+                    // If not, tell the user they need to log in now
+                    Messages.add('info', 'You need to login for this to work.');
+                }
+                return $location.path("/login");
+            }
+            return $q.reject(response);
+        }
+    };
+});
