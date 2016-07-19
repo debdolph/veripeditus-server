@@ -40,17 +40,16 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
         // Get bounds of map
         var bounds = $scope.map.getBounds();
         // Construct JSON query filter for REST API
-        var query = {'and': [
+        var query = {'filters': [{'and': [
                              {'name': 'latitude', 'op': 'ge', 'val': bounds.getSouth()},
                              {'name': 'latitude', 'op': 'le', 'val': bounds.getNorth()},
                              {'name': 'longitude', 'op': 'ge', 'val': bounds.getWest()},
                              {'name': 'longitude', 'op': 'le', 'val': bounds.getEast()}
-                            ]
+                            ]}]
                      };
 
         $log.debug("Querying players within (" + bounds.getSouth() + ", " + bounds.getWest() + ") (" + bounds.getNorth() + ", " + bounds.getEast() + ")");
 
-        // FIXME returns all players for some reason
         Player.query({q: angular.toJson(query)}, function(data) {
             $scope.players = data;
 
