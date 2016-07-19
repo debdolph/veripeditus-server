@@ -27,15 +27,19 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo($scope.map);
 
+    // Add initial marker for own position
     $scope.marker_self = L.marker([LocationService.position.coords.latitude, LocationService.position.coords.longitude]);
     $scope.marker_self.addTo($scope.map);
     $scope.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
     $scope.circle_self.addTo($scope.map);
 
+    // Initially center map view to own position
     $scope.map.setView($scope.marker_self.getLatLng(), 16);
 
+    // Already created markers for players will be stored here.
     $scope.player_markers = {};
 
+    // Function that loads all players in the visible map area, to be used as
     function getPlayersOnMap() {
         // Get bounds of map
         var bounds = $scope.map.getBounds();
@@ -65,34 +69,44 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
             }]
         };
 
+        // Send query to REST API
         $log.debug("Querying players within (" + bounds.getSouth() + ", " + bounds.getWest() + ") (" + bounds.getNorth() + ", " + bounds.getEast() + ")");
-
         Player.query({
             q: query
         },
         function(data) {
+            // Store entire response
             $scope.players = data;
 
             // Iterate over players and add map markers
             for (var i = 0; i < $scope.players.length; i++) {
                 var player = $scope.players[i];
 
+                // Look for already created marker for this player id
                 var marker = $scope.player_markers[player.id];
                 if (marker) {
+                    // Marker exists, store location
                     marker.setLatLng([player.latitude, player.longitude]);
-
                     $log.debug("Map: Reusing marker for player id " + player.id);
                 } else {
+                    // Marker does not exist
                     $log.debug("Map: Creating new marker for player id " + player.id);
 
+                    // Construct marker icon from base64 encoded player avatar
                     var picon = L.icon({
                         'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
                         'iconSize': [32, 32],
                     });
+
+                    // Create marker at player location
                     marker = L.marker([player.latitude, player.longitude], {
                         'icon': picon
                     });
+
+                    // Create simple popup with basic information
                     marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
+
+                    // Add marker to map and store to known markers
                     marker.addTo($scope.map);
                     $scope.player_markers[player.id] = marker;
                 }
@@ -100,16 +114,25 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
         });
     }
 
+    // Subscribe to broadcast event from LocationService
     $scope.$on('Geolocation.changed', function(event, position) {
+        // Update position of own marker
         $scope.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
+
+        // Update accuracy radius around own marker
         $scope.circle_self.setLatLng($scope.marker_self.getLatLng());
         $scope.circle_self.setRadius(position.coords.accuracy);
+
+        // Center map at own marker
         $scope.map.setView($scope.marker_self.getLatLng());
     });
 
+    // Subscribe to event on change of map view
     $scope.map.on('moveend', function(event) {
+        // Update players on new map view
         getPlayersOnMap();
     });
 
+    // Initially get players
     getPlayersOnMap();
 });
