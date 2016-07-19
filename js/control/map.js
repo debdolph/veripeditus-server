@@ -68,7 +68,7 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
         $log.debug("Querying players within (" + bounds.getSouth() + ", " + bounds.getWest() + ") (" + bounds.getNorth() + ", " + bounds.getEast() + ")");
 
         Player.query({
-            q: angular.toJson(query)
+            q: query
         },
         function(data) {
             $scope.players = data;
