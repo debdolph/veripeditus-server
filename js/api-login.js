@@ -128,6 +128,9 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
 
             $log.log("APIService: Removed HTTP Basic Auth string");
         },
+        loggedin: function() {
+            return 'user' in this.server_info && 'id' in this.server_info.user;
+        },
         server_info: server_info,
         auth_string: auth_string
     };
