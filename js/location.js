@@ -25,13 +25,14 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
     };
 
     var watchId;
-    var position = {};
+    var position = {coords: {latitude: 0.0, longitude: 0.0}};
 
     // Callback for Geolocation's watchPosition()
     function onLocationUpdate(newpos) {
         $rootScope.$apply(function() {
             position.coords = newpos.coords;
             position.timestamp = newpos.timestamp;
+            $rootScope.$broadcast('Geolocation.changed', position);
         });
     }
 

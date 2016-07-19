@@ -1,6 +1,7 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
  * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -18,19 +19,30 @@
 
 /** global: L */
 
-app.controller('ViewMapController', function($scope, Player) {
+app.controller('ViewMapController', function($scope, Player, LocationService) {
     // Set up map view
-    var map = L.map("map");
+    $scope.map = L.map("map");
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    }).addTo($scope.map);
+
+    $scope.marker_self = L.marker([LocationService.position.coords.latitude, LocationService.position.coords.longitude]);
+    $scope.marker_self.addTo($scope.map);
+    $scope.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
+    $scope.circle_self.addTo($scope.map);
+
+    $scope.map.setView($scope.marker_self.getLatLng(), 16);
+
+    $scope.$on('Geolocation.changed', function(event, position) {
+        $scope.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
+        $scope.circle_self.setLatLng($scope.marker_self.getLatLng());
+        $scope.circle_self.setRadius(position.coords.accuracy);
+        $scope.map.setView($scope.marker_self.getLatLng());
+    });
 
     Player.query(function(data) {
         $scope.players = data;
-
-        // FIXME: Use a more intelligent way to find map center!
-        map.setView([$scope.players[0].latitude, $scope.players[0].longitude], 16);
 
         // Iterate over players and add map markers
         for (var i = 0; i < $scope.players.length; i++) {
@@ -43,7 +55,7 @@ app.controller('ViewMapController', function($scope, Player) {
                 'icon': picon
             });
             marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
-            marker.addTo(map);
+            marker.addTo($scope.map);
         }
     });
 });
