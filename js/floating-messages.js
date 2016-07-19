@@ -64,13 +64,15 @@ angular.module('ngFloatingMessages', []).factory('Messages', function($timeout) 
     // contains a set of id: {class: 'alert class', message: 'foo'} objects
     var msgs = {}
 
+    // Remove the message
     function remove(id) {
-        // Clear the timer first
+        // Clear the timer first, in case we got called manually
         $timeout.cancel(msgs[id].tid);
         delete msgs[id];
     }
 
     return {
+        // Add a message
         add: function(cls, message) {
             // Find next numeric id
             if (Object.keys(msgs).length > 0) {
@@ -79,6 +81,7 @@ angular.module('ngFloatingMessages', []).factory('Messages', function($timeout) 
                 id = 0;
             }
 
+            // Add desired content with found id
             this.msgs[id] = {
                 'class': cls,
                 'message': message
