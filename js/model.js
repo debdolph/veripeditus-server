@@ -18,7 +18,7 @@
 
 var default_update = {
     'update': {
-        method: 'PUT'
+        method: 'PATCH'
     }
 };
 
