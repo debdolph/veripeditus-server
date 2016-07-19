@@ -21,6 +21,7 @@ $(function() {
     // Used to automatically restyle content area when window size changes,
     // because that might resize the header and footer areas as well
     var resizeFunction = function() {
+        // Get heights of header and footer
         var header = document.getElementById("navbar-header").offsetHeight;
         var footer = document.getElementById("footer").offsetHeight;
 
@@ -32,9 +33,14 @@ $(function() {
             $("#footer").show();
         }
 
+        // Update top and height style attributes of outer container to
+        // fit in between header and footer
         $("#content-outer").css("top", header).height($(window).height() - header - footer);
     };
+
+    // Initially call resizing code once
     resizeFunction();
+    // Subscribe to window resize event
     $(window).on('resize', resizeFunction);
 
     // Collapse navbar on menu click
