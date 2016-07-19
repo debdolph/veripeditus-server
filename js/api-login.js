@@ -78,10 +78,20 @@
  * user information within the app.
  *
  * The Messages service is used to add floating messages on login,
- * logout or error.
+ * logout or error (optionally, if it is available).
  */
 
-app.factory('APIService', function($log, $window, Messages) {
+app.factory('APIService', function($log, $window, $injector) {
+    // Try to get Messages service
+    try {
+        Messages = $injector.get('Messages');
+    } catch(error) {
+        $log.warn("APIService: Messages service not available, adding stub.");
+
+        // Add a stub making Messages calls no-op
+        Messages = {add: function(a, b) {}}
+    }
+
     var server_info = {};
 
     // Look for auth string in session storage, then local storage
