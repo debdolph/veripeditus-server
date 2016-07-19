@@ -1,6 +1,7 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
  * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -22,11 +23,19 @@ var default_update = {
     }
 };
 
-app.factory("Player", function($resource) {
-    return $resource("/api/player/:id", {
+app.factory("Player", function($rootScope, $resource, APIService) {
+    var res = $resource("/api/player/:id", {
         id: '@id'
     },
     default_update);
+
+    $rootScope.$on('Geolocation.changed', function(event, position) {
+        if (APIService.loggedin()) {
+            res.update({id: APIService.server_info.user.id}, {latitude: position.coords.latitude, longitude: position.coords.longitude});
+        }
+    });
+
+    return res;
 });
 
 app.factory('APIModelInterceptor', function() {
