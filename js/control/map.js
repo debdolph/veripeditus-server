@@ -60,6 +60,8 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
 
                 var marker = $scope.player_markers[player.id];
                 if (marker) {
+                    marker.setLatLng([player.latitude, player.longitude]);
+
                     $log.debug("Map: Reusing marker for player id " + player.id);
                 } else {
                     $log.debug("Map: Creating new marker for player id " + player.id);
