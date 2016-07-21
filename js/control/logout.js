@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.controller('ViewLogoutController', function($scope, $window, APIService) {
-    APIService.logout();
+app.controller('ViewLogoutController', function($scope, $window, APIBasicAuth) {
+    APIBasicAuth.logout();
     $window.history.back();
 });

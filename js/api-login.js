@@ -56,7 +56,7 @@
  *
  * To use the service, all you need to do is create a view, routed to
  * from /login, that, after collecting credentials from the user, calls
- * APIService.login(username, password, remember). If remember is
+ * APIBasicAuth.login(username, password, remember). If remember is
  * truthy, the authentication string will be stored in localStorage and
  * retrieved on instantiation of the service. If not, it will be stored
  * in sessionStorage in order to survive page reloads. Also, add the
@@ -64,7 +64,7 @@
  *
  *  $httpProvider.interceptors.push('APILoginInterceptor');
  *
- * To get rid of the stored credentials, call APIService.logout().
+ * To get rid of the stored credentials, call APIBasicAuth.logout().
  *
  * The service also extracts an object called server_info from JSON
  * replies to any HTTP request. The idea is that every REST response
@@ -81,13 +81,13 @@
  * logout or error (optionally, if it is available).
  */
 
-angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, $injector) {
+angular.module('ngBasicAuth', []).factory('APIBasicAuth', function($log, $window, $injector) {
     // Try to get Messages service
     var Messages;
     try {
         Messages = $injector.get('Messages');
     } catch(error) {
-        $log.warn("APIService: Messages service not available, adding stub.");
+        $log.warn("APIBasicAuth: Messages service not available, adding stub.");
 
         // Add a stub making Messages calls no-op
         Messages = {
@@ -102,7 +102,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
     var auth_string = $window.sessionStorage.auth_string || $window.localStorage.auth_string || "";
     if (auth_string) {
         data.auth_string = auth_string;
-        $log.info("APIService: Loaded known HTTP Basic Auth string");
+        $log.info("APIBasicAuth: Loaded known HTTP Basic Auth string");
     }
 
     return {
@@ -117,7 +117,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
                 $window.localStorage.auth_string = data.auth_string;
             }
 
-            $log.log("APIService: Stored new HTTP Basic Auth string");
+            $log.log("APIBasicAuth: Stored new HTTP Basic Auth string");
         },
         logout: function() {
             // Add floating message
@@ -128,7 +128,7 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
             delete $window.sessionStorage['auth_string'];
             delete $window.localStorage['auth_string'];
 
-            $log.log("APIService: Removed HTTP Basic Auth string");
+            $log.log("APIBasicAuth: Removed HTTP Basic Auth string");
         },
         loggedin: function() {
             return 'user' in this.server_info && 'id' in this.server_info.user;
@@ -136,13 +136,13 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
         server_info: server_info,
         data: data
     };
-}).factory('APILoginInterceptor', function($q, $location, $rootScope, $log, $injector, APIService) {
+}).factory('APILoginInterceptor', function($q, $location, $rootScope, $log, $injector, APIBasicAuth) {
     // Try to get Messages service
     var Messages;
     try {
         Messages = $injector.get('Messages');
     } catch(error) {
-        $log.warn("APIService: Messages service not available, adding stub.");
+        $log.warn("APIBasicAuth: Messages service not available, adding stub.");
 
         // Add a stub making Messages calls no-op
         Messages = {
@@ -153,8 +153,8 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
 
     return {
         request: function(request) {
-            if ('auth_string' in APIService.data) {
-                request.headers.Authorization = APIService.data.auth_string;
+            if ('auth_string' in APIBasicAuth.data) {
+                request.headers.Authorization = APIBasicAuth.data.auth_string;
             }
 
             return request;
@@ -169,17 +169,17 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
             // Did a user entry appear?
             if (new_server_info) {
                 // Get old and new usernames
-                var old_user = ('user' in APIService.server_info) && ('username' in APIService.server_info.user) ? APIService.server_info.user.username : "";
+                var old_user = ('user' in APIBasicAuth.server_info) && ('username' in APIBasicAuth.server_info.user) ? APIBasicAuth.server_info.user.username : "";
                 var new_user = ('user' in new_server_info) && ('username' in new_server_info.user) ? new_server_info.user.username : "";
 
                 if (old_user != new_user && new_user != "") {
                     // Obviously we just logged in successfully
-                    $log.info("APIService: Successful login with HTTP Basic Auth string");
+                    $log.info("APIBasicAuth: Successful login with HTTP Basic Auth string");
                     Messages.add('success', 'Login successful.');
                 }
 
                 // Store new server info
-                APIService.server_info = angular.copy(new_server_info);
+                APIBasicAuth.server_info = angular.copy(new_server_info);
             }
 
             // Return (possibly modified) response
@@ -187,15 +187,15 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
         },
         responseError: function(response) {
             if (response.status == 401) {
-                $log.warn("APIService: HTTP Basic Auth failed, redirecting to login");
+                $log.warn("APIBasicAuth: HTTP Basic Auth failed, redirecting to login");
 
                 // Check if we were using authentication
-                if ('auth_string' in APIService.data) {
+                if ('auth_string' in APIBasicAuth.data) {
                     // If yes, tell user their credentials are wrong
                     Messages.add('danger', 'Login failed.');
 
                     // Log out to invalidate stored credentials
-                    APIService.logout();
+                    APIBasicAuth.logout();
                 } else {
                     // If not, tell the user they need to log in now
                     Messages.add('info', 'You need to login for this to work.');

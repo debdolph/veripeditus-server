@@ -26,7 +26,7 @@ var default_update = {
 };
 
 // Service for the Player API object
-app.factory("Player", function($rootScope, $resource, APIService) {
+app.factory("Player", function($rootScope, $resource, APIBasicAuth) {
     // Define $resource service to API endpoint
     var res = $resource("/api/player/:id", {
         id: '@id'
@@ -36,10 +36,10 @@ app.factory("Player", function($rootScope, $resource, APIService) {
     // Subscribe to broadcast event from LocationService
     $rootScope.$on('Geolocation.changed', function(event, position) {
         // Update own location on server if logged in
-        if (APIService.loggedin()) {
+        if (APIBasicAuth.loggedin()) {
             res.update({
                 // Player.id from user in server_info (currently logged in)
-                id: APIService.server_info.user.id
+                id: APIBasicAuth.server_info.user.id
             },
             {
                 // Position from LocationService

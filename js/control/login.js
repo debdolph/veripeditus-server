@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.controller('ViewLoginController', function($scope, $window, APIService) {
+app.controller('ViewLoginController', function($scope, $window, APIBasicAuth) {
     $scope.login = function() {
-        APIService.login($scope.username, $scope.password, $scope.remember);
+        APIBasicAuth.login($scope.username, $scope.password, $scope.remember);
         // FIXME: Only on success
         $window.history.back();
     };
