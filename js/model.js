@@ -70,6 +70,8 @@ app.factory('APIModelInterceptor', function() {
 
 // Configure HTTP provider
 app.config(function($httpProvider) {
+    // Add a global interceptor for ngFancyREST
+    $httpProvider.interceptors.push('APIInterceptor');
     // Add a global interceptor to unwrap JSON data on query
     $httpProvider.interceptors.push('APIModelInterceptor');
     // Add a global interceptor that watches for a 401 status

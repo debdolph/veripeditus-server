@@ -19,13 +19,14 @@
 var VERSION = "0.1";
 
 // Main application module
-var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'gettext', 'ngBasicAuth', 'ngFloatingMessages']);
+var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'gettext', 'ngFancyREST', 'ngBasicAuth', 'ngFloatingMessages']);
 
 // One-time setup code for entire application
-app.run(function($rootScope, APIBasicAuth, LocationService, Messages) {
+app.run(function($rootScope, APIService, APIBasicAuth, LocationService, Messages) {
     // Publish some constants and services to all scopes
     $rootScope.VERSION = VERSION;
     $rootScope.APIBasicAuth = APIBasicAuth;
+    $rootScope.APIService = APIService;
     $rootScope.Messages = Messages;
     $rootScope.LocationService = LocationService;
 
