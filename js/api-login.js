@@ -193,6 +193,9 @@ angular.module('ngBasicAuth', []).factory('APIService', function($log, $window, 
                 if ('auth_string' in APIService.data) {
                     // If yes, tell user their credentials are wrong
                     Messages.add('danger', 'Login failed.');
+
+                    // Log out to invalidate stored credentials
+                    APIService.logout();
                 } else {
                     // If not, tell the user they need to log in now
                     Messages.add('info', 'You need to login for this to work.');
