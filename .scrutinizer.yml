@@ -1,7 +1,3 @@
-build:
-    tests:
-        override:
-            command: 'jasmine'
 checks:
     javascript: true
 filter:
