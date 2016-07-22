@@ -36,13 +36,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** global ObjRingbuffer */
+
 angular.module('ngFancyREST', []).factory('APIService', function($log, $window) {
     var metrics = new ObjRingbuffer(100);
 
     return {
         metrics: metrics
     };
-}).factory('APIInterceptor', function($q, $log, $window, APIService) {
+}).factory('APIInterceptor', function($q, APIService) {
     return {
         request: function(request) {
             // Add time of request passing interceptor to determine RTT later

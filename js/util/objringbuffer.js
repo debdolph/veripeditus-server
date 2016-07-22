@@ -79,7 +79,7 @@ ObjRingbuffer.prototype.push = function(obj) {
 ObjRingbuffer.prototype.min = function(field) {
     var m = this.objects[0][field];
 
-    for (i = 0; i < this.objects.length; i++) {
+    for (var i = 0; i < this.objects.length; i++) {
         if (this.objects[i][field] < m) {
             m = this.objects[i][field];
         }
@@ -91,7 +91,7 @@ ObjRingbuffer.prototype.min = function(field) {
 ObjRingbuffer.prototype.max = function(field) {
     var m = this.objects[0][field];
 
-    for (i = 0; i < this.objects.length; i++) {
+    for (var i = 0; i < this.objects.length; i++) {
         if (this.objects[i][field] > m) {
             m = this.objects[i][field];
         }
@@ -103,7 +103,7 @@ ObjRingbuffer.prototype.max = function(field) {
 ObjRingbuffer.prototype.average = function(field) {
     var s = 0;
 
-    for (i = 0; i < this.objects.length; i++) {
+    for (var i = 0; i < this.objects.length; i++) {
         s += this.objects[i][field];
     }
 

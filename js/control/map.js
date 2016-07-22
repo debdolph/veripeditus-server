@@ -128,7 +128,7 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
     });
 
     // Subscribe to event on change of map view
-    $scope.map.on('moveend', function(event) {
+    $scope.map.on('moveend', function() {
         // Update players on new map view
         getPlayersOnMap();
     });
