@@ -56,7 +56,9 @@ angular.module('ngFancyREST', []).factory('APIService', function($log, $window) 
                 response.config.time_recv = $window.performance.now();
 
                 // Add data to metrics buffer
-                APIService.metrics.push({rtt: response.config.time_recv - response.config.time_send});
+                APIService.metrics.push({
+                    rtt: response.config.time_recv - response.config.time_send
+                });
             }
 
             return response;
