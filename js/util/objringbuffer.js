@@ -59,6 +59,7 @@
 
 function ObjRingbuffer(size) {
     this.size = size;
+    this.pointer = 0;
     this.objects = [];
 }
 
@@ -71,13 +72,8 @@ ObjRingbuffer.prototype.isFull = function() {
 }
 
 ObjRingbuffer.prototype.push = function(obj) {
-    this.objects.unshift(obj);
-
-    if (this.objects.length > this.size) {
-        this.objects.pop();
-    }
-
-    this.last = obj;
+    this.pointer = (this.pointer + 1) % this.size;
+    this.objects[this.pointer] = obj;
 }
 
 ObjRingbuffer.prototype.min = function(field) {
@@ -112,4 +108,8 @@ ObjRingbuffer.prototype.average = function(field) {
     }
 
     return s / this.objects.length;
+}
+
+ObjRingbuffer.prototype.last = function() {
+    return this.objects[this.pointer];
 }
