@@ -30,4 +30,5 @@ Rumour has it that there is also a version for iOS.
 
 ## Code state
 
+[![Build Status](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-web/?branch=master)
