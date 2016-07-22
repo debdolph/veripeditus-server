@@ -37,11 +37,7 @@
  */
 
 angular.module('ngFancyREST', []).factory('APIService', function($log, $window) {
-    var metrics = {
-                   rtt: {
-                         last: 0
-                        }
-                  };
+    var metrics = new ObjRingbuffer(100);
 
     return {
         metrics: metrics
@@ -58,7 +54,9 @@ angular.module('ngFancyREST', []).factory('APIService', function($log, $window) 
             if ('time_send' in response.config) {
                 // Get time of repsonse passing interceptor and determine rtt
                 response.config.time_recv = $window.performance.now();
-                APIService.metrics.rtt.last = response.config.time_recv - response.config.time_send;
+
+                // Add data to metrics buffer
+                APIService.metrics.push({rtt: response.config.time_recv - response.config.time_send});
             }
 
             return response;

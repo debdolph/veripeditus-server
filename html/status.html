@@ -6,8 +6,15 @@
   <span class="badge">{{ VERSION }}</span>
  </li>
  <li class="list-group-item">
-  Last API round trip time
-  <span class="badge">{{ APIService.metrics.rtt.last }}</span>
+  API server network statistics
+  <ul class="list-group">
+   <li class="list-group-item">
+    HTTP request round trip time
+    <span class="label label-success">{{ APIService.metrics.min('rtt')|number:1 }} ms</span>
+    <span class="label label-warning">{{ APIService.metrics.average('rtt')|number:1 }} ms</span>
+    <span class="label label-danger">{{ APIService.metrics.max('rtt')|number:1 }} ms</span>
+   </li>
+  </ul>
  </li>
  <li class="list-group-item" ng-class="LocationService.position ? 'list-group-item-success' : 'list-group-item-danger'">
   Device location
