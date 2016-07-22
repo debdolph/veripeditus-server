@@ -1,5 +1,7 @@
 build:
     tests:
+        before:
+            - 'npm -g install jasmine'
         override:
             command: 'jasmine'
 checks:
