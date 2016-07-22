@@ -3,7 +3,7 @@
 <ul class="list-group">
  <li class="list-group-item">
   Veripeditus web app version
-  <span class="badge">{{ VERSION }}</span>
+  <span class="label">{{ VERSION }}</span>
  </li>
  <li class="list-group-item">
   API server network statistics
@@ -19,7 +19,7 @@
  <li class="list-group-item" ng-class="LocationService.position ? 'list-group-item-success' : 'list-group-item-danger'">
   Device location
   <span class="glyphicon" ng-class="LocationService.position ? 'glyphicon-ok' : 'glyphicon-warning-sign'"></span>
-  <span class="badge">{{ LocationService.position.coords.latitude }}</span>
-  <span class="badge">{{ LocationService.position.coords.longitude }}</span>
+  <span class="label">{{ LocationService.position.coords.latitude }}</span>
+  <span class="label">{{ LocationService.position.coords.longitude }}</span>
  </li>
 </ul>
