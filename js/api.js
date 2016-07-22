@@ -44,7 +44,7 @@ angular.module('ngFancyREST', []).factory('APIService', function($log, $window) 
     return {
         metrics: metrics
     };
-}).factory('APIInterceptor', function($q, APIService) {
+}).factory('APIInterceptor', function($q, $window, APIService) {
     return {
         request: function(request) {
             // Add time of request passing interceptor to determine RTT later
