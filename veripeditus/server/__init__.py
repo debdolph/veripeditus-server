@@ -46,7 +46,7 @@ def server_main(): # pragma: no cover
             return send_from_directory(APP.config['PATH_WEBAPP'], path)
 
     if args.gzip:
-        from flask.ext.compress import Compress
+        from flask_compress import Compress
         Compress(APP)
 
     APP.run(host=args.host, port=int(args.port))

@@ -1,7 +1,7 @@
 build:
     tests:
         before:
-            - 'pip3 install pylint pylint-flask Coverage'
+            - 'pip3 install pylint Coverage'
         override:
             -
                 command: 'coverage run --include="*veripeditus*" setup.py test'

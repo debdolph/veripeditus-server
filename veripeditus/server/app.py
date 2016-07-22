@@ -19,8 +19,8 @@ Main server application
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import Flask, jsonify
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.restless import url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_restless import url_for
 
 APP = Flask(__name__)
 
