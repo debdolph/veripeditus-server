@@ -1,5 +1,4 @@
 /*
- * veripeditus-web - Web frontend to the veripeditus server
  * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,20 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * -or-
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, you are free to use this software under any of
+ * LGPL-2+, AGPL-3+, Simplified BSD or The MirOS Licence.
  */
 
 /*
