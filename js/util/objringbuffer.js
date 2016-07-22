@@ -59,7 +59,7 @@
 
 function ObjRingbuffer(size) {
     this.size = size;
-    this.pointer = 0;
+    this.pointer = -1;
     this.objects = [];
 }
 
