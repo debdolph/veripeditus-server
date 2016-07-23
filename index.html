@@ -40,10 +40,10 @@
     <div ng-view id="content-wrapper"></div>
 
     <div id="control-overlay">
-      <div id="control-login" class="control control-round" ng-if="!APIBasicAuth.loggedin()">
+      <div id="control-login" class="control control-round" ng-click="$location.path('/login')" ng-if="!APIBasicAuth.loggedin()">
         <object type="image/svg+xml" data="img/ui/btn-login.svg" class="control-round-icon"></object>
       </div>
-      <div id="control-login" class="control control-round" ng-if="APIBasicAuth.loggedin()">
+      <div id="control-login" class="control control-round" ng-click="$location.path('/logout')" ng-if="APIBasicAuth.loggedin()">
         Logout
       </div>
     </div>
