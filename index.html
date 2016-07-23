@@ -29,37 +29,6 @@
  </head>
 
  <body>
-  <nav id="navbar" class="navbar navbar-default" role="navigation">
-   <div class="container-fluid">
-    <div id="navbar-header" class="navbar-header">
-     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-      <span class="sr-only" translate>Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-     </button>
-     <a class="navbar-brand" href="#/">
-      <span><object type="image/svg+xml" data="img/logo.svg" id="logo"></object></span>
-      <span id="logo-text">Veripeditus</span>
-     </a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="navbar-collapse-1">
-     <ul class="nav navbar-nav">
-      <li><a href="#/map"><span class="glyphicon glyphicon-map-marker"></span> <translate>Map</translate></a></li>
-     </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="! APIBasicAuth.server_info.user.id">
-      <li><a href="#/login"><span class="glyphicon glyphicon-ok"></span> <translate>Login</translate></a></li>
-      <li><a href="#/register"><span class="glyphicon glyphicon-plus"></span> <translate>Register</translate></a></li>
-     </ul>
-     <ul class="nav navbar-nav navbar-right" ng-if="APIBasicAuth.server_info.user.id">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ APIBasicAuth.server_info.user.name }}</a></li>
-      <li><a href="#/logout"><span class="glyphicon glyphicon-off"></span> <translate>Logout</translate></a></li>
-     </ul>
-    </div>
-   </div>
-  </nav>
-
   <div id="content-outer">
     <div id="floating-messages" class="col-xs-12 col-md-3 col-md-push-9">
       <div class="alert alert-{{ msg.class }}" ng-repeat="(id, msg) in Messages.msgs">
@@ -70,13 +39,6 @@
 
     <div ng-view id="content-wrapper"></div>
   </div>
-
-  <footer id="footer">
-    <p class="text-muted">
-     Veripeditus v{{ APIBasicAuth.server_info.version }} (server) / v{{ VERSION }} (webapp)<br/>
-     © 2015,2016 Dominik George, Eike Tim Jesinghaus · <translate>Licensed under</translate> AGPL-3+
-    </p>
-  </footer>
 
   <script src="lib/jquery/jquery.js"></script>
   <script src="lib/bootstrap/js/bootstrap.js"></script>
