@@ -1,20 +1,22 @@
-<h1>Login to Veripeditus</h1>
+<div ng-controller="ViewLoginController">
+  <h1>Login to Veripeditus</h1>
 
-<form novalidate>
-  <fieldset class="form-group">
-    <label for="username">User name</label>
-    <input type="text" ng-model="username" class="form-control" id="username" placeholder="Enter your username">
-  </fieldset>
-  <fieldset class="form-group">
-    <label for="password">Password</label>
-    <input type="password" ng-model="password" class="form-control" id="password" placeholder="Enter your password">
-  </fieldset>
-  <fieldset class="form-group">
-    <input type="checkbox" ng-model="remember" class="form-control" id="remember">
-    <label for="remember">Remember login</label>
-  </fieldset>
-  <button type="submit" ng-click="login()" class="btn btn-primary">Login</button>
-  <a href="#/register">
-   <button class="btn">Register</button>
-  </a>
-</form>
+  <form novalidate>
+    <fieldset class="form-group">
+      <label for="username">User name</label>
+      <input type="text" ng-model="username" class="form-control" id="username" placeholder="Enter your username">
+    </fieldset>
+    <fieldset class="form-group">
+      <label for="password">Password</label>
+      <input type="password" ng-model="password" class="form-control" id="password" placeholder="Enter your password">
+    </fieldset>
+    <fieldset class="form-group">
+      <input type="checkbox" ng-model="remember" class="form-control" id="remember">
+      <label for="remember">Remember login</label>
+    </fieldset>
+    <button type="submit" ng-click="login()" class="btn btn-primary" data-dismiss="modal">Login</button>
+    <a href="#/register">
+     <button class="btn">Register</button>
+    </a>
+  </form>
+</div>

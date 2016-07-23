@@ -20,9 +20,6 @@
 app.config(function($routeProvider) {
     $routeProvider.when('/', {
         redirectTo: '/map'
-    }).when('/login', {
-        templateUrl: 'html/login.html',
-        controller: 'ViewLoginController'
     }).when('/logout', {
         templateUrl: 'html/logout.html',
         controller: 'ViewLogoutController'
