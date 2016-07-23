@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.controller('ViewRegisterController', function($scope, Player) {
+app.controller('ViewRegisterController', function($scope, $window, Player) {
     $scope.register = function() {
         // Create and fill Player object
         var player = new Player({
@@ -28,5 +28,7 @@ app.controller('ViewRegisterController', function($scope, Player) {
 
         // Submit Player object via REST API
         player.$save();
+
+        $window.history.back();
     };
 });
