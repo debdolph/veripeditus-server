@@ -1,0 +1,25 @@
+<h1>Veripeditus Status</h1>
+
+<ul class="list-group">
+ <li class="list-group-item">
+  Veripeditus web app version
+  <span class="label">{{ VERSION }}</span>
+ </li>
+ <li class="list-group-item">
+  API server network statistics
+  <ul class="list-group">
+   <li class="list-group-item">
+    HTTP request round trip time
+    <span class="label label-success">{{ APIService.metrics.min('rtt')|number:1 }} ms</span>
+    <span class="label label-warning">{{ APIService.metrics.average('rtt')|number:1 }} ms</span>
+    <span class="label label-danger">{{ APIService.metrics.max('rtt')|number:1 }} ms</span>
+   </li>
+  </ul>
+ </li>
+ <li class="list-group-item" ng-class="LocationService.position ? 'list-group-item-success' : 'list-group-item-danger'">
+  Device location
+  <span class="glyphicon" ng-class="LocationService.position ? 'glyphicon-ok' : 'glyphicon-warning-sign'"></span>
+  <span class="label">{{ LocationService.position.coords.latitude }}</span>
+  <span class="label">{{ LocationService.position.coords.longitude }}</span>
+ </li>
+</ul>

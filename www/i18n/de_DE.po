@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"X-Generator: Poedit 1.8.8\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+
+#: index.html:76
+msgid "Licensed under"
+msgstr "Lizenziert unter"
+
+#: index.html:51
+msgid "Login"
+msgstr "Anmeldung"
+
+#: index.html:56
+msgid "Logout"
+msgstr "Abmeldung"
+
+#: index.html:48
+msgid "Map"
+msgstr "Karte"
+
+#: index.html:52
+msgid "Register"
+msgstr "Registrieren"
+
+#: index.html:35
+msgid "Toggle navigation"
+msgstr "Navigation ein-/ausblenden"
