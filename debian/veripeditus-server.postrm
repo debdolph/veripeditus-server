@@ -47,7 +47,7 @@ remove)
 	;;
 
 purge)
-	rm -f /var/lib/hello-php-world/dbconfig.inc
+	rm -f /var/lib/veripeditus/dbconfig.inc
 	if which ucf >/dev/null 2>&1; then
 		ucf --purge /var/lib/veripeditus/dbconfig.cfg
 		ucfr --purge veripeditus-server /var/lib/veripeditus/dbconfig.cfg

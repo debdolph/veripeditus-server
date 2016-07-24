@@ -40,7 +40,7 @@ do_webserver_config() {
 		    rm /etc/apache2/conf.d/veripeditus-server.conf
 	else
 		# neither Apache 2.2 nor Apache 2.4
-		echo >&2 "I: no web server configured for hello-php-world"
+		echo >&2 "I: no web server configured for veripeditus-server"
 		return 0
 	fi
 	if /etc/init.d/apache2 status >/dev/null 2>&1; then
