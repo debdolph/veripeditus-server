@@ -1,0 +1,7 @@
+*.debhelper.log
+*.substvars
+*.debhelper
+files
+tmp/*
+tmp.*
+veripeditus-server

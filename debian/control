@@ -1,0 +1,20 @@
+Source: veripeditus
+Maintainer: Dominik George <nik@naturalnet.de>
+Section: python
+Priority: optional
+Build-Depends: dh-python, python-setuptools (>= 0.6b3), python3, debhelper (>= 9)
+Standards-Version: 3.9.6
+
+Package: veripeditus-server
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends},
+ apache2 | httpd, dbconfig-common, dbconfig-pgsql, libapache2-mod-wsgi,
+ python3-flask, python3-flask-sqlalchemy, python3-sqlalchemy-utils, python3-flask-restless, python3-flask-compress, python3-passlib, python3-wand, python3-psycopg2
+Recommends: postgresql
+Description: Veripeditus AR gaming engine (server component)
+ Veripeditus (from Latin „veritas“ → „truth“ and „pedis“ → „foot“) is a
+ client/server augmented reality gaming engine and framework. It allows
+ writing game „cartridges“ for the server, which it can then run.
+ Players access the game while being outside with a mobile device.
+ .
+ This package contains the API server and framework.
