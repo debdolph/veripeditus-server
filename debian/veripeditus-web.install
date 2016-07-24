@@ -1,0 +1,5 @@
+debian/apache2/veripeditus-web.conf etc/apache2/conf-available/
+www/index.html usr/share/veripeditus/web/
+www/html usr/share/veripeditus/web/
+www/js usr/share/veripeditus/web/
+www/styles usr/share/veripeditus/web/

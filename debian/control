@@ -18,3 +18,16 @@ Description: Veripeditus AR gaming engine (server component)
  Players access the game while being outside with a mobile device.
  .
  This package contains the API server and framework.
+
+Package: veripeditus-web
+Architecture: any
+Depends: ${misc:Depends}, 
+ apache2 | httpd, libjs-angularjs, libjs-angular-gettext, libjs-angular-ui-bootstrap, libjs-bootstrap, libjs-leaflet
+Recommends: javascript-common
+Description: Veripeditus AR gaming engine (web application)
+ Veripeditus (from Latin „veritas“ → „truth“ and „pedis“ → „foot“) is a
+ client/server augmented reality gaming engine and framework. It allows
+ writing game „cartridges“ for the server, which it can then run.
+ Players access the game while being outside with a mobile device.
+ .
+ This package contains the web application for gameplay.
