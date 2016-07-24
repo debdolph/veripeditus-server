@@ -29,7 +29,7 @@ APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 APP.config['PASSWORD_SCHEMES'] = ['pbkdf2_sha512', 'md5_crypt']
 APP.config['BASIC_REALM'] = "Veripeditus"
 
-CFGLIST = ['/etc/veripeditus/server.cfg']
+CFGLIST = ['/var/lib/veripeditus/dbconfig.cfg', '/etc/veripeditus/server.cfg']
 for cfg in CFGLIST:
     APP.config.from_pyfile(cfg, silent=True)
 
