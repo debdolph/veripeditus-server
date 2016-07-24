@@ -1,0 +1,12 @@
+build:
+    tests:
+        before:
+            - 'npm -g install jasmine'
+        override:
+            command: 'jasmine'
+checks:
+    javascript: true
+filter:
+    excluded_paths:
+        - 'dev/*'
+        - 'spec/*'
