@@ -1,0 +1,58 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+div#content-wrapper {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
+div#content-outer {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+div#floating-messages {
+	position: fixed;
+	z-index: 9999;
+	padding-top: 20px;
+}
+
+div#map {
+	height: 100%;
+	width: 100%;
+}
+
+div#control-overlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	pointer-events: none;
+	margin: 20px 20px;
+	opacity: 0.8;
+}
+
+div#control-overlay .control {
+	pointer-events: auto;
+}
+
+div#control-overlay .control-round {
+	width: 64px;
+	height: 64px;
+	background: url(../img/ui/btn-round.svg);
+	background-size: cover;
+}
+
+div#control-overlay .control-round .control-round-icon {
+	position: absolute;
+	width: 60%;
+	height: 60%;
+	left: 20%;
+	top: 20%;
+	pointer-events: none;
+}
