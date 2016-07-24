@@ -19,16 +19,26 @@
 var VERSION = "0.1";
 
 // Main application module
-var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'gettext', 'ngFancyREST', 'ngBasicAuth', 'ngFloatingMessages']);
+var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'gettext', 'ui.bootstrap', 'ngFancyREST', 'ngBasicAuth', 'ngFloatingMessages']);
 
 // One-time setup code for entire application
-app.run(function($rootScope, APIService, APIBasicAuth, LocationService, Messages) {
+app.run(function($rootScope, $location, $uibModal, APIService, APIBasicAuth, LocationService, Messages) {
     // Publish some constants and services to all scopes
     $rootScope.VERSION = VERSION;
+    $rootScope.$location = $location;
     $rootScope.APIBasicAuth = APIBasicAuth;
     $rootScope.APIService = APIService;
     $rootScope.Messages = Messages;
     $rootScope.LocationService = LocationService;
+
+    // FIXME move to some better place
+    $rootScope.loginDialog = function() {
+        var mi = $uibModal.open({
+            templateUrl: 'html/login.html',
+            controller: 'ViewLoginController'
+        });
+        // FIXME check promise; e.g. react to login by loading something
+    };
 
     // Start location service so all controllers receive location updates
     LocationService.start();

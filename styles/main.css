@@ -1,35 +1,6 @@
-html, body, div#map {
+html, body {
 	height: 100%;
 	width: 100%;
-}
-
-.navbar.navbar-default {
-	background-color: #ff5050;;
-	border-bottom: 1px solid #e60000;
-	margin-bottom: 0px;
-}
-
-.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a, #footer > .text-muted {
-	color: #F3F3F3;
-}
-
-.navbar-default .navbar-toggle .icon-bar {
-	background-color: #F3F3F3;
-}
-
-.nav {
-	font-size: 18px;
-}
-
-#logo {
-	height: 18px;
-}
-
-#navbar {
-	position: absolute;
-	top: 0px;
-	width: 100%;
-	z-index: 2003;
 }
 
 div#content-wrapper {
@@ -40,10 +11,10 @@ div#content-wrapper {
 
 div#content-outer {
 	position: fixed;
-	top: 60px;
+	top: 0px;
+	left: 0px;
 	height: 100%;
 	width: 100%;
-	z-index: 1;
 }
 
 div#floating-messages {
@@ -52,12 +23,36 @@ div#floating-messages {
 	padding-top: 20px;
 }
 
-#footer {
-	position: fixed;
-	bottom: 0px;
+div#map {
+	height: 100%;
 	width: 100%;
-	text-align: center;
-	background-color: #003cb3;
-	border-top: 1px solid #939393;
-	z-index: 2002;
+}
+
+div#control-overlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	pointer-events: none;
+	margin: 20px 20px;
+	opacity: 0.8;
+}
+
+div#control-overlay .control {
+	pointer-events: auto;
+}
+
+div#control-overlay .control-round {
+	width: 64px;
+	height: 64px;
+	background: url(../img/ui/btn-round.svg);
+	background-size: cover;
+}
+
+div#control-overlay .control-round .control-round-icon {
+	position: absolute;
+	width: 60%;
+	height: 60%;
+	left: 20%;
+	top: 20%;
+	pointer-events: none;
 }
