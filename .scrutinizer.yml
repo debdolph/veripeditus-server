@@ -2,6 +2,7 @@ build:
     tests:
         before:
             - 'pip3 install pylint Coverage'
+            - 'npm -g install jasmine'
         override:
             -
                 command: 'coverage run --include="*veripeditus*" setup.py test'
@@ -13,11 +14,15 @@ build:
                 analysis:
                     file: 'pylint-data'
                     format: 'pylint-parseable'
+            -
+                command: 'cd www; jasmine'
 checks:
     python:
         code_rating: true
         duplicate_code: true
+    javascript: true
 filter:
     excluded_paths:
         - 'tests/*'
-        - 'www/*'
+        - 'www/dev/*'
+        - 'www/spec/*'
