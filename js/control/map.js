@@ -19,7 +19,7 @@
 
 /** global: L */
 
-app.controller('ViewMapController', function($log, $scope, Player, LocationService) {
+app.controller('ViewMapController', function($log, $scope, GameDataService, LocationService) {
     // Set up map view
     $scope.map = L.map("map", {zoomControl: false, worldCopyJump: true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,80 +39,42 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
     // Already created markers for players will be stored here.
     $scope.player_markers = {};
 
-    // Function that loads all players in the visible map area, to be used as
-    function getPlayersOnMap() {
-        // Get bounds of map
-        var bounds = $scope.map.getBounds();
-        // Construct JSON query filter for REST API
-        var query = {
-            'filters': [{
-                'and': [{
-                    'name': 'latitude',
-                    'op': 'ge',
-                    'val': bounds.getSouth()
-                },
-                {
-                    'name': 'latitude',
-                    'op': 'le',
-                    'val': bounds.getNorth()
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'ge',
-                    'val': bounds.getWest()
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'le',
-                    'val': bounds.getEast()
-                }]
-            }]
-        };
+    // Show players from GameDataService on map upon update
+    $scope.$on('GameData.updated.players', function(event, players) {
+        // Iterate over players and add map markers
+        for (id of Object.keys(players)) {
+            var player = players[id];
 
-        // Send query to REST API
-        $log.debug("Querying players within (" + bounds.getSouth() + ", " + bounds.getWest() + ") (" + bounds.getNorth() + ", " + bounds.getEast() + ")");
-        Player.query({
-            q: query
-        },
-        function(data) {
-            // Store entire response
-            $scope.players = data;
+            // Look for already created marker for this player id
+            var marker = $scope.player_markers[player.id];
+            if (marker) {
+                // Marker exists, store location
+                marker.setLatLng([player.latitude, player.longitude]);
+                $log.debug("Map: Reusing marker for player id " + player.id);
+            } else {
+                // Marker does not exist
+                $log.debug("Map: Creating new marker for player id " + player.id);
 
-            // Iterate over players and add map markers
-            for (var i = 0; i < $scope.players.length; i++) {
-                var player = $scope.players[i];
+                // Construct marker icon from base64 encoded player avatar
+                var picon = L.icon({
+                    'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
+                    'iconSize': [32, 32],
+                });
 
-                // Look for already created marker for this player id
-                var marker = $scope.player_markers[player.id];
-                if (marker) {
-                    // Marker exists, store location
-                    marker.setLatLng([player.latitude, player.longitude]);
-                    $log.debug("Map: Reusing marker for player id " + player.id);
-                } else {
-                    // Marker does not exist
-                    $log.debug("Map: Creating new marker for player id " + player.id);
+                // Create marker at player location
+                marker = L.marker([player.latitude, player.longitude], {
+                    'icon': picon
+                });
 
-                    // Construct marker icon from base64 encoded player avatar
-                    var picon = L.icon({
-                        'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
-                        'iconSize': [32, 32],
-                    });
+                // Create simple popup with basic information
+                marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
 
-                    // Create marker at player location
-                    marker = L.marker([player.latitude, player.longitude], {
-                        'icon': picon
-                    });
-
-                    // Create simple popup with basic information
-                    marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
-
-                    // Add marker to map and store to known markers
-                    marker.addTo($scope.map);
-                    $scope.player_markers[player.id] = marker;
-                }
+                // Add marker to map and store to known markers
+                marker.addTo($scope.map);
+                $scope.player_markers[player.id] = marker;
             }
-        });
-    }
+        }
+    });
 
     // Subscribe to broadcast event from LocationService
     $scope.$on('Geolocation.changed', function(event, position) {
@@ -129,10 +91,12 @@ app.controller('ViewMapController', function($log, $scope, Player, LocationServi
 
     // Subscribe to event on change of map view
     $scope.map.on('moveend', function() {
-        // Update players on new map view
-        getPlayersOnMap();
+        // Update view bounds in GameDataService
+        var bounds = $scope.map.getBounds();
+        GameDataService.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
     });
 
-    // Initially get players
-    getPlayersOnMap();
+    // Initially set bounds in GameDataService
+    var bounds = $scope.map.getBounds();
+    GameDataService.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
 });
