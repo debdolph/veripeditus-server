@@ -21,7 +21,10 @@
 
 app.controller('ViewMapController', function($log, $scope, GameDataService, LocationService) {
     // Set up map view
-    $scope.map = L.map("map", {zoomControl: false, worldCopyJump: true});
+    $scope.map = L.map("map", {
+        zoomControl: false,
+        worldCopyJump: true
+    });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'

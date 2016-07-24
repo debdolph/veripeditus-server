@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 // Service for the Player API object
 app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAuth, LocationService) {
     // Declare a new update() method for all services, passed to $resource in factories
@@ -35,7 +34,9 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
     default_update);
 
     // Status objects
-    var bounds = [[0.0, 0.0], [0.0, 0.0]];
+    var bounds = [
+        [0.0, 0.0],
+        [0.0, 0.0]];
 
     // Storage objects
     var players = {};
