@@ -1,0 +1,5 @@
+Debian packages are needed:
+
+  python3-flask-compress
+  python3-flask-restless
+  libjs-angular-ui-bootstrap
