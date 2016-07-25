@@ -41,17 +41,17 @@
 
     <div id="control-overlay">
       <div id="control-login" class="control control-round" ng-if="!APIBasicAuth.loggedin()" ng-click="loginDialog()">
-        <object type="image/svg+xml" data="img/ui/btn-login.svg" class="control-round-icon"></object>
+        <img src="img/ui/btn-login.svg" class="control-round-icon" />
       </div>
       <div id="control-login" class="control control-round" ng-if="APIBasicAuth.loggedin()">
         Logout
       </div>
 
       <div id="control-view" class="control control-round" ng-if="$location.path() != '/cam'" ng-click="$location.path('/cam')">
-        <object type="image/svg+xml" data="img/ui/btn-cam.svg" class="control-round-icon"></object>
+        <img src="img/ui/btn-cam.svg" class="control-round-icon" />
       </div>
       <div id="control-view" class="control control-round" ng-if="$location.path() != '/map'" ng-click="$location.path('/map')">
-        <object type="image/svg+xml" data="img/ui/btn-map.svg" class="control-round-icon"></object>
+        <img src="img/ui/btn-map.svg" class="control-round-icon" />
       </div>
     </div>
   </div>
