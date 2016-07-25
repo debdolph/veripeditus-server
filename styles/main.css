@@ -49,7 +49,7 @@ div#control-overlay .control-round {
 }
 
 div#control-overlay .control-round .control-round-icon {
-	position: absolute;
+	position: relative;
 	width: 60%;
 	height: 60%;
 	left: 20%;
