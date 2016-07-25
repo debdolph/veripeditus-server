@@ -16,21 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// All route definitions for app views
-app.config(function($routeProvider) {
-    $routeProvider.when('/', {
-        redirectTo: '/map'
-    }).when('/map', {
-        templateUrl: 'html/map.html',
-        controller: 'ViewMapController'
-    }).when('/cam', {
-        templateUrl: 'html/cam.html',
-        controller: 'ViewCamController'
-    }).when('/register', {
-        templateUrl: 'html/register.html',
-        controller: 'ViewRegisterController'
-    }).when('/status', {
-        templateUrl: 'html/status.html',
-        controller: 'ViewStatusController'
+app.controller('ViewCamController', function($log, $document, $scope, GameDataService, DeviceService) {
+    // Find video view
+    $scope.cam = $document.find('video')[0];
+
+    // Subscribe to update event from DeviceService
+    $scope.$on('Camera.changed', function(event, url) {
+        // Update stream URL of video view
+        $scope.cam.src = url;
     });
+
+    // Stop camera upon leaving this view
+    // FIXME move to state controller, probably
+    $scope.$on('$destroy', function() {
+        DeviceService.stopCamera();
+    });
+
+    // Start camera
+    DeviceService.startCamera();
 });
