@@ -18,7 +18,7 @@
  */
 
 // Service for the Player API object
-app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAuth, LocationService) {
+app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAuth, DeviceService) {
     // Declare a new update() method for all services, passed to $resource in factories
     var default_update = {
         'update': {
@@ -48,7 +48,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
         this.longitude = 0.0;
     }
 
-    // Subscribe to broadcast event from LocationService
+    // Subscribe to broadcast event from DeviceService
     $rootScope.$on('Geolocation.changed', function(event, position) {
         // Update own location on server if logged in
         if (APIBasicAuth.loggedin()) {
@@ -57,7 +57,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
                 id: APIBasicAuth.server_info.user.id
             },
             {
-                // Position from LocationService
+                // Position from DeviceService
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
             });
