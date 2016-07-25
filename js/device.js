@@ -85,10 +85,54 @@ app.factory('DeviceService', function($rootScope, $log, $window, Messages) {
         }
     }
 
+    // Video constraints
+    var mediaConstraints = {
+        audio: false,
+        video: {
+            width: $window.innerWidth,
+            height: $window.innerHeight,
+            facingMode: {
+                exact: "environment"
+            }
+        }
+    };
+
+    // Stores the stream URL for the camera and internal stream object
+    var cameraUrl;
+    var cameraStream;
+
+    // Start camera by getting user media
+    function startCamera() {
+        // Look for running stream
+        if (!cameraStream) {
+            navigator.mediaDevices.getUserMedia(mediaConstraints).then(function(stream) {
+                cameraStream = stream;
+                cameraUrl = $window.URL.createObjectURL(stream);
+                $rootScope.$broadcast("Camera.changed", cameraUrl);
+            }).catch(function(error) {
+                Messages.add("danger", error.message);
+            });
+        }
+    }
+
+    // Stop camera
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks()[0].stop();
+            cameraStream = undefined;
+
+            // Tell others the stream was stopped
+            $rootScope.$broadcast('Camera.stopped');
+        }
+    }
+
     // Publish service API
     return {
         startLocation: startLocation,
         stopLocation: stopLocation,
-        position: position
+        startCamera: startCamera,
+        stopCamera: stopCamera,
+        position: position,
+        cameraUrl: cameraUrl
     };
 });

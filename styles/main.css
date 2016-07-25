@@ -23,7 +23,7 @@ div#floating-messages {
 	padding-top: 20px;
 }
 
-div#map {
+div#map, video#cam {
 	height: 100%;
 	width: 100%;
 }
