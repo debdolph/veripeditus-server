@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('LocationService', function($rootScope, $log, $window, Messages) {
+app.factory('DeviceService', function($rootScope, $log, $window, Messages) {
     // Options to give to the Geolocation API
     var locationOptions = {
         enableHighAccuracy: true,
@@ -70,13 +70,13 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
     }
 
     // Start watching Geolocation
-    function start() {
+    function startLocation() {
         // Store watchId for later clearing
         this.watchId = $window.navigator.geolocation.watchPosition(onLocationUpdate, onLocationError, locationOptions);
     }
 
     // Stop watching Geolocation
-    function stop() {
+    function stopLocation() {
         // Only clear if a watch is actually active
         if (this.watchId) {
             // Clear previously stored watchId
@@ -87,8 +87,8 @@ app.factory('LocationService', function($rootScope, $log, $window, Messages) {
 
     // Publish service API
     return {
-        start: start,
-        stop: stop,
+        startLocation: startLocation,
+        stopLocation: stopLocation,
         position: position
     };
 });

@@ -19,7 +19,7 @@
 
 /** global: L */
 
-app.controller('ViewMapController', function($log, $scope, GameDataService, LocationService) {
+app.controller('ViewMapController', function($log, $scope, GameDataService, DeviceService) {
     // Set up map view
     $scope.map = L.map("map", {
         zoomControl: false,
@@ -31,7 +31,7 @@ app.controller('ViewMapController', function($log, $scope, GameDataService, Loca
     }).addTo($scope.map);
 
     // Add initial marker for own position
-    $scope.marker_self = L.marker([LocationService.position.coords.latitude, LocationService.position.coords.longitude]);
+    $scope.marker_self = L.marker([DeviceService.position.coords.latitude, DeviceService.position.coords.longitude]);
     $scope.marker_self.addTo($scope.map);
     $scope.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
     $scope.circle_self.addTo($scope.map);
@@ -79,7 +79,7 @@ app.controller('ViewMapController', function($log, $scope, GameDataService, Loca
         }
     });
 
-    // Subscribe to broadcast event from LocationService
+    // Subscribe to broadcast event from DeviceService
     $scope.$on('Geolocation.changed', function(event, position) {
         // Update position of own marker
         $scope.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
