@@ -57,10 +57,7 @@
   </div>
 
   <div id="splash" ng-if="!DeviceService.fullscreen.enabled">
-    <object type="image/svg+xml" data="img/logo.svg" id="splash-logo"></object>
-    <button class="btn btn-primary" ng-click="DeviceService.startFullscreen()" id="splash-button">
-      Start
-    </button>
+    <img src="img/logo.svg" id="splash-logo" ng-click="DeviceService.startFullscreen()" />
   </div>
 
   <script src="lib/angular.js/angular.js"></script>
