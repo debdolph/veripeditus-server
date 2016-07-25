@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('DeviceService', function($rootScope, $log, $window, Messages) {
+app.factory('DeviceService', function($rootScope, $log, $window, $document, Messages) {
     // Options to give to the Geolocation API
     var locationOptions = {
         enableHighAccuracy: true,
@@ -126,13 +126,40 @@ app.factory('DeviceService', function($rootScope, $log, $window, Messages) {
         }
     }
 
+    // Fullscreen state
+    var fullscreen = {enabled: false};
+
+    // Subscribe to fullscreen change event
+    document.onmozfullscreenchange = function() {
+        if (document.mozFullScreenElement) {
+            $log.debug("DeviceService: Fullscreen mode entered");
+            fullscreen.enabled = true;
+        } else {
+            $log.debug("DeviceService: Fullscreen mode left");
+            fullscreen.enabled = false;
+        }
+    };
+
+    // Start fullscreen mode
+    function startFullscreen() {
+        document.body.mozRequestFullScreen();
+    }
+
+    // Stop fullscreen mode
+    function stopFullscreen() {
+        document.mozCancelFullScreen();
+    }
+
     // Publish service API
     return {
         startLocation: startLocation,
         stopLocation: stopLocation,
         startCamera: startCamera,
         stopCamera: stopCamera,
+        startFullscreen: startFullscreen,
+        stopFullscreen: stopFullscreen,
         position: position,
-        cameraUrl: cameraUrl
+        cameraUrl: cameraUrl,
+        fullscreen: fullscreen
     };
 });
