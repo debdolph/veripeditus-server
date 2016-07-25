@@ -24,6 +24,9 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
     $scope.$on('Camera.changed', function(event, url) {
         // Update stream URL of video view
         $scope.cam.src = url;
+        $scope.cam.onloadedmetadata = function() {
+            $scope.cam.play();
+        };
     });
 
     // Stop camera upon leaving this view
