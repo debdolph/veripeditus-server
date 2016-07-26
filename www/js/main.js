@@ -19,7 +19,7 @@
 var VERSION = "0.1";
 
 // Main application module
-var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'gettext', 'ui.bootstrap', 'ngFancyREST', 'ngBasicAuth', 'ngFloatingMessages']);
+var app = angular.module('Veripeditus', ['ngRoute', 'ngResource', 'ngAnimate', 'gettext', 'ui.bootstrap', 'ngFancyREST', 'ngBasicAuth', 'ngFloatingMessages']);
 
 // One-time setup code for entire application
 app.run(function($rootScope, $location, $uibModal, APIService, APIBasicAuth, DeviceService, Messages) {

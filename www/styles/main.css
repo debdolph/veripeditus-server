@@ -74,3 +74,19 @@ div#splash {
 	display: block;
 	margin: auto;
 }
+
+.animation-fade {
+	transition: all linear 1s;
+}
+.animation-fade.ng-show {
+	opacity: 1;
+}
+.animation-fade.ng-hide {
+	opacity: 0;
+}
+.animation-fade.ng-show.ng-show-active {
+	opacity: 1;
+}
+.animation-fade.ng-hide.ng-show-active {
+	opacity: 0;
+}
