@@ -37,4 +37,19 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
 
     // Start camera
     DeviceService.startCamera();
+
+    // Subscribe to data updates for surrounding players
+    $scope.$on('GameData.updated.players', function(event, players) {
+        // FIXME add code
+    });
+
+    // Subcribe to geolocation updates
+    $scope.$on('Geolocation.changed', function(event, position) {
+        // Calculate view bounds
+        // FIXME come up with something smarter
+        var bounds = [[position.latitude - 0.001, position.longitude - 0.001], [position.latitude + 0.001, position.longitude + 0.001]];
+
+        // Update bounds in GameDataService
+        GameDataService.setBounds(bounds[0], bounds[1]);
+    });
 });
