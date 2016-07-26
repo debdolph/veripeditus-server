@@ -150,15 +150,58 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
         document.mozCancelFullScreen();
     }
 
+    // Storage for orientation data
+    var orientation = {
+        absolute: false,
+        alpha: 0,
+        beta: 0,
+        gamma: 0
+    };
+
+    // Event handler for device oreintation changes
+    function handleOrientation(event) {
+        // Store values
+        orientation.absolute = event.absolute;
+        orientation.alpha = event.alpha;
+        orientation.beta = event.beta;
+        orientation.gamma = event.gamma;
+
+        // Broadcast change event
+        $rootScope.$broadcast('Orientation.changed', orientation);
+    }
+
+    // Start listening for orientation events
+    function startOrientation() {
+        // Add global event handler
+        $window.addEventListener('deviceorientation', handleOrientation, true);
+    }
+
+    // Stop listening for orientation events
+    function stopOrientation() {
+        // Remove global event listener
+        $window.removeEventListener('deviceorientation', handleOrientation, true);
+
+        // Reset orientation data
+        orientation = {
+            absolute: false,
+            alpha: 0,
+            beta: 0,
+            gamma: 0
+        };
+    }
+
     // Publish service API
     return {
         startLocation: startLocation,
         stopLocation: stopLocation,
+        startOrientation: startOrientation,
+        stopOrientation: stopOrientation,
         startCamera: startCamera,
         stopCamera: stopCamera,
         startFullscreen: startFullscreen,
         stopFullscreen: stopFullscreen,
         position: position,
+        orientation: orientation,
         cameraUrl: cameraUrl,
         fullscreen: fullscreen
     };

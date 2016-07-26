@@ -42,4 +42,6 @@ app.run(function($rootScope, $location, $uibModal, APIService, APIBasicAuth, Dev
 
     // Start location service so all controllers receive location updates
     DeviceService.startLocation();
+    // Start orientation service as well
+    DeviceService.startOrientation();
 });
