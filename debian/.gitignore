@@ -5,5 +5,5 @@ debhelper-build-stamp
 files
 tmp/*
 tmp.*
-veripeditus-server
+python3-veripeditus-server
 veripeditus-web

@@ -1,34 +1,30 @@
 #!/bin/sh
-# From MirOS: contrib/hosted/tg/deb/jupp/debian/jupp.postinst,v 1.11 2011/10/06 08:59:57 tg Exp $
+# From MirOS: contrib/hosted/tg/deb/jupp/debian/jupp.prerm,v 1.4 2011/09/06 20:07:39 tg Exp $
 
 set -e
 
 # This maintainer script can be called the following ways:
 #
-# * new-postinst "configure" [$most_recently_configured_version]
-# The package is unpacked; all dependencies are unpacked and, when there
-# are no circular dependencies, configured.
-#
-# * old-postinst "abort-upgrade" $new_version
-# * conflictors-postinst "abort-remove" "in-favour" $package
-#	$new_version
-# * postinst "abort-remove"
-# * deconfigureds-postinst "abort-deconfigure" "in-favour"
-#	$failed_install_package $fip_version ["removing"
+# * prerm "remove"
+# * old-prerm "upgrade" $new_version
+# * conflictors-prerm "remove" "in-favour" $package $new_version
+# * deconfigureds-prerm "deconfigure" "in-favour"
+#	$package_being_installed $pbi_version ["removing"
 #	$conflicting_package $cp_version]
-# The package is unpacked; all dependencies are at least Half-Installed,
-# previously been configured, and not removed. In some error situations,
-# dependencies may not be even fully unpacked.
+# The package and dependencies are at least Half-Installed; dependencies
+# have previously been configured and not removed.
 #
-# * postinst "triggered" "${triggers[*]}"
-# For trigger-only calls, i.e. if "configure" is not called.
+# * new-prerm "failed-upgrade" $old_version
+# Called when 'old-prerm "upgrade"' fails; new package not unpacked, all
+# other constraints the same as above.
 
-if test -e /usr/share/apache2/apache2-maintscript-helper; then
+test -n "$PSW_PRERM_DIDWEB" || \
+    if test -e /usr/share/apache2/apache2-maintscript-helper; then
 	. /usr/share/apache2/apache2-maintscript-helper
 fi
 do_webserver_config() {
 	# set up Apache configuration
-	local apache22common_state nl='
+	local apache22common_state x rv nl='
 '
 
 	apache22common_state=$(dpkg-query -f '${Status}' -W 'apache2.2-common' \
@@ -36,24 +32,21 @@ do_webserver_config() {
 
 	if test -e /usr/share/apache2/apache2-maintscript-helper; then
 		# Apache 2.4
-		apache2_invoke enconf veripeditus-server || exit $?
+		apache2_invoke disconf python3-veripeditus-server || exit $?
 	elif test x"$apache22common_state" = x"installed" || \
 	    test x"$apache22common_state" = x"unpacked"; then
 		# Apache 2.2
-		if test -d /etc/apache2/conf.d/ && \
-		    test '!' -L /etc/apache2/conf.d/veripeditus-server.conf; then
-			ln -s ../conf-available/veripeditus-server.conf \
-			    /etc/apache2/conf.d/veripeditus-server.conf
-		fi
+		test '!' -L /etc/apache2/conf.d/python3-veripeditus-server.conf || \
+		    rm /etc/apache2/conf.d/python3-veripeditus-server.conf
 	else
 		# neither Apache 2.2 nor Apache 2.4
-		echo >&2 "I: no web server configured for veripeditus-server"
+		echo >&2 "I: no web server configured for python3-veripeditus-server"
 		return 0
 	fi
 	if /etc/init.d/apache2 status >/dev/null 2>&1; then
-		echo >&2 "I: restarting Apache to flush the code cache"
+		echo >&2 "I: restarting Apache to get rid of hanging connections"
 		(invoke-rc.d apache2 stop || :)
-		set +e # ignore Debian Policy here, I'm a shell author FFS!
+		set +e # ignore Debian Policy here, Iâ€™m a shell author FFS!
 		x=$(apache2ctl configtest 2>&1)
 		rv=$?
 		case $rv:$x in
@@ -72,6 +65,17 @@ EOF
 	fi
 }
 
+# Handle webserver part first, to ensure itâ€™s gone before
+# dbconfig-common attempts to purge the database; this is
+# tricky due to bad interaction with debconf
+test -n "$PSW_PRERM_DIDWEB" || case $1 in
+remove)
+	do_webserver_config >&2
+	PSW_PRERM_DIDWEB=1
+	export PSW_PRERM_DIDWEB
+	;;
+esac
+
 # Initialise debconf
 . /usr/share/debconf/confmodule
 # Initialise dbconfig-common
@@ -86,25 +90,19 @@ dbc_generate_include_args=-otemplate_infile=/usr/share/veripeditus/dbconfig-temp
 # use UTF-8 encoding and server locale, in the hope that works
 dbc_pgsql_createdb_encoding=UTF8
 dbc_authmethod_user=password
-. /usr/share/dbconfig-common/dpkg/postinst.pgsql
-dbc_go veripeditus-server "$@"
+. /usr/share/dbconfig-common/dpkg/prerm.pgsql
+dbc_go python3-veripeditus-server "$@"
 
 # custom actions
 case $1 in
-configure)
-	# end debconf connection so we can start services
-	db_stop
-	do_webserver_config
+remove|deconfigure)
 	;;
 
-abort-upgrade|abort-remove|abort-deconfigure)
-	;;
-
-triggered)
+upgrade|failed-upgrade)
 	;;
 
 *)
-	echo >&2 "postinst called with unknown subcommand '$1'"
+	echo >&2 "prerm called with unknown subcommand '$1'"
 	exit 1
 	;;
 esac

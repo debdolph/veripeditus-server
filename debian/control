@@ -5,7 +5,7 @@ Priority: optional
 Build-Depends: dh-python, python-setuptools (>= 0.6b3), python3, debhelper (>= 9)
 Standards-Version: 3.9.6
 
-Package: veripeditus-server
+Package: python3-veripeditus-server
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends},
  apache2 | httpd, dbconfig-common, dbconfig-pgsql, libapache2-mod-wsgi,

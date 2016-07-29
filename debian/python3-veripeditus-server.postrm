@@ -38,7 +38,7 @@ dbc_pgsql_createdb_encoding=UTF8
 dbc_authmethod_user=password
 if test -f /usr/share/dbconfig-common/dpkg/postrm.pgsql; then
 	. /usr/share/dbconfig-common/dpkg/postrm.pgsql
-	dbc_go veripeditus-server "$@"
+	dbc_go python3-veripeditus-server "$@"
 fi
 
 # custom actions
@@ -50,7 +50,7 @@ purge)
 	rm -f /var/lib/veripeditus/dbconfig.inc
 	if which ucf >/dev/null 2>&1; then
 		ucf --purge /var/lib/veripeditus/dbconfig.cfg
-		ucfr --purge veripeditus-server /var/lib/veripeditus/dbconfig.cfg
+		ucfr --purge python3-veripeditus-server /var/lib/veripeditus/dbconfig.cfg
 	fi
 	rm -rf /var/lib/veripeditus
 	;;
