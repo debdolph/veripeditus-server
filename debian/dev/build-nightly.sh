@@ -51,6 +51,9 @@ fi
 tree=${1:-master}
 commit=$(git rev-parse --short "${tree}")
 
+# Store current point in history to return to later
+current=$(git rev-parse HEAD)
+
 # Build date
 stime_rfc=$(date +"%a, %d %b %Y %H:%M:%S %z")
 stime_vsn=$(date -u +"%Y%m%d.%H%M%S")
@@ -93,7 +96,7 @@ touch -r "${dch_temp}" debian/changelog
 git commit -a --author "${DEBEMAIL}" -m "Automatic commit before gbp run."
 
 # Merge tree to be build into this branch
-git merge --no-edit --squash -q "${tree}"
+git merge --no-edit --squash --commit -q "${tree}"
 
 # Fire!
 gbp buildpackage \
@@ -103,8 +106,8 @@ gbp buildpackage \
     -us -uc
 rv=$?
 
-# Reset to state before temporary commit and merge above
-git reset --hard 'HEAD@{2}'
+# Reset to state before doing anything
+git reset --hard "${current}"
 
 # Clean up
 rm -f "${dch_temp}"
