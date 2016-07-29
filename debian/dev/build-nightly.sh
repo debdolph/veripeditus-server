@@ -92,6 +92,9 @@ touch -r "${dch_temp}" debian/changelog
 # Produce temporary commit
 git commit -a --author "${DEBEMAIL}" -m "Automatic commit before gbp run."
 
+# Merge tree to be build into this branch
+git merge --no-edit --squash -q "${tree}"
+
 # Fire!
 gbp buildpackage \
     --git-debian-branch=debian \
@@ -100,8 +103,8 @@ gbp buildpackage \
     -us -uc
 rv=$?
 
-# Reset to state before temporary commit above
-git reset --hard 'HEAD@{1}'
+# Reset to state before temporary commit and merge above
+git reset --hard 'HEAD@{2}'
 
 # Clean up
 rm -f "${dch_temp}"
