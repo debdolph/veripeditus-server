@@ -73,7 +73,7 @@ else
 fi
 
 # Try to create temporary file for new changelog
-if ! dch_tmep=$(mktemp "$(realpath ..)/${dch_source}.nightly-build.tmp.XXXXXXXXXX"); then
+if ! dch_temp=$(mktemp "$(realpath ..)/${dch_source}.nightly-build.tmp.XXXXXXXXXX"); then
 	print -u2 Could not create temporary file.
 	exit 1
 fi
@@ -89,6 +89,9 @@ print "${dch_source} (${version}) UNRELEASED; urgency=low\n\n  *" \
 cat "${dch_temp}" >>debian/changelog
 touch -r "${dch_temp}" debian/changelog
 
+# Produce temporary commit
+git commit -a --author "${DEBEMAIL}" -m "Automatic commit before gbp run."
+
 # Fire!
 gbp buildpackage \
     --git-debian-branch=debian \
@@ -97,9 +100,10 @@ gbp buildpackage \
     -us -uc
 rv=$?
 
-# Restore changelog
-cat "${dch_temp}" >debian/changelog
-touch -r "${dch_temp}" debian/changelog
+# Reset to state before temporary commit above
+git reset --hard 'HEAD@{1}'
+
+# Clean up
 rm -f "${dch_temp}"
 
 # Exit with saved status from gbp
