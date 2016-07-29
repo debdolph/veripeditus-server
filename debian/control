@@ -8,8 +8,18 @@ Standards-Version: 3.9.6
 Package: python3-veripeditus-server
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends},
- apache2 | httpd, dbconfig-common, dbconfig-pgsql, libapache2-mod-wsgi,
- python3-flask, python3-flask-sqlalchemy, python3-sqlalchemy-utils, python3-flask-restless, python3-flask-compress, python3-passlib, python3-wand, python3-psycopg2
+ apache2 | httpd,
+ dbconfig-common,
+ dbconfig-pgsql,
+ libapache2-mod-wsgi,
+ python3-flask,
+ python3-flask-sqlalchemy,
+ python3-sqlalchemy-utils,
+ python3-flask-restless,
+ python3-flask-compress,
+ python3-passlib,
+ python3-wand,
+ python3-psycopg2
 Recommends: postgresql
 Description: Veripeditus AR gaming engine (server component)
  Veripeditus (from Latin „veritas“ → „truth“ and „pedis“ → „foot“) is a
@@ -22,7 +32,12 @@ Description: Veripeditus AR gaming engine (server component)
 Package: veripeditus-web
 Architecture: all
 Depends: ${misc:Depends}, 
- apache2 | httpd, libjs-angularjs, libjs-angular-gettext, libjs-angular-ui-bootstrap, libjs-bootstrap, libjs-leaflet
+ apache2 | httpd,
+ libjs-angularjs,
+ libjs-angular-gettext,
+ libjs-angular-ui-bootstrap,
+ libjs-bootstrap,
+ libjs-leaflet
 Recommends: javascript-common
 Description: Veripeditus AR gaming engine (web application)
  Veripeditus (from Latin „veritas“ → „truth“ and „pedis“ → „foot“) is a
