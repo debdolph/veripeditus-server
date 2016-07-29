@@ -1,3 +1,0 @@
-[alias]
-	push-www = subtree push --prefix=www git@github.com:Veripeditus/veripeditus-web master
-	pull-www = subtree pull --prefix=www git@github.com:Veripeditus/veripeditus-web master
