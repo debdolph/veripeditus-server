@@ -23,6 +23,9 @@ app.config(function($routeProvider) {
     }).when('/map', {
         templateUrl: 'html/map.html',
         controller: 'ViewMapController'
+    }).when('/cam', {
+        templateUrl: 'html/cam.html',
+        controller: 'ViewCamController'
     }).when('/register', {
         templateUrl: 'html/register.html',
         controller: 'ViewRegisterController'

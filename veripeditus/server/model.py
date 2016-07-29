@@ -19,7 +19,6 @@ Main server data model
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from veripeditus.server.app import APP, DB
-from veripeditus.server.util import get_data_path
 
 from flask import g
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
@@ -46,10 +45,6 @@ class Player(Base):
     email = DB.Column(EmailType)
     longitude = DB.Column(DB.Float, default=0.0, nullable=False)
     latitude = DB.Column(DB.Float, default=0.0, nullable=False)
-    avatar = DB.Column(DB.LargeBinary, default=open(os.path.join(get_data_path(), 'icon_player_default.png'), 'rb').read())
-
-    def avatar_base64(self):
-        return base64.encodestring(self.avatar).decode("utf-8").replace('\n', '')
 
     @staticmethod
     def get_authenticated(username, password):
