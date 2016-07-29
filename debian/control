@@ -20,7 +20,7 @@ Description: Veripeditus AR gaming engine (server component)
  This package contains the API server and framework.
 
 Package: veripeditus-web
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, 
  apache2 | httpd, libjs-angularjs, libjs-angular-gettext, libjs-angular-ui-bootstrap, libjs-bootstrap, libjs-leaflet
 Recommends: javascript-common
