@@ -58,15 +58,15 @@ app.controller('ViewMapController', function($log, $scope, GameDataService, Devi
                 // Marker does not exist
                 $log.debug("Map: Creating new marker for player id " + player.id);
 
-                // Construct marker icon from base64 encoded player avatar
-                var picon = L.icon({
-                    'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
-                    'iconSize': [32, 32],
-                });
+//                // Construct marker icon from base64 encoded player avatar
+//                var picon = L.icon({
+//                    'iconUrl': 'data:image/png;base64,' + player.avatar_base64,
+//                    'iconSize': [32, 32],
+//                });
 
                 // Create marker at player location
                 marker = L.marker([player.latitude, player.longitude], {
-                    'icon': picon
+//                    'icon': picon
                 });
 
                 // Create simple popup with basic information
