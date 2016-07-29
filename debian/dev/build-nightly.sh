@@ -104,7 +104,8 @@ gbp buildpackage \
     --git-debian-branch=debian \
     --git-upstream-tree="${tree}" \
     --git-force-create \
-    -us -uc -S
+    --git-pbuilder \
+    -us -uc
 rv=$?
 
 # Reset to state before doing anything
