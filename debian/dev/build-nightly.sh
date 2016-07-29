@@ -96,7 +96,8 @@ touch -r "${dch_temp}" debian/changelog
 git commit -a --author "${DEBEMAIL}" -m "Automatic commit before gbp run."
 
 # Merge tree to be build into this branch
-git merge --no-edit --squash --commit -q "${tree}"
+git merge --no-edit --squash -q "${tree}"
+git commit -a --author="${DEBEMAIL}" -m "Merge from ${tree} for automatic build."
 
 # Fire!
 gbp buildpackage \
