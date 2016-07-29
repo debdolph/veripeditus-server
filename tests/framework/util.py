@@ -109,7 +109,7 @@ class GameDataTests(unittest.TestCase):
         from veripeditus.framework.util import get_game_data_file
 
         file = get_game_data_file(restype, resname)
-        reffile = open(os.path.join(self.datadir, restype, "%s.txt" % resname), "r")
+        reffile = open(os.path.join(self.datadir, restype, "%s.txt" % resname), "r", encoding="utf-8")
 
         # The returned data should match the data in the test file
         self.assertEqual(file.read(), reffile.read())
