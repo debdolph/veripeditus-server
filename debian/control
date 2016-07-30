@@ -23,6 +23,7 @@ Depends: ${misc:Depends}, ${python:Depends},
  libapache2-mod-wsgi,
  python3-psycopg2
 Recommends: postgresql
+Suggest: python3-flask-compress
 Description: Veripeditus AR gaming engine (server component)
  Veripeditus (from Latin „veritas“ → „truth“ and „pedis“ → „foot“) is a
  client/server augmented reality gaming engine and framework. It allows
