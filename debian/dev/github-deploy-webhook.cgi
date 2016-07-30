@@ -27,7 +27,7 @@
 # script to pick up.
 #
 # Dependencies:
-#   openssl, jq
+#   mksh, openssl, jq
 
 BRANCHES="master"
 SECRET=$(</etc/veripeditus-github-secret)

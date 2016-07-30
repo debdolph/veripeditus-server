@@ -18,6 +18,9 @@
 # of dealing in the work, even if advised of the possibility of such
 # damage or existence of a defect, except proven that it results out
 # of said person’s immediate fault when using the work as intended.
+#-
+# Dependencies:
+#   mksh, git, apt
 
 BRANCH=${1:-master}
 STATEDIR=/var/spool/veripeditus/build/signals

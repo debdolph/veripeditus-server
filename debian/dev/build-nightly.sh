@@ -22,6 +22,12 @@
 # of dealing in the work, even if advised of the possibility of such
 # damage or existence of a defect, except proven that it results out
 # of said person’s immediate fault when using the work as intended.
+#-
+# Dependencies:
+#   mksh, git, git-buildpackage, cowbuilder, dpkg-dev
+#
+# Prerequisites:
+#   Cowbuilder needs to be set up before running.
 
 # sanitise environment
 unset LANGUAGE
