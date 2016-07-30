@@ -80,7 +80,7 @@ case ${HTTP_X_GITHUB_EVENT} in
 		# Do we trigger on that branch?
 		if [[ " ${BRANCHES} " = *" ${branch} "* ]]; then
 			# Determine the exact commit to build
-			head=$(print -nr -- "${body}" | jq -r .head)
+			head=$(print -nr -- "${body}" | jq -r .after)
 
 			# Touch a state file to signal a new build request
 			print -nr -- "${head}" >"${STATEDIR}/${branch}"
