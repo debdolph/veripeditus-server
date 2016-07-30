@@ -1,0 +1,16 @@
+{
+ "short_name": "Veripeditus",
+ "name": "Veripeditus AR Game",
+ "description": "Augmented reality gaming platform",
+ "icons": [
+  {
+   "src": "img/logo.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ],
+ "background_color": "black",
+ "display": "standalone",
+ "orientation": "portrait-primary",
+ "lang": "en-US"
+}
