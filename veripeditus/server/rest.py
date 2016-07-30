@@ -61,7 +61,7 @@ MANAGER = APIManager(APP, flask_sqlalchemy_db=DB, preprocessors=_GLOBAL_PRE_PROC
                      postprocessors=_GLOBAL_POST_PROCESSORS)
 
 MANAGER.create_api(Player,
-                   include_columns=_INCLUDE+['username', 'name', 'email', 'longitude', 'latitude'],
+                   include_columns=_INCLUDE+['username', 'name', 'email', 'longitude', 'latitude', 'avatar'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',

@@ -45,6 +45,7 @@ class Player(Base):
     email = DB.Column(EmailType)
     longitude = DB.Column(DB.Float, default=0.0, nullable=False)
     latitude = DB.Column(DB.Float, default=0.0, nullable=False)
+    avatar = DB.Column(DB.String(32), default="default", nullable=False)
 
     @staticmethod
     def get_authenticated(username, password):
