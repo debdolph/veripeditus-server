@@ -110,7 +110,10 @@ def get_game_data_file(restype, basename, mode=None):
         # Mode was given as argument
         _mode = mode
 
-    return open(_filename, _mode)
+    if _mode.endswith('b'):
+        return open(_filename, _mode)
+    else:
+        return open(_filename, _mode, encoding='utf-8')
 
 def get_game_data_object(restype, basename):
     """
