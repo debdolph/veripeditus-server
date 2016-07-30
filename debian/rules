@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
 export PYBUILD_NAME=veripeditus-server
+export VERIPEDITUS_BUILD_VERSION=$(shell dpkg-parsechangelog -n 1 -S version)
+
 %:
 	dh $@ --with python3 --buildsystem=pybuild
-
