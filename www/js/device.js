@@ -142,12 +142,24 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
 
     // Start fullscreen mode
     function startFullscreen() {
-        document.body.mozRequestFullScreen();
+        if (document.body.requestFullScreen) {
+          document.body.requestFullScreen();
+        } else if (document.body.mozRequestFullScreen) {
+          document.body.mozRequestFullScreen();
+        } else if (document.body.webkitRequestFullScreen) {
+          document.body.webkitRequestFullScreen();
+        }
     }
 
     // Stop fullscreen mode
     function stopFullscreen() {
-        document.mozCancelFullScreen();
+        if (document.cancelFullScreen) {
+          document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
     }
 
     // Storage for orientation data
