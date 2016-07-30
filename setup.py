@@ -16,11 +16,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from setuptools import setup
+
+# Find out what version we are installing/building
+if 'VERIPEDITUS_BUILD_VERSION' in os.environ:
+    # First, look for environment variable
+    version = os.environ['VERIPEDITUS_BUILD_VERSION']
+elif os.path.isfile('VERSION'):
+    # Load from file
+    version = open('VERSION', 'r').read().strip()
+else:
+    # Use fallback
+    version = '0.1~unknown'
 
 setup(
     name='Veripeditus',
-    version='0.1',
+    version=version,
     long_description=__doc__,
     packages=[
               'veripeditus',
