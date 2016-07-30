@@ -18,9 +18,11 @@ Main server application
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_restless import url_for
+
+from veripeditus.server.util import get_data_path
 
 APP = Flask(__name__)
 
@@ -32,6 +34,11 @@ APP.config['BASIC_REALM'] = "Veripeditus"
 CFGLIST = ['/var/lib/veripeditus/dbconfig.cfg', '/etc/veripeditus/server.cfg']
 for cfg in CFGLIST:
     APP.config.from_pyfile(cfg, silent=True)
+
+# Serve static files from data path
+@APP.route('/api/data/<path:path>')
+def _serve_static_data(path):
+    return send_from_directory(get_data_path(), path)
 
 DB = SQLAlchemy(APP)
 from veripeditus.server.model import *
