@@ -112,7 +112,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
                 var player = new Player(data[i].id);
                 player.latitude = data[i].latitude;
                 player.longitude = data[i].longitude;
-                player.avatar_base64 = data[i].avatar_base64;
+                player.avatar = data[i].avatar;
                 player.username = data[i].username;
                 player.name = data[i].username;
                 players[player.id] = player;
