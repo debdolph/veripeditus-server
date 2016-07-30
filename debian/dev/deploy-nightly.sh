@@ -19,8 +19,23 @@
 # damage or existence of a defect, except proven that it results out
 # of said person’s immediate fault when using the work as intended.
 
+BRANCH=${1:-master}
+STATEDIR=/var/spool/veripeditus/build/signals
+
 # Get location of script
 me=$(realpath "$0")
+
+# Look for something to build
+if [[ -f "${STATEDIR}/${BRANCH}" ]]; then
+	# Look for lock file
+	if [[ -e "${STATEDIR}/${BRANCH}.lock" ]]; then
+		# Do nothing if locked
+		exit 0
+	else
+		# Create lock file
+		touch "${STATEDIR}/${BRANCH}.lock"
+	fi
+fi
 
 # Create temporary directory to work with
 if ! d=$(mktemp -d); then
@@ -28,6 +43,10 @@ if ! d=$(mktemp -d); then
 	exit 1
 fi
 cd "${d}"
+
+# Copy signal file here for later time reference
+cp "${STATEDIR}/${BRANCH}" .
+touch -r "${STATEDIR}/${BRANCH}" "${BRANCH}"
 
 # Get hold of repo and switch to the Debian branch
 git clone https://github.com/Veripeditus/veripeditus-server
@@ -37,11 +56,11 @@ git checkout debian
 # Check whether currently running script is up-to-date
 if ! cmp -s "${me}" debian/dev/deploy-nightly.sh; then
 	# Overwrite currently running script and restart
-	exec mksh -c "cat debian/dev/deploy-nightly.sh >${me@Q}; cd /; rm -rf ${d@Q}; exec ${me@Q}"
+	exec mksh -c "cat debian/dev/deploy-nightly.sh >${me@Q}; cd /; rm -rf ${d@Q}; rm -f ${STATEDIR@Q}/${BRANCH@Q}.lock; exec ${me@Q}"
 fi
 
 # Execute nightly build script
-mksh debian/dev/build-nightly.sh
+mksh debian/dev/build-nightly.sh "$(<"../${BRANCH}")"
 rv=$?
 
 if (( !rv )); then
@@ -57,6 +76,14 @@ else
 fi
 
 # cleanup
+# Check whether no new build was registered for the branch
+if ! [[ "${STATEDIR}/${BRANCH}" -nt "../${BRANCH}" ]]; then
+	# Remove build signal
+	rm -f "${STATEDIR}/${BRANCH}"
+fi
+# Remove lock file
+rm -f "${STATEDIR}/${BRANCH}.lock"
+# Remove temporary build directory
 cd /
 rm -rf "${d}"
 
