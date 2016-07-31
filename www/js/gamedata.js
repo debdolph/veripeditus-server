@@ -19,6 +19,9 @@
 
 // Service for the Player API object
 app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAuth, DeviceService) {
+    // Get a local scope so events propagate correctly
+    var $scope = $rootScope.$new();
+
     // Declare a new update() method for all services, passed to $resource in factories
     var default_update = {
         'update': {
@@ -49,7 +52,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
     }
 
     // Subscribe to broadcast event from DeviceService
-    $rootScope.$on('Geolocation.changed', function(event, position) {
+    $scope.$on('Geolocation.changed', function(event, position) {
         // Update own location on server if logged in
         if (APIBasicAuth.loggedin()) {
             res.update({
@@ -65,7 +68,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
     });
 
     // Subscribe to (own) event upon updating view bounds
-    $rootScope.$on('GameData.updated.bounds', function(event) {
+    $scope.$on('GameData.updated.bounds', function(event) {
         updatePlayers();
     });
 
