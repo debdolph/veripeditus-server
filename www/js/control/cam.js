@@ -66,19 +66,24 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         // Determine difference of bearing and device orientation
         var bearing_diff = DeviceService.orientation.alpha - bearing;
 
-        // Calculate offsets in 3D space in relation to camera
-        var angle = (((-bearing_diff) % 360) / 360) * L.LatLng.DEG_TO_RAD;
-        var tx = Math.sin(angle) * (perspective * (distance / MAX_DISTANCE));
-        var ty = 0;
-        var tz = perspective - Math.cos(angle) * (perspective * (distance / MAX_DISTANCE));
+        if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
+            // Calculate offsets in 3D space in relation to camera
+            var angle = (((-bearing_diff) % 360) / 360) * L.LatLng.DEG_TO_RAD;
+            var tx = Math.sin(angle) * (perspective * (distance / MAX_DISTANCE));
+            var ty = 0;
+            var tz = perspective - Math.cos(angle) * (perspective * (distance / MAX_DISTANCE));
 
-        // Generate transform functions
-        var rotation = "rotateY(" + (bearing_diff) + "deg)";
-        var offset = "translate3d(" + tx + "px, " + ty + "px, " + tz + "px)";
+            // Generate transform functions
+            var rotation = "rotateY(" + (bearing_diff) + "deg)";
+            var offset = "translate3d(" + tx + "px, " + ty + "px, " + tz + "px)";
 
-        // Generate CSS transform attributes
-        style['transform'] = rotation + " " + offset;
-        style['-webkit-transform'] = rotation + " " + offset;
+            // Generate CSS transform attributes
+            style['transform'] = rotation + " " + offset;
+            style['-webkit-transform'] = rotation + " " + offset;
+        } else {
+            // Object is behind us and not visible
+            style['display'] = 'none';
+        }
 
         return style;
     };
