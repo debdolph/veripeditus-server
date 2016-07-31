@@ -67,13 +67,13 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         // Calculate offsets in 3D space in relation to camera
         // FIXME take distance into account
         var angle = (((-bearing_diff) % 360) / 360) * (2*Math.PI);
-        var px = Math.sin(angle) * perspective;
-        var py = 0;
-        var pz = perspective - Math.cos(angle) * perspective;
+        var tx = Math.sin(angle) * perspective;
+        var ty = 0;
+        var tz = perspective - Math.cos(angle) * perspective;
 
         // Generate transform functions
         var rotation = "rotateY(" + (bearing_diff) + "deg)";
-        var offset = "translate3d(" + px + "px, " + py + "px, " + pz + "px)";
+        var offset = "translate3d(" + tx + "px, " + ty + "px, " + tz + "px)";
 
         // Generate CSS transform attribute
         style.transform = rotation + " " + offset;
