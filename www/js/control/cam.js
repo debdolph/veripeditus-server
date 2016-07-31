@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** global: L */
+
 app.controller('ViewCamController', function($log, $document, $scope, GameDataService, DeviceService) {
     const MAX_DISTANCE = 100;
 
@@ -65,10 +67,10 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         var bearing_diff = DeviceService.orientation.alpha - bearing;
 
         // Calculate offsets in 3D space in relation to camera
-        var angle = (((-bearing_diff) % 360) / 360) * (2 * Math.PI);
-        var tx = Math.sin(angle) * perspective;
+        var angle = (((-bearing_diff) % 360) / 360) * L.LatLng.DEG_TO_RAD;
+        var tx = Math.sin(angle) * (perspective * (distance / MAX_DISTANCE));
         var ty = 0;
-        var tz = perspective - Math.cos(angle) * (perspective * (distance / 100));
+        var tz = perspective - Math.cos(angle) * (perspective * (distance / MAX_DISTANCE));
 
         // Generate transform functions
         var rotation = "rotateY(" + (bearing_diff) + "deg)";
