@@ -1,3 +1,6 @@
+Licensing
+=========
+
 veripeditus-server - Server component for the Veripeditus game framework
 Copyright (C) 2016  Dominik George <nik@naturalnet.de>
 Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
@@ -15,6 +18,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Alternative licensing
+=====================
 
 Alternatively, all artwork and non-code parts are published under the
 Creative Commons-Attribution-Share Alike 4.0 Unported license or later:
@@ -41,3 +47,14 @@ Under the following terms:
     No additional restrictions — You may not apply legal terms or
     technological measures that legally restrict others from doing
     anything the license permits.
+
+
+Exceptions
+==========
+
+avatar_kangaroo.svg
+-------------------
+
+Copyright (C) 2012  Carina Salomon
+
+Licensed under Creative Commons-Attribution-Share Alike 3.0 DE or later.
