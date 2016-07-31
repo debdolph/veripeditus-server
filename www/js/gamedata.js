@@ -55,7 +55,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
     $scope.$on('Geolocation.changed', function(event, position) {
         // Update own location on server if logged in
         if (APIBasicAuth.loggedin()) {
-            res.update({
+            resPlayer.update({
                 // Player.id from user in server_info (currently logged in)
                 id: APIBasicAuth.server_info.user.id
             },
