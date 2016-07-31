@@ -65,11 +65,10 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         var bearing_diff = DeviceService.orientation.alpha - bearing;
 
         // Calculate offsets in 3D space in relation to camera
-        // FIXME take distance into account
         var angle = (((-bearing_diff) % 360) / 360) * (2 * Math.PI);
         var tx = Math.sin(angle) * perspective;
         var ty = 0;
-        var tz = perspective - Math.cos(angle) * perspective;
+        var tz = perspective - Math.cos(angle) * (perspective * (distance / 100));
 
         // Generate transform functions
         var rotation = "rotateY(" + (bearing_diff) + "deg)";
