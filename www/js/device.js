@@ -91,9 +91,9 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
         video: {
             width: $window.innerWidth,
             height: $window.innerHeight,
-//            facingMode: {
-//                exact: "environment"
-//            }
+            facingMode: {
+                exact: "environment"
+            }
         }
     };
 
