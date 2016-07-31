@@ -51,7 +51,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
 
         // Center image first
         var width = document.getElementById("arplayer-" + player.id).width;
-        style.left = ((screen.width - width) / 2) + "px";
+        style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
         var own_latlng = L.latLng(DeviceService.position.coords.latitude, DeviceService.position.coords.longitude);
@@ -74,8 +74,9 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         var rotation = "rotateY(" + (bearing_diff) + "deg)";
         var offset = "translate3d(" + tx + "px, " + ty + "px, " + tz + "px)";
 
-        // Generate CSS transform attribute
-        style.transform = rotation + " " + offset;
+        // Generate CSS transform attributes
+        style['transform'] = rotation + " " + offset;
+        style['-webkit-transform'] = rotation + " " + offset;
 
         return style;
     };

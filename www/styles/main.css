@@ -101,6 +101,10 @@ div#arview {
 	perspective-origin: 50% 50%;
 	transform-origin: 50% 50%;
 	perspective: 800px;
+	-webkit-transform-style: preserve-3d;
+	-webkit-perspective-origin: 50% 50%;
+	-webkit-transform-origin: 50% 50%;
+	-webkit-perspective: 800px;
 }
 
 div#arview img.arplayer {
@@ -108,4 +112,5 @@ div#arview img.arplayer {
 	max-width: 95%;
 	position: absolute;
 	transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
 }
