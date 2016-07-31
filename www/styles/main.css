@@ -23,9 +23,15 @@ div#floating-messages {
 	padding-top: 20px;
 }
 
-div#map, video#cam {
+div#map {
 	height: 100%;
 	width: 100%;
+}
+
+video#cam {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
 }
 
 div#control-overlay {
