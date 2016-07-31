@@ -66,7 +66,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
 
         // Calculate offsets in 3D space in relation to camera
         // FIXME take distance into account
-        var angle = (((-bearing_diff) % 360) / 360) * (2*Math.PI);
+        var angle = (((-bearing_diff) % 360) / 360) * (2 * Math.PI);
         var tx = Math.sin(angle) * perspective;
         var ty = 0;
         var tz = perspective - Math.cos(angle) * perspective;
@@ -94,7 +94,9 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
     $scope.$on('Geolocation.changed', function(event, position) {
         // Calculate view bounds
         // FIXME come up with something smarter
-        var bounds = [[position.coords.latitude - 0.001, position.coords.longitude - 0.001], [position.coords.latitude + 0.001, position.coords.longitude + 0.001]];
+        var bounds = [
+            [position.coords.latitude - 0.001, position.coords.longitude - 0.001],
+            [position.coords.latitude + 0.001, position.coords.longitude + 0.001]];
 
         // Update bounds in GameDataService
         GameDataService.setBounds(bounds[0], bounds[1]);
