@@ -19,6 +19,14 @@ Steps to contribute
  4. Ask any questions that may arise.
  5. Take feedback into account and start hacking!
 
+Please mind the following:
+
+ * Fork the project, then create a new branch.
+ * In this branch, only work on a specific issue. Do not mix issues!
+ * Do micro-commits. Each logical step in your development should
+   be one commit.
+ * Write clear commit messages (look at the log for ideas).
+
 Code style, contribution guidelines, etc.
 -----------------------------------------
 
