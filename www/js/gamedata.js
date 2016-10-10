@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-GameData = {
+GameDataService = function() {
     // Status objects
     this.bounds = [
         [0.0, 0.0],
@@ -98,3 +98,5 @@ GameData = {
         // FIXME Signal bounds update
     };
 });
+
+GameData = new GameDataService();

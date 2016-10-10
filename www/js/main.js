@@ -16,6 +16,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Veripeditus = {
-    this.VERSION = VERSION;
-};
+VERSION = '0.1';

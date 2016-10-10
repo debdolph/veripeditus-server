@@ -23,7 +23,7 @@
  * LGPL-2+, AGPL-3+, Simplified BSD or The MirOS Licence.
  */
 
-Messages = {
+MessagesService = function() {
     // contains a set of id: {class: 'alert class', message: 'foo'} objects
     this.msgs = {};
 
@@ -53,3 +53,5 @@ Messages = {
         this.msgs[id].tid = tid;
     };
 };
+
+Messages = new MessagesService();

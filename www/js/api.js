@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-API = {
+APIService = function() {
     this.metrics = new ObjRingbuffer(100);
 
     // FIXME Add real HTTP code
@@ -41,3 +41,5 @@ API = {
         return response;
     };
 };
+
+API = new APIService();
