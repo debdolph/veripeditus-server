@@ -30,11 +30,11 @@
   <script src="lib/leaflet/leaflet.js"></script>
   <script src="js/util/leaflet-addons.js"></script>
   <script src="js/util/objringbuffer.js"></script>
-  <script src="js/floating-messages.js"></script>
+  <script src="js/util/messages.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/device.js"></script>
   <script src="js/gamedata.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/main.js"></script>
   <script src="js/control/map.js"></script>
   <script src="js/control/cam.js"></script>
  </head>
@@ -42,14 +42,14 @@
  <body>
   <div id="content-outer">
    <div id="content-wrapper">
-    <div class="view" id="camview">
+    <div class="view" id="camview" style="display: hidden">
      <video id="cam" autoplay></video>
 
      <div id="arview">
      </div>
     </div>
 
-    <div class="view" id="mapview">
+    <div class="view" id="map" style="display: block">
     </div>
    </div>
 

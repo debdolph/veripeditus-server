@@ -16,4 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-VERSION = '0.1';
+Veripeditus = {
+    version: '0.1',
+    views: [],
+    registerView: function(view) {
+        this.views.push(view);
+    };
+};

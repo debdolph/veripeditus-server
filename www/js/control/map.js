@@ -38,12 +38,12 @@ MapController = function() {
     this.map.setView(this.marker_self.getLatLng(), 16);
 
     // Already created markers for players will be stored here.
-    this..player_markers = {};
+    this.player_markers = {};
 
-    // Show players from GameDataService on map upon update
-    this.onUpdatedPlayers = function(event, players) {
+    // Called by GameDataService on player update
+    this.onUpdatedPlayers = function() {
         // Iterate over players and add map markers
-        for (id of Object.keys(players)) {
+        for (id of Object.keys(GameData.players)) {
             var player = players[id];
 
             // Look for already created marker for this player id
@@ -74,21 +74,19 @@ MapController = function() {
             }
         }
     };
-    // FIXME Receive signal
 
-    // Subscribe to broadcast event from DeviceService
-    this.onGeolocationChanged = function(event, position) {
+    // Called by DeviceService on geolocation update
+    this.onGeolocationChanged = function() {
         // Update position of own marker
-        this.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
+        this.marker_self.setLatLng([Device.position.coords.latitude, Device.position.coords.longitude]);
 
         // Update accuracy radius around own marker
-        this..circle_self.setLatLng(this.marker_self.getLatLng());
-        this.circle_self.setRadius(position.coords.accuracy);
+        this.circle_self.setLatLng(this.marker_self.getLatLng());
+        this.circle_self.setRadius(Device.position.coords.accuracy);
 
         // Center map at own marker
         this.map.setView(this.marker_self.getLatLng());
     };
-    // FIXME Receive signal
 
     // Subscribe to event on change of map view
     this.map.on('moveend', function() {
@@ -101,3 +99,7 @@ MapController = function() {
     var bounds = this.map.getBounds();
     GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
 };
+
+// Instantiate controller and register to services
+MapView = new MapController();
+Veripeditus.registerView(MapView);

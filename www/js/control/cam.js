@@ -22,10 +22,10 @@ CamController = function() {
     // Find video view
     this.cam = document.getElementById('cam');
 
-    // Subscribe to update event from DeviceService
-    this.onCameraChanged = function(event, url) {
+    // Called by DeviceService on camera stream change
+    this.onCameraChanged = function() {
         // Update stream URL of video view
-        this.cam.src = url;
+        this.cam.src = Device.cameraUrl;
         this.cam.onloadedmetadata = function() {
             this.cam.play();
         };
@@ -81,35 +81,34 @@ CamController = function() {
         return style;
     };
 
+    // FIXME Move to GameDataService
     this.getPlayerAvatar = function(player) {
         return '/api/data/avatar_' + player.avatar + '.svg';
     };
 
-    this.onGameDataUpdated = function(event, players) {
-        // Map players into scope
-        this.players = players;
+    // Called by GameDataService on player update
+    this.onUpdatedPlayers = function() {
+        // FIXME do something
     };
 
-    // Subcribe to geolocation updates
-    this.onGeolocationChanged = function(event, position) {
+    // Called by DeviceService on geolocation change
+    this.onGeolocationChanged = function() {
         // Calculate view bounds
         // FIXME come up with something smarter
         var bounds = [
-            [position.coords.latitude - 0.001, position.coords.longitude - 0.001],
-            [position.coords.latitude + 0.001, position.coords.longitude + 0.001]];
+            [Device.position.coords.latitude - 0.001, Device.position.coords.longitude - 0.001],
+            [Device.position.coords.latitude + 0.001, Device.position.coords.longitude + 0.001]];
 
         // Update bounds in GameDataService
         GameData.setBounds(bounds[0], bounds[1]);
     };
-    // FIXME receive signal
 
-    // Subcribe to orientation updates
-    this.onOrientationChanged = function(event) {
-        // Force update of player images
-        // FIXME come up with something better
-        this.players = players;
+    // Called by DeviceService on orientation change
+    this.onOrientationChanged = function() {
+        // FIXME do something
     };
-    // FIXME Receive signal
-
-    // FIXME add all that to DOM
 });
+
+// Instantiate controller and register to services
+CamView = new CamController();
+Veripeditus.registerView(CamView);

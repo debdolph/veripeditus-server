@@ -85,7 +85,10 @@ GameDataService = function() {
                 this.players[player.id] = player;
             }
 
-            // FIXME Signal new users
+            // Call onUpdatedPlayers on all views
+            for (view of Veripeditus.views) {
+                view.onUpdatedPlayers();
+            }
         });
     };
     // FIXME Send query to API
@@ -94,8 +97,6 @@ GameDataService = function() {
     this.setBounds = function(southWest, northEast) {
         this.bounds[0] = southWest;
         this.bounds[1] = northEast;
-
-        // FIXME Signal bounds update
     };
 });
 
