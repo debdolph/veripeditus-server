@@ -43,9 +43,6 @@ class User(Base):
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
     name = DB.Column(DB.String(64))
     email = DB.Column(EmailType)
-    longitude = DB.Column(DB.Float, default=0.0, nullable=False)
-    latitude = DB.Column(DB.Float, default=0.0, nullable=False)
-    avatar = DB.Column(DB.String(32), default="default", nullable=False)
 
     @staticmethod
     def get_authenticated(username, password):
