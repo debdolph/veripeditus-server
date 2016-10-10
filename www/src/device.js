@@ -42,7 +42,10 @@ DeviceService = function() {
         this.position.coords = newpos.coords;
         this.position.timestamp = newpos.timestamp;
 
-        // FIXME Add signalling
+        // Call onGeolocationChanged on all views
+        for (view of Veripeditus.views) {
+            view.onGeolocationChanged();
+        }
     };
 
     // Callback for Geolocation errors
@@ -105,7 +108,10 @@ DeviceService = function() {
                 this.cameraStream = stream;
                 this.cameraUrl = window.URL.createObjectURL(stream);
 
-                // FIXME Add signalling
+                // Call onCameraChanged on all views
+                for (view of Veripeditus.views) {
+                    view.onCameraChanged();
+                }
             }).
             catch(function(error) {
                 Messages.add("danger", error.message);
@@ -119,7 +125,10 @@ DeviceService = function() {
             this.cameraStream.getTracks()[0].stop();
             this.cameraStream = undefined;
 
-            // FIXME Add signalling
+            // Call onCameraChanged on all views
+            for (view of Veripeditus.views) {
+                view.onCameraChanged();
+            }
         }
     }
 
@@ -168,18 +177,21 @@ DeviceService = function() {
     };
 
     // Event handler for device oreintation changes
-    this.handleOrientation(event) {
+    this.handleOrientation = function(event) {
         // Store values
         this.orientation.absolute = event.absolute;
         this.orientation.alpha = event.alpha;
         this.orientation.beta = event.beta;
         this.orientation.gamma = event.gamma;
 
-        // FIXME Add signalling
+        // Call onOrientationChanged on all views
+        for (view of Veripeditus.views) {
+            view.onOrientationChanged();
+        }
     };
 
     // Start listening for orientation events
-    this.startOrientation() {
+    this.startOrientation = function() {
         // Add global event handler
         window.addEventListener('deviceorientation', this.handleOrientation, true);
     };

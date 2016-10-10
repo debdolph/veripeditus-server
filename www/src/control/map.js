@@ -26,24 +26,24 @@ MapController = function() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo($scope.map);
+    }).addTo(this.map);
 
     // Add initial marker for own position
     this.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
     this.marker_self.addTo(this.map);
-    this.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
-    this.circle_self.addTo($scope.map);
+    this.circle_self = L.circle(this.marker_self.getLatLng(), 0);
+    this.circle_self.addTo(this.map);
 
     // Initially center map view to own position
     this.map.setView(this.marker_self.getLatLng(), 16);
 
     // Already created markers for players will be stored here.
-    this..player_markers = {};
+    this.player_markers = {};
 
-    // Show players from GameDataService on map upon update
-    this.onUpdatedPlayers = function(event, players) {
+    // Called by GameDataService on player update
+    this.onUpdatedPlayers = function() {
         // Iterate over players and add map markers
-        for (id of Object.keys(players)) {
+        for (id of Object.keys(GameData.players)) {
             var player = players[id];
 
             // Look for already created marker for this player id
@@ -69,35 +69,37 @@ MapController = function() {
                 marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
 
                 // Add marker to map and store to known markers
-                marker.addTo($scope.map);
+                marker.addTo(this.map);
                 this.player_markers[player.id] = marker;
             }
         }
     };
-    // FIXME Receive signal
 
-    // Subscribe to broadcast event from DeviceService
-    this.onGeolocationChanged = function(event, position) {
+    // Called by DeviceService on geolocation update
+    this.onGeolocationChanged = function() {
         // Update position of own marker
-        this.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
+        this.marker_self.setLatLng([Device.position.coords.latitude, Device.position.coords.longitude]);
 
         // Update accuracy radius around own marker
-        this..circle_self.setLatLng(this.marker_self.getLatLng());
-        this.circle_self.setRadius(position.coords.accuracy);
+        this.circle_self.setLatLng(this.marker_self.getLatLng());
+        this.circle_self.setRadius(Device.position.coords.accuracy);
 
         // Center map at own marker
         this.map.setView(this.marker_self.getLatLng());
     };
-    // FIXME Receive signal
 
     // Subscribe to event on change of map view
     this.map.on('moveend', function() {
         // Update view bounds in GameDataService
         var bounds = this.map.getBounds();
         GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
-    };
+    });
 
     // Initially set bounds in GameDataService
     var bounds = this.map.getBounds();
     GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
 };
+
+// Instantiate controller and register to services
+MapView = new MapController();
+Veripeditus.registerView(MapView);
