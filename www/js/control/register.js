@@ -19,7 +19,7 @@
 app.controller('ViewRegisterController', function($scope, $window, User) {
     $scope.register = function() {
         // Create and fill User object
-        var user = new user({
+        var user = new User({
             username: $scope.username,
             name: $scope.name,
             email: $scope.email,

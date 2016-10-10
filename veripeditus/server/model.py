@@ -46,7 +46,7 @@ class User(Base):
 
     @staticmethod
     def get_authenticated(username, password):
-        user = user.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             return user
         else:
