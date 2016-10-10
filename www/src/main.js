@@ -17,7 +17,7 @@
  */
 
 Veripeditus = {
-    version: '0.1',
+    version: '1.0.0a0.dev0',
     views: [],
     registerView: function(view) {
         this.views.push(view);
