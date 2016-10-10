@@ -131,10 +131,8 @@ Device = {
     // Subscribe to fullscreen change event
     document.onmozfullscreenchange = function() {
         if (document.mozFullScreenElement) {
-            $log.debug("DeviceService: Fullscreen mode entered");
             this.fullscreen.enabled = true;
         } else {
-            $log.debug("DeviceService: Fullscreen mode left");
             this.fullscreen.enabled = false;
         }
     };
