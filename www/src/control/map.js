@@ -93,7 +93,7 @@ MapController = function() {
         // Update view bounds in GameDataService
         var bounds = this.map.getBounds();
         GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
-    };
+    });
 
     // Initially set bounds in GameDataService
     var bounds = this.map.getBounds();

@@ -39,7 +39,7 @@ GameDataService = function() {
         if (API.loggedin()) {
             // FIXME do update player location
         }
-    });
+    };
 
     this.updatePlayers = function() {
         // Construct JSON query filter for REST API
@@ -89,7 +89,7 @@ GameDataService = function() {
             for (view of Veripeditus.views) {
                 view.onUpdatedPlayers();
             }
-        });
+        };
     };
     // FIXME Send query to API
 
@@ -98,6 +98,6 @@ GameDataService = function() {
         this.bounds[0] = southWest;
         this.bounds[1] = northEast;
     };
-});
+};
 
 GameData = new GameDataService();

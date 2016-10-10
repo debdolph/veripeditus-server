@@ -21,5 +21,5 @@ Veripeditus = {
     views: [],
     registerView: function(view) {
         this.views.push(view);
-    };
+    }
 };

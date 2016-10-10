@@ -177,7 +177,7 @@ DeviceService = function() {
     };
 
     // Event handler for device oreintation changes
-    this.handleOrientation(event) {
+    this.handleOrientation = function(event) {
         // Store values
         this.orientation.absolute = event.absolute;
         this.orientation.alpha = event.alpha;
@@ -191,7 +191,7 @@ DeviceService = function() {
     };
 
     // Start listening for orientation events
-    this.startOrientation() {
+    this.startOrientation = function() {
         // Add global event handler
         window.addEventListener('deviceorientation', this.handleOrientation, true);
     };

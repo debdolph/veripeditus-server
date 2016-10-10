@@ -30,13 +30,13 @@ MessagesService = function() {
     // Remove the message
     this.remove = function(id) {
         // Clear the timer first, in case we got called manually
-        window.timeout.cancel(msgs[id].tid);
-        delete msgs[id];
+        window.timeout.cancel(this.msgs[id].tid);
+        delete this.msgs[id];
     };
 
     this.add = function(cls, message) {
         // Find next numeric id
-        if (Object.keys(msgs).length > 0) {
+        if (Object.keys(this.msgs).length > 0) {
             var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
         } else {
             id = 0;

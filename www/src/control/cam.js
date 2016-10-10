@@ -107,7 +107,7 @@ CamController = function() {
     this.onOrientationChanged = function() {
         // FIXME do something
     };
-});
+};
 
 // Instantiate controller and register to services
 CamView = new CamController();
