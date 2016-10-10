@@ -16,34 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global ObjRingbuffer */
+import ObjRingbuffer from 'util/objringbuffer';
 
-angular.module('ngFancyREST', []).factory('APIService', function($log, $window) {
-    var metrics = new ObjRingbuffer(100);
+export default {
+    this.metrics = new ObjRingbuffer(100);
 
-    return {
-        metrics: metrics
+    // FIXME Add real HTTP code
+
+    this.onRequest = function(request) {
+        // Add time of request passing interceptor to determine RTT later
+        request.time_send = $window.performance.now();
+
+        return request;
     };
-}).factory('APIInterceptor', function($q, $window, APIService) {
-    return {
-        request: function(request) {
-            // Add time of request passing interceptor to determine RTT later
-            request.time_send = $window.performance.now();
+    this.onResponse = function(response) {
+        if ('time_send' in response.request) {
+            // Get time of repsonse passing interceptor and determine rtt
+            response.time_recv = $window.performance.now();
 
-            return request;
-        },
-        response: function(response) {
-            if ('time_send' in response.config) {
-                // Get time of repsonse passing interceptor and determine rtt
-                response.config.time_recv = $window.performance.now();
-
-                // Add data to metrics buffer
-                APIService.metrics.push({
-                    rtt: response.config.time_recv - response.config.time_send
-                });
-            }
-
-            return response;
+            // Add data to metrics buffer
+            this.metrics.push({
+                rtt: response.time_recv - response.request.time_send
+            });
         }
+
+        return response;
     };
-});
+};

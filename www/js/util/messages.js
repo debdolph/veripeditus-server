@@ -47,38 +47,34 @@
  *    </div>
  *  </div>
  */
-angular.module('ngFloatingMessages', []).factory('Messages', function($timeout) {
+
+export default {
     // contains a set of id: {class: 'alert class', message: 'foo'} objects
-    var msgs = {}
+    this.msgs = {};
 
     // Remove the message
-    function remove(id) {
+    this.remove = function(id) {
         // Clear the timer first, in case we got called manually
-        $timeout.cancel(msgs[id].tid);
+        window.timeout.cancel(msgs[id].tid);
         delete msgs[id];
-    }
-
-    return {
-        // Add a message
-        add: function(cls, message) {
-            // Find next numeric id
-            if (Object.keys(msgs).length > 0) {
-                var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
-            } else {
-                id = 0;
-            }
-
-            // Add desired content with found id
-            this.msgs[id] = {
-                'class': cls,
-                'message': message
-            };
-
-            // Add timer to auto-close the message
-            var tid = $timeout(remove, 10000, true, id);
-            this.msgs[id].tid = tid;
-        },
-        'remove': remove,
-        'msgs': msgs
     };
-});
+
+    this.add = function(cls, message) {
+        // Find next numeric id
+        if (Object.keys(msgs).length > 0) {
+            var id = Math.max.apply(null, Object.keys(this.msgs)) + 1;
+        } else {
+            id = 0;
+        }
+
+        // Add desired content with found id
+        this.msgs[id] = {
+            'class': cls,
+            'message': message
+        };
+
+        // Add timer to auto-close the message
+        var tid = window.timeout(this.remove, 10000, true, id);
+        this.msgs[id].tid = tid;
+    };
+};
