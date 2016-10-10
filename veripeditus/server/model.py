@@ -52,6 +52,16 @@ class User(Base):
         else:
             return None
 
+class Player(Base):
+    id = DB.Column(DB.Integer, primary_key=True)
+    name = DB.Column(DB.String(32), unique=True, nullable=False)
+    avatar = DB.Column(DB.String(32), default="default", nullable=False)
+    user = DB.relationship("User", backref=DB.backref("players", lazy="dynamic"))
+    world = DB.relationship("World", backref=DB.backref("players", lazy="dynamic"))
+
+    longitude = DB.Column(DB.Float, default=0.0, nullable=False)
+    latitude = DB.Column(DB.Float, default=0.0, nullable=False)
+
 usergroup = DB.Table('usergroup',
     DB.Column('user_id', DB.Integer, DB.ForeignKey('user.id')),
     DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
