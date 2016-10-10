@@ -43,6 +43,7 @@ class User(Base):
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
     name = DB.Column(DB.String(64))
     email = DB.Column(EmailType)
+    active_user = DB.relationship("Player")
 
     @staticmethod
     def get_authenticated(username, password):

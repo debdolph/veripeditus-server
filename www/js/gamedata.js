@@ -31,7 +31,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
     };
 
     // Define $resource service to API endpoint Player
-    var resPlayer = $resource("/api/player/:id", {
+    var resUser = $resource("/api/user/:id", {
         id: '@id'
     },
     default_update);
@@ -42,37 +42,38 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
         [0.0, 0.0]];
 
     // Storage objects
-    var players = {};
+    var users = {};
 
     // Player object
-    function Player(id) {
+    function User(id) {
         this.id = id;
-        this.latitude = 0.0;
-        this.longitude = 0.0;
+        this.active_player = {};
+        this.active_player.latitude = 0.0;
+        this.active_player.longitude = 0.0;
     }
 
     // Subscribe to broadcast event from DeviceService
     $scope.$on('Geolocation.changed', function(event, position) {
         // Update own location on server if logged in
         if (APIBasicAuth.loggedin()) {
-            resPlayer.update({
+            resUser.update({
                 // Player.id from user in server_info (currently logged in)
                 id: APIBasicAuth.server_info.user.id
             },
             {
                 // Position from DeviceService
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
+                active_player.latitude: position.coords.latitude,
+                active_player.longitude: position.coords.longitude
             });
         }
     });
 
     // Subscribe to (own) event upon updating view bounds
     $scope.$on('GameData.updated.bounds', function(event) {
-        updatePlayers();
+        updateUsers();
     });
 
-    function updatePlayers() {
+    function updateUsers() {
         // Construct JSON query filter for REST API
         var query = {
             'filters': [{
@@ -101,7 +102,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
 
         // Send query to REST API
         $log.debug("Querying players within (" + bounds[0][0] + ", " + bounds[0][1] + ") (" + bounds[1][0] + ", " + bounds[1][1] + ")");
-        resPlayer.query({
+        resUser.query({
             q: query
         },
         function(data) {
@@ -112,17 +113,18 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
                     continue;
                 }
 
-                var player = new Player(data[i].id);
+		var user = new User(data[i].id);
+                user.active_player = {};
                 player.latitude = data[i].latitude;
                 player.longitude = data[i].longitude;
                 player.avatar = data[i].avatar;
                 player.username = data[i].username;
                 player.name = data[i].username;
-                players[player.id] = player;
+		users[user.id] = user;
             }
 
             // Broadcast event that position changed
-            $rootScope.$broadcast('GameData.updated.players', players);
+            $rootScope.$broadcast('GameData.updated.users', users);
         });
     }
 
@@ -137,7 +139,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
 
     // Publish
     return {
-        players: players,
+        users: users,
         setBounds: setBounds
     };
 });
