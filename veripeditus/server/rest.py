@@ -60,7 +60,7 @@ _GLOBAL_POST_PROCESSORS = {m: _GLOBAL_GENERAL_POST_PROCESSORS for m in _METHODS}
 MANAGER = APIManager(APP, flask_sqlalchemy_db=DB, preprocessors=_GLOBAL_PRE_PROCESSORS,
                      postprocessors=_GLOBAL_POST_PROCESSORS)
 
-MANAGER.create_api(Player,
+MANAGER.create_api(User,
                    include_columns=_INCLUDE+['username', 'name', 'email', 'longitude', 'latitude', 'avatar'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 

@@ -43,14 +43,14 @@ class ServerAppTests(unittest.TestCase):
         """ Test whether a test user is known in the database """
 
         # Get first known admin user from ORM
-        from veripeditus.server.model import Player
-        player = Player.query.filter_by(username="admin").first()
+        from veripeditus.server.model import User
+        user = User.query.filter_by(username="admin").first()
 
-        self.assertEqual(player.username, "admin")
-        self.assertEqual(player.password, "admin")
-        self.assertEqual(player.name, "The Boss")
-        self.assertEqual(player.email, "theboss@example.com")
-        self.assertLessEqual(player.longitude, 180.0)
-        self.assertGreaterEqual(player.longitude, -180.0)
-        self.assertLessEqual(player.latitude, 90.0)
-        self.assertGreaterEqual(player.latitude, -90.0)
+        self.assertEqual(user.username, "admin")
+        self.assertEqual(user.password, "admin")
+        self.assertEqual(user.name, "The Boss")
+        self.assertEqual(user.email, "theboss@example.com")
+        self.assertLessEqual(user.player.longitude, 180.0)
+        self.assertGreaterEqual(user.player.longitude, -180.0)
+        self.assertLessEqual(user.player.latitude, 90.0)
+        self.assertGreaterEqual(user.player.latitude, -90.0)

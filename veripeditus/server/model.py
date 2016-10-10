@@ -38,7 +38,7 @@ class Base(DB.Model):
     created = DB.Column(DB.DateTime, default=DB.func.now())
     updated = DB.Column(DB.DateTime, default=DB.func.now(), onupdate=DB.func.now())
 
-class Player(Base):
+class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
     name = DB.Column(DB.String(64))
@@ -49,14 +49,14 @@ class Player(Base):
 
     @staticmethod
     def get_authenticated(username, password):
-        player = Player.query.filter_by(username=username).first()
-        if player and player.password == password:
-            return player
+        user = user.query.filter_by(username=username).first()
+        if user and user.password == password:
+            return user
         else:
             return None
 
-playergroup = DB.Table('playergroup',
-    DB.Column('player_id', DB.Integer, DB.ForeignKey('player.id')),
+usergroup = DB.Table('usergroup',
+    DB.Column('user_id', DB.Integer, DB.ForeignKey('user.id')),
     DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
 )
 
@@ -67,7 +67,7 @@ worldgroup = DB.Table('worldgroup',
 
 class Group(Base):
     name = DB.Column(DB.String(64), unique=True, nullable=False)
-    players = DB.relationship('Player', secondary=playergroup,
+    users = DB.relationship('user', secondary=usergroup,
                               backref=DB.backref('groups', lazy='dynamic'))
 
 class Game(Base):

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.server.model import Player
+from veripeditus.server.model import User
 from veripeditus.server.app import DB
 
 import unittest
@@ -25,18 +25,18 @@ class ServerModelTests(unittest.TestCase):
     def setUp(self):
         """ Sets up test data objects """
 
-        self.test_player = Player()
-        self.test_player.username = "test"
-        self.test_player.password = "test"
-        self.test_player.name = "test Player"
-        self.test_player.email = "test@example.com"
-        DB.session.add(self.test_player)
+        self.test_user = User()
+        self.test_user.username = "test"
+        self.test_user.password = "test"
+        self.test_user.name = "test Player"
+        self.test_user.email = "test@example.com"
+        DB.session.add(self.test_user)
         DB.session.commit()
 
     def tearDown(self):
         """ Remove test object """
 
-        DB.session.delete(self.test_player)
+        DB.session.delete(self.test_user)
         DB.session.commit()
 
     def test_player_password_unrecoverable(self):
@@ -48,11 +48,11 @@ class ServerModelTests(unittest.TestCase):
         test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(test_pw_len))
 
         # Set the password on the test_player object
-        self.test_player.password = test_pw
+        self.test_user.password = test_pw
 
         # Check that the retrieved password is not the clear text string.
         # We need to retrieve it first to circumvent auto coercion.
-        self.assertNotEqual(str(self.test_player.password.hash), test_pw)
+        self.assertNotEqual(str(self.test_user.password.hash), test_pw)
 
     def test_player_password_verifies(self):
         """ Tests whether the hashed password verifies """
@@ -63,8 +63,8 @@ class ServerModelTests(unittest.TestCase):
         test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(test_pw_len))
 
         # Set the password on the test_player object
-        self.test_player.password = test_pw
+        self.test_user.password = test_pw
 
         # Check that, through auto coercion, the password can be verified
         # by direct comparison
-        self.assertEqual(self.test_player.password, test_pw)
+        self.assertEqual(self.test_user.password, test_pw)

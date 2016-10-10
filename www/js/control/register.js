@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.controller('ViewRegisterController', function($scope, $window, Player) {
+app.controller('ViewRegisterController', function($scope, $window, User) {
     $scope.register = function() {
-        // Create and fill Player object
-        var player = new Player({
+        // Create and fill User object
+        var user = new user({
             username: $scope.username,
             name: $scope.name,
             email: $scope.email,
             password: $scope.password,
         });
 
-        // Submit Player object via REST API
-        player.$save();
+        // Submit User object via REST API
+        user.$save();
 
         $window.history.back();
     };

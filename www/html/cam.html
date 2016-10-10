@@ -1,5 +1,5 @@
 <video id="cam" autoplay></video>
 
 <div id="arview">
- <img ng-src="{{ getPlayerAvatar(player) }}" class="arplayer" id="arplayer-{{ id }}" ng-style="getARStyle(player)" ng-repeat="(id, player) in players" />
+ <img ng-src="{{ getPlayerAvatar(user.player) }}" class="arplayer" id="arplayer-{{ id }}" ng-style="getARStyle(user.player)" ng-repeat="(id, user) in users" />
 </div>

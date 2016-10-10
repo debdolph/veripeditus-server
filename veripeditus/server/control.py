@@ -26,7 +26,7 @@ from flask import request, Response, g
 
 from veripeditus.framework import VERSION
 from veripeditus.server.app import DB, APP
-from veripeditus.server.model import Game, Player
+from veripeditus.server.model import Game, User
 from veripeditus.server.util import get_games
 
 def _sync_games():
@@ -58,21 +58,21 @@ def _sync_games():
         DB.session.commit()
 
 def _add_data():
-    # Create example data (only if database was unused, e.g. no Player
+    # Create example data (only if database was unused, e.g. no User
     # exists)
 
-    # Return if a Player exists
-    if len(Player.query.all()) == 0:
-        # Create new player
-        player = Player()
-        player.username = "admin"
-        player.password = "admin"
-        player.name = "The Boss"
-        player.email = "theboss@example.com"
-        player.longitude = random.uniform(-180.0, 180.0)
-        player.latitude = random.uniform(-90.0, 90.0)
-        # Add player to database
-        DB.session.add(player)
+    # Return if a User exists
+    if len(User.query.all()) == 0:
+        # Create new user
+        user = User()
+        user.username = "admin"
+        user.password = "admin"
+        user.name = "The Boss"
+        user.email = "theboss@example.com"
+        user.longitude = random.uniform(-180.0, 180.0)
+        user.latitude = random.uniform(-90.0, 90.0)
+        # Add user to database
+        DB.session.add(user)
         DB.session.commit()
 
 def init():
@@ -82,11 +82,11 @@ def init():
 @APP.before_request
 def _check_auth():
     if not request.authorization:
-        g.player = None
+        g.user = None
     else:
-        g.player = Player.get_authenticated(request.authorization.username,
+        g.user = User.get_authenticated(request.authorization.username,
                                             request.authorization.password)
-        if not g.player:
+        if not g.user:
             return Response('Authentication failed.', 401,
                             {'WWW-Authenticate':'Basic realm="%s"' % APP.config['BASIC_REALM']})
 
@@ -97,9 +97,9 @@ def get_server_info():
     info["version"] = VERSION
 
     info["user"] = {}
-    if not g.player is None:
-        info["user"]["id"] = g.player.id
-        info["user"]["name"] = g.player.name
-        info["user"]["username"] = g.player.username
+    if not g.user is None:
+        info["user"]["id"] = g.user.id
+        info["user"]["name"] = g.user.name
+        info["user"]["username"] = g.user.username
 
     return info
