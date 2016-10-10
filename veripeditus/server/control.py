@@ -69,8 +69,10 @@ def _add_data():
         user.password = "admin"
         user.name = "The Boss"
         user.email = "theboss@example.com"
-        user.longitude = random.uniform(-180.0, 180.0)
-        user.latitude = random.uniform(-90.0, 90.0)
+        player = Player()
+        player.longitude = random.uniform(-180.0, 180.0)
+        player.latitude = random.uniform(-90.0, 90.0)
+        player.user = user
         # Add user to database
         DB.session.add(user)
         DB.session.commit()
