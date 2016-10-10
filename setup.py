@@ -47,7 +47,7 @@ setup(
     zip_safe=False,
     install_requires=[
                       'Flask>=0.10',
-                      'Flask-Restless',
+                      'Flask-Restless==0.17.0',
                       'Flask-SQLAlchemy',
                       'SQLAlchemy-Utils',
                       'passlib',
