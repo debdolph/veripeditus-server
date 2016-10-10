@@ -44,7 +44,7 @@
  * old objects from the end.
  */
 
-export default function ObjRingbuffer(size) {
+function ObjRingbuffer(size) {
     this.size = size;
     this.pointer = -1;
     this.objects = [];

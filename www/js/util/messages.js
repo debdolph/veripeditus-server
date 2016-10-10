@@ -23,32 +23,7 @@
  * LGPL-2+, AGPL-3+, Simplified BSD or The MirOS Licence.
  */
 
-/*
- * Service for floating messages
- *
- * This service is a very simple helper implementation to display
- * floating messages to users. It maintains a data structure with
- * (class, message) tuples, with class being any Bootstrap alert class.
- *
- * Messages are added by calling Messages.add("class", "message").
- *
- * Messages can be manually removed by calling Messages.remove(id), e.g.
- * from a dismiss button in the Bootstrap alert.
- *
- * Messages are also given a timeout of 10 seconds, after which they are
- * removed automatically.
- *
- * This snippet, for example, can be used to display the messages:
- *
- *  <div id="floating-messages" class="col-xs-12 col-md-3 col-md-push-9">
- *    <div class="alert alert-{{ msg.class }}" ng-repeat="(id, msg) in Messages.msgs">
- *      <a ng-click="Messages.remove(id)" class="close">&times;</a>
- *      {{ msg.message }}
- *    </div>
- *  </div>
- */
-
-export default {
+Messages = {
     // contains a set of id: {class: 'alert class', message: 'foo'} objects
     this.msgs = {};
 

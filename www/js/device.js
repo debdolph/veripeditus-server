@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Messages from 'util/messages.js';
-
-export default {
+Device = {
     // Options to give to the Geolocation API
     this.locationOptions = {
         enableHighAccuracy: true,

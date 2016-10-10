@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ObjRingbuffer from 'util/objringbuffer';
-
-export default {
+API = {
     this.metrics = new ObjRingbuffer(100);
 
     // FIXME Add real HTTP code
