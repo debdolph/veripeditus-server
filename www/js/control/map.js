@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: L */
-
-app.controller('ViewMapController', function($log, $scope, GameDataService, DeviceService) {
+MapController = {
     // Set up map view
-    $scope.map = L.map("map", {
+    this.map = L.map("map", {
         zoomControl: false,
         worldCopyJump: true
     });
@@ -31,32 +29,30 @@ app.controller('ViewMapController', function($log, $scope, GameDataService, Devi
     }).addTo($scope.map);
 
     // Add initial marker for own position
-    $scope.marker_self = L.marker([DeviceService.position.coords.latitude, DeviceService.position.coords.longitude]);
-    $scope.marker_self.addTo($scope.map);
-    $scope.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
-    $scope.circle_self.addTo($scope.map);
+    this.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
+    this.marker_self.addTo(this.map);
+    this.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
+    this.circle_self.addTo($scope.map);
 
     // Initially center map view to own position
-    $scope.map.setView($scope.marker_self.getLatLng(), 16);
+    this.map.setView(this.marker_self.getLatLng(), 16);
 
     // Already created markers for players will be stored here.
-    $scope.player_markers = {};
+    this..player_markers = {};
 
     // Show players from GameDataService on map upon update
-    $scope.$on('GameData.updated.players', function(event, players) {
+    this.onUpdatedPlayers = function(event, players) {
         // Iterate over players and add map markers
         for (id of Object.keys(players)) {
             var player = players[id];
 
             // Look for already created marker for this player id
-            var marker = $scope.player_markers[player.id];
+            var marker = this.player_markers[player.id];
             if (marker) {
                 // Marker exists, store location
                 marker.setLatLng([player.latitude, player.longitude]);
-                $log.debug("Map: Reusing marker for player id " + player.id);
             } else {
                 // Marker does not exist
-                $log.debug("Map: Creating new marker for player id " + player.id);
 
                 // Construct marker icon from avatar name
                 var picon = L.icon({
@@ -74,32 +70,34 @@ app.controller('ViewMapController', function($log, $scope, GameDataService, Devi
 
                 // Add marker to map and store to known markers
                 marker.addTo($scope.map);
-                $scope.player_markers[player.id] = marker;
+                this.player_markers[player.id] = marker;
             }
         }
-    });
+    };
+    // FIXME Receive signal
 
     // Subscribe to broadcast event from DeviceService
-    $scope.$on('Geolocation.changed', function(event, position) {
+    this.onGeolocationChanged = function(event, position) {
         // Update position of own marker
-        $scope.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
+        this.marker_self.setLatLng([position.coords.latitude, position.coords.longitude]);
 
         // Update accuracy radius around own marker
-        $scope.circle_self.setLatLng($scope.marker_self.getLatLng());
-        $scope.circle_self.setRadius(position.coords.accuracy);
+        this..circle_self.setLatLng(this.marker_self.getLatLng());
+        this.circle_self.setRadius(position.coords.accuracy);
 
         // Center map at own marker
-        $scope.map.setView($scope.marker_self.getLatLng());
-    });
+        this.map.setView(this.marker_self.getLatLng());
+    };
+    // FIXME Receive signal
 
     // Subscribe to event on change of map view
-    $scope.map.on('moveend', function() {
+    this.map.on('moveend', function() {
         // Update view bounds in GameDataService
-        var bounds = $scope.map.getBounds();
-        GameDataService.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
-    });
+        var bounds = this.map.getBounds();
+        GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
+    };
 
     // Initially set bounds in GameDataService
-    var bounds = $scope.map.getBounds();
-    GameDataService.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
-});
+    var bounds = this.map.getBounds();
+    GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
+};
