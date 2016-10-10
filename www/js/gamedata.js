@@ -30,7 +30,7 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
         }
     };
 
-    // Define $resource service to API endpoint Player
+    // Define $resource service to API endpoint User
     var resUser = $resource("/api/user/:id", {
         id: '@id'
     },
@@ -113,14 +113,14 @@ app.factory("GameDataService", function($rootScope, $resource, $log, APIBasicAut
                     continue;
                 }
 
-		var user = new User(data[i].id);
+                var user = new User(data[i].id);
                 user.active_player = {};
-                player.latitude = data[i].latitude;
-                player.longitude = data[i].longitude;
-                player.avatar = data[i].avatar;
-                player.username = data[i].username;
-                player.name = data[i].username;
-		users[user.id] = user;
+                user.active_player.latitude = data[i].latitude;
+                user.active_player.longitude = data[i].longitude;
+                user.active_player.avatar = data[i].avatar;
+                user.active_player.username = data[i].username;
+                user.active_player.name = data[i].username;
+                users[user.id] = user;
             }
 
             // Broadcast event that position changed
