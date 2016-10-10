@@ -16,34 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: L */
-
-app.controller('ViewCamController', function($log, $document, $scope, GameDataService, DeviceService) {
-    const MAX_DISTANCE = 100;
+CamController = {
+    this.MAX_DISTANCE = 100;
 
     // Find video view
-    $scope.cam = $document.find('video')[0];
+    this.cam = document.getElementById('cam');
 
     // Subscribe to update event from DeviceService
-    $scope.$on('Camera.changed', function(event, url) {
+    this.onCameraChanged = function(event, url) {
         // Update stream URL of video view
-        $scope.cam.src = url;
-        $scope.cam.onloadedmetadata = function() {
-            $scope.cam.play();
+        this.cam.src = url;
+        this.cam.onloadedmetadata = function() {
+            this.cam.play();
         };
-    });
-
-    // Stop camera upon leaving this view
-    // FIXME move to state controller, probably
-    $scope.$on('$destroy', function() {
-        DeviceService.stopCamera();
-    });
+    };
 
     // Start camera
-    DeviceService.startCamera();
+    Device.startCamera();
+    // FIXME Stop on leave
 
     // Utility functions for generating player images
-    $scope.getARStyle = function(player) {
+    this.getARStyle = function(player) {
         // Target object
         var style = {}
 
@@ -56,7 +49,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
-        var own_latlng = L.latLng(DeviceService.position.coords.latitude, DeviceService.position.coords.longitude);
+        var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
         // Get player LatLng
         var player_latlng = L.latLng(player.latitude, player.longitude);
 
@@ -64,7 +57,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         var distance = own_latlng.distanceTo(player_latlng);
         var bearing = own_latlng.bearingTo(player_latlng);
         // Determine difference of bearing and device orientation
-        var bearing_diff = DeviceService.orientation.alpha - bearing;
+        var bearing_diff = Device.orientation.alpha - bearing;
 
         if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
             // Calculate offsets in 3D space in relation to camera
@@ -87,18 +80,18 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
 
         return style;
     };
-    $scope.getPlayerAvatar = function(player) {
+
+    this.getPlayerAvatar = function(player) {
         return '/api/data/avatar_' + player.avatar + '.svg';
     };
 
-    // Subscribe to data updates for surrounding players
-    $scope.$on('GameData.updated.players', function(event, players) {
+    this.onGameDataUpdated = function(event, players) {
         // Map players into scope
-        $scope.players = angular.copy(players);
-    });
+        this.players = players;
+    };
 
     // Subcribe to geolocation updates
-    $scope.$on('Geolocation.changed', function(event, position) {
+    this.onGeolocationChanged = function(event, position) {
         // Calculate view bounds
         // FIXME come up with something smarter
         var bounds = [
@@ -106,13 +99,17 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
             [position.coords.latitude + 0.001, position.coords.longitude + 0.001]];
 
         // Update bounds in GameDataService
-        GameDataService.setBounds(bounds[0], bounds[1]);
-    });
+        GameData.setBounds(bounds[0], bounds[1]);
+    };
+    // FIXME receive signal
 
     // Subcribe to orientation updates
-    $scope.$on('Orientation.changed', function(event) {
+    this.onOrientationChanged = function(event) {
         // Force update of player images
         // FIXME come up with something better
-        $scope.players = angular.copy($scope.players);
-    });
+        this.players = players;
+    };
+    // FIXME Receive signal
+
+    // FIXME add all that to DOM
 });
