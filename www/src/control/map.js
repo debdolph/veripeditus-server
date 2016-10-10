@@ -26,13 +26,13 @@ MapController = function() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo($scope.map);
+    }).addTo(this.map);
 
     // Add initial marker for own position
     this.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
     this.marker_self.addTo(this.map);
-    this.circle_self = L.circle($scope.marker_self.getLatLng(), 0);
-    this.circle_self.addTo($scope.map);
+    this.circle_self = L.circle(this.marker_self.getLatLng(), 0);
+    this.circle_self.addTo(this.map);
 
     // Initially center map view to own position
     this.map.setView(this.marker_self.getLatLng(), 16);
@@ -69,7 +69,7 @@ MapController = function() {
                 marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
 
                 // Add marker to map and store to known markers
-                marker.addTo($scope.map);
+                marker.addTo(this.map);
                 this.player_markers[player.id] = marker;
             }
         }
