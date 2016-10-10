@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Device = {
+DeviceService = function() {
     // Options to give to the Geolocation API
     this.locationOptions = {
         enableHighAccuracy: true,
@@ -198,3 +198,5 @@ Device = {
         };
     };
 };
+
+Device = new DeviceService();

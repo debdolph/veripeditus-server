@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-MapController = {
+MapController = function() {
     // Set up map view
     this.map = L.map("map", {
         zoomControl: false,
