@@ -66,7 +66,7 @@ MapController = function() {
                 });
 
                 // Create simple popup with basic information
-                marker.bindPopup("<p>Username: " + player.username + "<br />Name: " + player.name + "</p>");
+                marker.bindPopup("<p>Name: " + player.name + "</p>");
 
                 // Add marker to map and store to known markers
                 marker.addTo(this.map);

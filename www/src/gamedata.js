@@ -30,7 +30,7 @@ GameDataService = function() {
         [0.0, 0.0]];
 
     // Storage objects
-    this.users = {};
+    this.players = {};
 
     // Current player object
     // FIXME get logged-in player from API
@@ -61,8 +61,7 @@ GameDataService = function() {
             player.latitude = data.objects[i].latitude;
             player.longitude = data.objects[i].longitude;
             player.avatar = data.objects[i].avatar;
-            player.username = data.objects[i].username;
-            player.name = data.objects[i].username;
+            player.name = data.objects[i].name;
             this.gd.players[player.id] = player;
         }
 
