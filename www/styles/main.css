@@ -21,6 +21,8 @@ div#floating-messages {
 	position: fixed;
 	z-index: 9999;
 	padding-top: 20px;
+	top: 0px;
+	left: 0px;
 }
 
 div#map, div#camview {
