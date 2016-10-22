@@ -32,18 +32,20 @@ force_auto_coercion()
 class Base(DB.Model):
     __abstract__ = True
 
-    id = DB.Column(DB.Integer, primary_key=True)
+    id = DB.Column(DB.Integer(), primary_key=True)
     uuid = DB.Column(UUIDType(binary=False), unique=True, default=uuid4, nullable=False)
 
-    created = DB.Column(DB.DateTime, default=DB.func.now())
-    updated = DB.Column(DB.DateTime, default=DB.func.now(), onupdate=DB.func.now())
+    created = DB.Column(DB.DateTime(), default=DB.func.now())
+    updated = DB.Column(DB.DateTime(), default=DB.func.now(), onupdate=DB.func.now())
 
 class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
     name = DB.Column(DB.String(64))
-    email = DB.Column(EmailType)
-    active_user = DB.relationship("Player")
+    email = DB.Column(EmailType())
+
+    current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("player.id"))
+    current_player = DB.relationship("Player", foreign_keys=[current_player_id])
 
     @staticmethod
     def get_authenticated(username, password):
@@ -54,14 +56,17 @@ class User(Base):
             return None
 
 class Player(Base):
-    id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(32), unique=True, nullable=False)
     avatar = DB.Column(DB.String(32), default="default", nullable=False)
-    user = DB.relationship("User", backref=DB.backref("players", lazy="dynamic"))
-    world = DB.relationship("World", backref=DB.backref("players", lazy="dynamic"))
 
-    longitude = DB.Column(DB.Float, default=0.0, nullable=False)
-    latitude = DB.Column(DB.Float, default=0.0, nullable=False)
+    user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
+    user = DB.relationship("User", backref=DB.backref("players", lazy="dynamic"), foreign_keys=[user_id])
+
+    world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
+    world = DB.relationship("World", backref=DB.backref("players", lazy="dynamic"), foreign_keys=[world_id])
+
+    longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
+    latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
 
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)

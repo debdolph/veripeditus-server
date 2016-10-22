@@ -26,7 +26,7 @@ from flask import request, Response, g
 
 from veripeditus.framework import VERSION
 from veripeditus.server.app import DB, APP
-from veripeditus.server.model import Game, User
+from veripeditus.server.model import *
 from veripeditus.server.util import get_games
 
 def _sync_games():
@@ -73,6 +73,7 @@ def _add_data():
         world.name = "Default World"
         world.game = Game.query.first()
         player = Player()
+        player.name = "Default Player"
         player.longitude = random.uniform(-180.0, 180.0)
         player.latitude = random.uniform(-90.0, 90.0)
         player.user = user
