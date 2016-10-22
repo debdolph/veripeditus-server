@@ -17,6 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+Player = function(id) {
+        this.id = id;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+};
+
 GameDataService = function() {
     // Status objects
     this.bounds = [
@@ -26,18 +32,31 @@ GameDataService = function() {
     // Storage objects
     this.players = {};
 
-    // Player object
-    this.Player = function(id) {
-        this.id = id;
-        this.latitude = 0.0;
-        this.longitude = 0.0;
-    };
-
     // FIXME Subscribe to signal
     this.onGeolocationChanged = function(event, position) {
         // Update own location on server if logged in
         if (API.loggedin()) {
             // FIXME do update player location
+        }
+    };
+
+    this.onReturnPlayers = function(data) {
+        // Iterate over data and merge into players store
+        for (var i = 0; i < data.objects.length; i++) {
+            // FIXME Skip own player because it is handled separately
+
+            var player = new Player(data.objects[i].id);
+            player.latitude = data.objects[i].latitude;
+            player.longitude = data.objects[i].longitude;
+            player.avatar = data.objects[i].avatar;
+            player.username = data.objects[i].username;
+            player.name = data.objects[i].username;
+            this.players[player.id] = player;
+        }
+
+        // Call onUpdatedPlayers on all views
+        for (view of Veripeditus.views) {
+            view.onUpdatedPlayers();
         }
     };
 
@@ -68,26 +87,6 @@ GameDataService = function() {
             }]
         };
 
-        function onReturnPlayers(data) {
-            // Iterate over data and merge into players store
-            for (var i = 0; i < data.objects.length; i++) {
-                // FIXME Skip own player because it is handled separately
-
-                var player = new Player(data[i].id);
-                player.latitude = data.objects[i].latitude;
-                player.longitude = data.objects[i].longitude;
-                player.avatar = data.objects[i].avatar;
-                player.username = data.objects[i].username;
-                player.name = data.objects[i].username;
-                this.players[player.id] = player;
-            }
-
-            // Call onUpdatedPlayers on all views
-            for (view of Veripeditus.views) {
-                view.onUpdatedPlayers();
-            }
-        };
-
         $.ajax({
             dataType: "json",
             contentType: "applicaiton/json",
@@ -95,7 +94,8 @@ GameDataService = function() {
             data: {
                 q: JSON.stringify(query),
             },
-            success: onReturnPlayers
+            players: this.players,
+            success: this.onReturnPlayers
         });
     };
 
