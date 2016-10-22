@@ -35,11 +35,13 @@ setup(
     version=version,
     long_description=__doc__,
     packages=[
-              'veripeditus',
               'veripeditus.framework',
               'veripeditus.server',
               'veripeditus.game.test',
              ],
+    namespace_packages=[
+                        'veripeditus.game',
+                       ],
     include_package_data=True,
     package_data={
                   'veripeditus.server': ['data/*'],
