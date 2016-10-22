@@ -53,7 +53,6 @@ MapController = function() {
                 marker.setLatLng([player.latitude, player.longitude]);
             } else {
                 // Marker does not exist
-
                 // Construct marker icon from avatar name
                 var picon = L.icon({
                     'iconUrl': '/api/data/avatar_' + player.avatar + '.svg',

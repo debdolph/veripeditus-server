@@ -77,7 +77,8 @@ DeviceService = function() {
         // Store watchId for later clearing
         this.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
             self.onLocationUpdate.call(self, newpos);
-        }, this.onLocationError, this.locationOptions);
+        },
+        this.onLocationError, this.locationOptions);
     }
 
     // Stop watching Geolocation

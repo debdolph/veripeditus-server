@@ -1,6 +1,6 @@
 #!/bin/mksh
 
-find ./js/ -iname "*.js" -print0 |
+find ./src/ -iname "*.js" -print0 |
     while IFS= read -r -d '' f; do
     	t=$(mktemp)
     	cat "$f" >"$t"

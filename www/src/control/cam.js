@@ -34,7 +34,6 @@ CamController = function() {
     // Start camera
     Device.startCamera();
     // FIXME Stop on leave
-
     // Utility functions for generating player images
     this.getARStyle = function(player) {
         // Target object
