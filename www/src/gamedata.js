@@ -70,18 +70,15 @@ GameDataService = function() {
 
         function onReturnPlayers(data) {
             // Iterate over data and merge into players store
-            for (var i = 0; i < data.length; i++) {
-                // Skip own player because it is handled separately
-                if (API.loggedin() && data[i].id == API.server_info.user.id) {
-                    continue;
-                }
+            for (var i = 0; i < data.objects.length; i++) {
+                // FIXME Skip own player because it is handled separately
 
                 var player = new Player(data[i].id);
-                player.latitude = data[i].latitude;
-                player.longitude = data[i].longitude;
-                player.avatar = data[i].avatar;
-                player.username = data[i].username;
-                player.name = data[i].username;
+                player.latitude = data.objects[i].latitude;
+                player.longitude = data.objects[i].longitude;
+                player.avatar = data.objects[i].avatar;
+                player.username = data.objects[i].username;
+                player.name = data.objects[i].username;
                 this.players[player.id] = player;
             }
 
@@ -90,13 +87,24 @@ GameDataService = function() {
                 view.onUpdatedPlayers();
             }
         };
+
+        $.ajax({
+            dataType: "json",
+            contentType: "applicaiton/json",
+            url: "/api/player",
+            data: {
+                q: JSON.stringify(query),
+            },
+            success: onReturnPlayers
+        });
     };
-    // FIXME Send query to API
 
     // Public method to update view boundaries, e.g. from map view
     this.setBounds = function(southWest, northEast) {
         this.bounds[0] = southWest;
         this.bounds[1] = northEast;
+
+        this.updatePlayers();
     };
 };
 
