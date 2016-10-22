@@ -57,8 +57,6 @@ GameDataService = function() {
     this.onReturnPlayers = function(data) {
         // Iterate over data and merge into players store
         for (var i = 0; i < data.objects.length; i++) {
-            // FIXME Skip own player because it is handled separately
-
             var player = new Player(data.objects[i].id);
             player.latitude = data.objects[i].latitude;
             player.longitude = data.objects[i].longitude;
