@@ -17,17 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.factory('DeviceService', function($rootScope, $log, $window, $document, Messages) {
+DeviceService = function() {
+    var self = this;
+
     // Options to give to the Geolocation API
-    var locationOptions = {
+    this.locationOptions = {
         enableHighAccuracy: true,
         maximumAge: 0
     };
 
     // Stores the id of the watchPosition() service
-    var watchId;
+    this.watchId = -1;
     // Stores the last position from the Geolocation service
-    var position = {
+    this.position = {
         coords: {
             latitude: 0.0,
             longitude: 0.0,
@@ -37,20 +39,21 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
     };
 
     // Callback for Geolocation's watchPosition()
-    function onLocationUpdate(newpos) {
-        // Get this function back into scope after being called from navigator
-        $rootScope.$apply(function() {
-            // Store coords and timestamp from Geolocation service
-            position.coords = newpos.coords;
-            position.timestamp = newpos.timestamp;
+    this.onLocationUpdate = function(newpos) {
+        // Store coords and timestamp from Geolocation service
+        this.position.coords = newpos.coords;
+        this.position.timestamp = newpos.timestamp;
 
-            // Broadcast event that position changed
-            $rootScope.$broadcast('Geolocation.changed', position);
-        });
-    }
+        // Call onGeolocationChanged on all views
+        for (view of Veripeditus.views) {
+            if (view.onGeolocationChanged) {
+                view.onGeolocationChanged();
+            }
+        }
+    };
 
     // Callback for Geolocation errors
-    function onLocationError(error) {
+    this.onLocationError = function(error) {
         // Stores message after finding out what caused the error
         var msg;
 
@@ -67,30 +70,32 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
 
         // Add floating message
         Messages.add("danger", msg);
-    }
+    };
 
     // Start watching Geolocation
-    function startLocation() {
+    this.startLocation = function() {
         // Store watchId for later clearing
-        this.watchId = $window.navigator.geolocation.watchPosition(onLocationUpdate, onLocationError, locationOptions);
+        this.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
+            self.onLocationUpdate.call(self, newpos);
+        }, this.onLocationError, this.locationOptions);
     }
 
     // Stop watching Geolocation
-    function stopLocation() {
+    this.stopLocation = function() {
         // Only clear if a watch is actually active
         if (this.watchId) {
             // Clear previously stored watchId
-            $window.navigator.geolocation.clearWatch(this.watchId);
+            window.navigator.geolocation.clearWatch(this.watchId);
             this.watchId = undefined;
         }
     }
 
     // Video constraints
-    var mediaConstraints = {
+    this.mediaConstraints = {
         audio: false,
         video: {
-            width: $window.innerWidth,
-            height: $window.innerHeight,
+            width: window.innerWidth,
+            height: window.innerHeight,
             facingMode: {
                 exact: "environment"
             }
@@ -98,53 +103,61 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
     };
 
     // Stores the stream URL for the camera and internal stream object
-    var cameraUrl;
-    var cameraStream;
+    this.cameraUrl = undefined;
+    this.cameraStream = undefined;
 
     // Start camera by getting user media
-    function startCamera() {
+    this.startCamera = function() {
         // Look for running stream
-        if (!cameraStream) {
-            navigator.mediaDevices.getUserMedia(mediaConstraints).then(function(stream) {
-                cameraStream = stream;
-                cameraUrl = $window.URL.createObjectURL(stream);
-                $rootScope.$broadcast("Camera.changed", cameraUrl);
+        if (!this.cameraStream) {
+            navigator.mediaDevices.getUserMedia(this.mediaConstraints).then(function(stream) {
+                this.cameraStream = stream;
+                this.cameraUrl = window.URL.createObjectURL(stream);
+
+                // Call onCameraChanged on all views
+                for (view of Veripeditus.views) {
+                    if (view.onCameraChanged) {
+                        view.onCameraChanged();
+                    }
+                }
             }).
             catch(function(error) {
                 Messages.add("danger", error.message);
             });
         }
-    }
+    };
 
     // Stop camera
-    function stopCamera() {
-        if (cameraStream) {
-            cameraStream.getTracks()[0].stop();
-            cameraStream = undefined;
+    this.stopCamera = function() {
+        if (this.cameraStream) {
+            this.cameraStream.getTracks()[0].stop();
+            this.cameraStream = undefined;
 
-            // Tell others the stream was stopped
-            $rootScope.$broadcast('Camera.stopped');
+            // Call onCameraChanged on all views
+            for (view of Veripeditus.views) {
+                if (view.onCameraChanged) {
+                    view.onCameraChanged();
+                }
+            }
         }
     }
 
     // Fullscreen state
-    var fullscreen = {
+    this.fullscreen = {
         enabled: false
     };
 
     // Subscribe to fullscreen change event
     document.onmozfullscreenchange = function() {
         if (document.mozFullScreenElement) {
-            $log.debug("DeviceService: Fullscreen mode entered");
-            fullscreen.enabled = true;
+            this.fullscreen.enabled = true;
         } else {
-            $log.debug("DeviceService: Fullscreen mode left");
-            fullscreen.enabled = false;
+            this.fullscreen.enabled = false;
         }
     };
 
     // Start fullscreen mode
-    function startFullscreen() {
+    this.startFullscreen = function() {
         if (document.body.requestFullScreen) {
             document.body.requestFullScreen();
         } else if (document.body.mozRequestFullScreen) {
@@ -152,10 +165,10 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
         } else if (document.body.webkitRequestFullScreen) {
             document.body.webkitRequestFullScreen();
         }
-    }
+    };
 
     // Stop fullscreen mode
-    function stopFullscreen() {
+    this.stopFullscreen = function() {
         if (document.cancelFullScreen) {
             document.cancelFullScreen();
         } else if (document.mozCancelFullScreen) {
@@ -163,10 +176,10 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
         } else if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
         }
-    }
+    };
 
     // Storage for orientation data
-    var orientation = {
+    this.orientation = {
         absolute: false,
         alpha: 0,
         beta: 0,
@@ -174,50 +187,45 @@ app.factory('DeviceService', function($rootScope, $log, $window, $document, Mess
     };
 
     // Event handler for device oreintation changes
-    function handleOrientation(event) {
+    this.handleOrientation = function(event) {
         // Store values
-        orientation.absolute = event.absolute;
-        orientation.alpha = event.alpha;
-        orientation.beta = event.beta;
-        orientation.gamma = event.gamma;
+        this.orientation.absolute = event.absolute;
+        this.orientation.alpha = event.alpha;
+        this.orientation.beta = event.beta;
+        this.orientation.gamma = event.gamma;
 
-        // Broadcast change event
-        $rootScope.$broadcast('Orientation.changed', orientation);
-    }
+        // Call onOrientationChanged on all views
+        for (view of Veripeditus.views) {
+            if (view.onOrientationChanged) {
+                view.onOrientationChanged();
+            }
+        }
+    };
 
     // Start listening for orientation events
-    function startOrientation() {
+    var handleOrientation = function(event) {
+        self.handleOrientation.call(self, event);
+    };
+    this.startOrientation = function() {
         // Add global event handler
-        $window.addEventListener('deviceorientation', handleOrientation, true);
-    }
+        window.addEventListener('deviceorientation', handleOrientation, true);
+    };
 
     // Stop listening for orientation events
-    function stopOrientation() {
+    this.stopOrientation = function() {
         // Remove global event listener
-        $window.removeEventListener('deviceorientation', handleOrientation, true);
+        window.removeEventListener('deviceorientation', handleOrientation, true);
 
         // Reset orientation data
-        orientation = {
+        this.orientation = {
             absolute: false,
             alpha: 0,
             beta: 0,
             gamma: 0
         };
-    }
-
-    // Publish service API
-    return {
-        startLocation: startLocation,
-        stopLocation: stopLocation,
-        startOrientation: startOrientation,
-        stopOrientation: stopOrientation,
-        startCamera: startCamera,
-        stopCamera: stopCamera,
-        startFullscreen: startFullscreen,
-        stopFullscreen: stopFullscreen,
-        position: position,
-        orientation: orientation,
-        cameraUrl: cameraUrl,
-        fullscreen: fullscreen
     };
-});
+};
+
+Device = new DeviceService();
+Device.startOrientation();
+Device.startLocation();

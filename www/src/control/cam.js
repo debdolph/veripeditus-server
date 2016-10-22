@@ -16,34 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: L */
-
-app.controller('ViewCamController', function($log, $document, $scope, GameDataService, DeviceService) {
-    const MAX_DISTANCE = 100;
+CamController = function() {
+    this.MAX_DISTANCE = 100;
 
     // Find video view
-    $scope.cam = $document.find('video')[0];
+    this.cam = document.getElementById('cam');
 
-    // Subscribe to update event from DeviceService
-    $scope.$on('Camera.changed', function(event, url) {
+    // Called by DeviceService on camera stream change
+    this.onCameraChanged = function() {
         // Update stream URL of video view
-        $scope.cam.src = url;
-        $scope.cam.onloadedmetadata = function() {
-            $scope.cam.play();
+        this.cam.src = Device.cameraUrl;
+        this.cam.onloadedmetadata = function() {
+            this.cam.play();
         };
-    });
-
-    // Stop camera upon leaving this view
-    // FIXME move to state controller, probably
-    $scope.$on('$destroy', function() {
-        DeviceService.stopCamera();
-    });
+    };
 
     // Start camera
-    DeviceService.startCamera();
+    Device.startCamera();
+    // FIXME Stop on leave
 
     // Utility functions for generating player images
-    $scope.getARStyle = function(player) {
+    this.getARStyle = function(player) {
         // Target object
         var style = {}
 
@@ -56,7 +49,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
-        var own_latlng = L.latLng(DeviceService.position.coords.latitude, DeviceService.position.coords.longitude);
+        var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
         // Get player LatLng
         var player_latlng = L.latLng(player.latitude, player.longitude);
 
@@ -64,7 +57,7 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
         var distance = own_latlng.distanceTo(player_latlng);
         var bearing = own_latlng.bearingTo(player_latlng);
         // Determine difference of bearing and device orientation
-        var bearing_diff = DeviceService.orientation.alpha - bearing;
+        var bearing_diff = Device.orientation.alpha - bearing;
 
         if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
             // Calculate offsets in 3D space in relation to camera
@@ -87,32 +80,35 @@ app.controller('ViewCamController', function($log, $document, $scope, GameDataSe
 
         return style;
     };
-    $scope.getPlayerAvatar = function(player) {
+
+    // FIXME Move to GameDataService
+    this.getPlayerAvatar = function(player) {
         return '/api/data/avatar_' + player.avatar + '.svg';
     };
 
-    // Subscribe to data updates for surrounding players
-    $scope.$on('GameData.updated.players', function(event, players) {
-        // Map players into scope
-        $scope.players = angular.copy(players);
-    });
+    // Called by GameDataService on player update
+    this.onUpdatedPlayers = function() {
+        // FIXME do something
+    };
 
-    // Subcribe to geolocation updates
-    $scope.$on('Geolocation.changed', function(event, position) {
+    // Called by DeviceService on geolocation change
+    this.onGeolocationChanged = function() {
         // Calculate view bounds
         // FIXME come up with something smarter
         var bounds = [
-            [position.coords.latitude - 0.001, position.coords.longitude - 0.001],
-            [position.coords.latitude + 0.001, position.coords.longitude + 0.001]];
+            [Device.position.coords.latitude - 0.001, Device.position.coords.longitude - 0.001],
+            [Device.position.coords.latitude + 0.001, Device.position.coords.longitude + 0.001]];
 
         // Update bounds in GameDataService
-        GameDataService.setBounds(bounds[0], bounds[1]);
-    });
+        GameData.setBounds(bounds[0], bounds[1]);
+    };
 
-    // Subcribe to orientation updates
-    $scope.$on('Orientation.changed', function(event) {
-        // Force update of player images
-        // FIXME come up with something better
-        $scope.players = angular.copy($scope.players);
-    });
-});
+    // Called by DeviceService on orientation change
+    this.onOrientationChanged = function() {
+        // FIXME do something
+    };
+};
+
+// Instantiate controller and register to services
+CamView = new CamController();
+Veripeditus.registerView(CamView);

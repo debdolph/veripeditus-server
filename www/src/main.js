@@ -16,4 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-app.controller('ViewStatusController', function() {});
+Veripeditus = {
+    version: '1.0.0a0.dev0',
+    views: [],
+    registerView: function(view) {
+        this.views.push(view);
+    }
+};
