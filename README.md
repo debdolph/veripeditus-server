@@ -33,15 +33,6 @@ Python. There are a few design/development principles:
  * Code must at all times be compatible with Python versions in Debian
    stable and Debian unstable
 
-### Code state
-
-The CI state represents the results from unit tests, pylint and coverage
-assessment.
-
-[![Build Status](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Veripeditus/veripeditus-server/?branch=master)
-
 ## Features of the web frontend
 
 The web frontend was originally intended to provide a quick view into
