@@ -65,7 +65,7 @@ MANAGER.create_api(User,
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Player,
-                   include_columns=_INCLUDE+['name', 'longitude', 'latitude', 'avatar'],
+                   include_columns=_INCLUDE+['name', 'longitude', 'latitude', 'avatar', 'world', 'world.id'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',

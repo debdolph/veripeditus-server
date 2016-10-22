@@ -35,6 +35,8 @@ GameDataService = function() {
     // Current player object
     // FIXME get logged-in player from API
     this.current_player_id = 1;
+    this.players[1] = new Player(1);
+    this.players[1].world = {"id": 1};
 
     this.onGeolocationChanged = function() {
         // Update own location on server if logged in
@@ -97,6 +99,15 @@ GameDataService = function() {
                         'name': 'longitude',
                         'op': 'le',
                         'val': this.bounds[1][1]
+                    },
+                    {
+                        'name': 'world',
+                        'op': 'has',
+                        'val': {
+                            'name': 'id',
+                            'op': 'eq',
+                            'val': this.players[this.current_player_id].world.id
+                        }
                     }]},
                 {
                     'name': 'id',
