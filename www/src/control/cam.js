@@ -20,7 +20,7 @@ CamController = function() {
     this.MAX_DISTANCE = 100;
 
     // Find video view
-    this.cam = document.getElementById('cam');
+    this.cam = $("#cam");
 
     // Called by DeviceService on camera stream change
     this.onCameraChanged = function() {
@@ -44,7 +44,7 @@ CamController = function() {
         var perspective = 800;
 
         // Center image first
-        var width = document.getElementById("arplayer-" + player.id).width;
+        var width = $("#arplayer-" + player.id).width;
         style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
