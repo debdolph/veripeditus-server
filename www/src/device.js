@@ -46,7 +46,9 @@ DeviceService = function() {
 
         // Call onGeolocationChanged on all views
         for (view of Veripeditus.views) {
-            view.onGeolocationChanged();
+            if (view.onGeolocationChanged) {
+                view.onGeolocationChanged();
+            }
         }
     };
 
@@ -73,7 +75,9 @@ DeviceService = function() {
     // Start watching Geolocation
     this.startLocation = function() {
         // Store watchId for later clearing
-        this.watchId = window.navigator.geolocation.watchPosition(this.onLocationUpdate, this.onLocationError, this.locationOptions);
+        this.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
+            self.onLocationUpdate.call(self, newpos);
+        }, this.onLocationError, this.locationOptions);
     }
 
     // Stop watching Geolocation
@@ -112,7 +116,9 @@ DeviceService = function() {
 
                 // Call onCameraChanged on all views
                 for (view of Veripeditus.views) {
-                    view.onCameraChanged();
+                    if (view.onCameraChanged) {
+                        view.onCameraChanged();
+                    }
                 }
             }).
             catch(function(error) {
@@ -129,7 +135,9 @@ DeviceService = function() {
 
             // Call onCameraChanged on all views
             for (view of Veripeditus.views) {
-                view.onCameraChanged();
+                if (view.onCameraChanged) {
+                    view.onCameraChanged();
+                }
             }
         }
     }
@@ -188,7 +196,9 @@ DeviceService = function() {
 
         // Call onOrientationChanged on all views
         for (view of Veripeditus.views) {
-            view.onOrientationChanged();
+            if (view.onOrientationChanged) {
+                view.onOrientationChanged();
+            }
         }
     };
 

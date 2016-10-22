@@ -56,7 +56,9 @@ GameDataService = function() {
 
         // Call onUpdatedPlayers on all views
         for (view of Veripeditus.views) {
-            view.onUpdatedPlayers();
+            if (view.onUpdatedPlayers) {
+                view.onUpdatedPlayers();
+            }
         }
     };
 
