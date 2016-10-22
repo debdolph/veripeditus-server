@@ -19,16 +19,8 @@
 import os
 from setuptools import setup
 
-# Find out what version we are installing/building
-if 'VERIPEDITUS_BUILD_VERSION' in os.environ:
-    # First, look for environment variable
-    version = os.environ['VERIPEDITUS_BUILD_VERSION']
-elif os.path.isfile('VERSION'):
-    # Load from file
-    version = open('VERSION', 'r').read().strip()
-else:
-    # Use fallback
-    version = '0.1~unknown'
+with open('VERSION', 'r') as f:
+    version = f.read().strip()
 
 setup(
     name='Veripeditus',
@@ -55,10 +47,10 @@ setup(
                       'passlib',
                       'Wand',
                      ],
-    test_suite = 'tests',
-    entry_points         = {
-                            'console_scripts': [
-                                                'veripeditus-standalone = veripeditus.server:server_main'
-                                               ]
-                           },
+    test_suite='tests',
+    entry_points={
+                  'console_scripts': [
+                                      'veripeditus-standalone = veripeditus.server:server_main'
+                                     ]
+                 },
 )
