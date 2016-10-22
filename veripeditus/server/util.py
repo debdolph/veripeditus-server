@@ -31,10 +31,9 @@ def get_game_names():
     veripeditus.game.foo.
     """
 
-    # Get all accessible packages that start with veripeditus.game.,
-    # strip veripeditus.game. and construct list
-    _pkgs = [i[1].split(".")[2] for i in pkgutil.walk_packages(onerror=lambda x: None)
-             if i[1].startswith("veripeditus.game.")]
+    # Get all modules inside the namespace package veripeditus.game
+    import veripeditus.game
+    _pkgs = [i[1] for i in pkgutil.iter_modules(veripeditus.game.__path__)]
 
     return _pkgs
 
