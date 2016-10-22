@@ -203,18 +203,18 @@ DeviceService = function() {
     };
 
     // Start listening for orientation events
+    var handleOrientation = function(event) {
+        self.handleOrientation.call(self, event);
+    };
     this.startOrientation = function() {
         // Add global event handler
-        window.addEventListener('deviceorientation', function(event) {
-            self.handleOrientation.call(self, event);
-        }, true);
+        window.addEventListener('deviceorientation', handleOrientation, true);
     };
 
     // Stop listening for orientation events
     this.stopOrientation = function() {
         // Remove global event listener
-        // FIXME remove correct event handler
-        window.removeEventListener('deviceorientation', this.handleOrientation, true);
+        window.removeEventListener('deviceorientation', handleOrientation, true);
 
         // Reset orientation data
         this.orientation = {
