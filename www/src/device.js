@@ -18,6 +18,8 @@
  */
 
 DeviceService = function() {
+    var self = this;
+
     // Options to give to the Geolocation API
     this.locationOptions = {
         enableHighAccuracy: true,
@@ -193,12 +195,15 @@ DeviceService = function() {
     // Start listening for orientation events
     this.startOrientation = function() {
         // Add global event handler
-        window.addEventListener('deviceorientation', this.handleOrientation, true);
+        window.addEventListener('deviceorientation', function(event) {
+            self.handleOrientation.call(self, event);
+        }, true);
     };
 
     // Stop listening for orientation events
     this.stopOrientation = function() {
         // Remove global event listener
+        // FIXME remove correct event handler
         window.removeEventListener('deviceorientation', this.handleOrientation, true);
 
         // Reset orientation data
