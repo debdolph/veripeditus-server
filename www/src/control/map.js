@@ -44,7 +44,7 @@ MapController = function() {
     this.onUpdatedPlayers = function() {
         // Iterate over players and add map markers
         for (id of Object.keys(GameData.players)) {
-            var player = players[id];
+            var player = GameData.players[id];
 
             // Look for already created marker for this player id
             var marker = this.player_markers[player.id];

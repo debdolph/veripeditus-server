@@ -51,7 +51,7 @@ GameDataService = function() {
             player.avatar = data.objects[i].avatar;
             player.username = data.objects[i].username;
             player.name = data.objects[i].username;
-            this.players[player.id] = player;
+            this.gd.players[player.id] = player;
         }
 
         // Call onUpdatedPlayers on all views
@@ -94,7 +94,7 @@ GameDataService = function() {
             data: {
                 q: JSON.stringify(query),
             },
-            players: this.players,
+            gd: this,
             success: this.onReturnPlayers
         });
     };
