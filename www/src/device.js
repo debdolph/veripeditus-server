@@ -212,3 +212,5 @@ DeviceService = function() {
 };
 
 Device = new DeviceService();
+Device.startOrientation();
+Device.startLocation();
