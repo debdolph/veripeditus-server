@@ -63,21 +63,6 @@ class Player(Base):
     longitude = DB.Column(DB.Float, default=0.0, nullable=False)
     latitude = DB.Column(DB.Float, default=0.0, nullable=False)
 
-usergroup = DB.Table('usergroup',
-    DB.Column('user_id', DB.Integer, DB.ForeignKey('user.id')),
-    DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
-)
-
-worldgroup = DB.Table('worldgroup',
-    DB.Column('world_id', DB.Integer, DB.ForeignKey('world.id')),
-    DB.Column('group_id', DB.Integer, DB.ForeignKey('group.id'))
-)
-
-class Group(Base):
-    name = DB.Column(DB.String(64), unique=True, nullable=False)
-    users = DB.relationship('user', secondary=usergroup,
-                              backref=DB.backref('groups', lazy='dynamic'))
-
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)
     name = DB.Column(DB.String(32), nullable=False)
@@ -108,5 +93,3 @@ class World(Base):
     name = DB.Column(DB.String(32), unique=True, nullable=False)
     game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
     game = DB.relationship('Game', backref=DB.backref('worlds', lazy='dynamic'))
-    groups = DB.relationship('Group', secondary=worldgroup,
-                             backref=DB.backref('groups', lazy='dynamic'))
