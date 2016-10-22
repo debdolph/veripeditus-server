@@ -18,6 +18,8 @@
  */
 
 DeviceService = function() {
+    var self = this;
+
     // Options to give to the Geolocation API
     this.locationOptions = {
         enableHighAccuracy: true,
@@ -44,7 +46,9 @@ DeviceService = function() {
 
         // Call onGeolocationChanged on all views
         for (view of Veripeditus.views) {
-            view.onGeolocationChanged();
+            if (view.onGeolocationChanged) {
+                view.onGeolocationChanged();
+            }
         }
     };
 
@@ -71,7 +75,9 @@ DeviceService = function() {
     // Start watching Geolocation
     this.startLocation = function() {
         // Store watchId for later clearing
-        this.watchId = window.navigator.geolocation.watchPosition(this.onLocationUpdate, this.onLocationError, this.locationOptions);
+        this.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
+            self.onLocationUpdate.call(self, newpos);
+        }, this.onLocationError, this.locationOptions);
     }
 
     // Stop watching Geolocation
@@ -110,7 +116,9 @@ DeviceService = function() {
 
                 // Call onCameraChanged on all views
                 for (view of Veripeditus.views) {
-                    view.onCameraChanged();
+                    if (view.onCameraChanged) {
+                        view.onCameraChanged();
+                    }
                 }
             }).
             catch(function(error) {
@@ -127,7 +135,9 @@ DeviceService = function() {
 
             // Call onCameraChanged on all views
             for (view of Veripeditus.views) {
-                view.onCameraChanged();
+                if (view.onCameraChanged) {
+                    view.onCameraChanged();
+                }
             }
         }
     }
@@ -186,20 +196,25 @@ DeviceService = function() {
 
         // Call onOrientationChanged on all views
         for (view of Veripeditus.views) {
-            view.onOrientationChanged();
+            if (view.onOrientationChanged) {
+                view.onOrientationChanged();
+            }
         }
     };
 
     // Start listening for orientation events
+    var handleOrientation = function(event) {
+        self.handleOrientation.call(self, event);
+    };
     this.startOrientation = function() {
         // Add global event handler
-        window.addEventListener('deviceorientation', this.handleOrientation, true);
+        window.addEventListener('deviceorientation', handleOrientation, true);
     };
 
     // Stop listening for orientation events
     this.stopOrientation = function() {
         // Remove global event listener
-        window.removeEventListener('deviceorientation', this.handleOrientation, true);
+        window.removeEventListener('deviceorientation', handleOrientation, true);
 
         // Reset orientation data
         this.orientation = {
@@ -212,3 +227,5 @@ DeviceService = function() {
 };
 
 Device = new DeviceService();
+Device.startOrientation();
+Device.startLocation();

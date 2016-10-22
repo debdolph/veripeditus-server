@@ -44,7 +44,7 @@ MapController = function() {
     this.onUpdatedPlayers = function() {
         // Iterate over players and add map markers
         for (id of Object.keys(GameData.players)) {
-            var player = players[id];
+            var player = GameData.players[id];
 
             // Look for already created marker for this player id
             var marker = this.player_markers[player.id];
@@ -89,9 +89,9 @@ MapController = function() {
     };
 
     // Subscribe to event on change of map view
-    this.map.on('moveend', function() {
+    this.map.on('moveend', function(event) {
         // Update view bounds in GameDataService
-        var bounds = this.map.getBounds();
+        var bounds = event.target.getBounds();
         GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
     });
 

@@ -28,10 +28,10 @@ MessagesService = function() {
     this.msgs = {};
 
     // Remove the message
-    this.remove = function(id) {
+    this.remove = function(msgs, id) {
         // Clear the timer first, in case we got called manually
-        window.timeout.cancel(this.msgs[id].tid);
-        delete this.msgs[id];
+        window.clearTimeout(msgs[id].tid);
+        delete msgs[id];
     };
 
     this.add = function(cls, message) {
@@ -49,7 +49,7 @@ MessagesService = function() {
         };
 
         // Add timer to auto-close the message
-        var tid = window.timeout(this.remove, 10000, true, id);
+        var tid = window.setTimeout(this.remove, 10000, this.msgs, id);
         this.msgs[id].tid = tid;
     };
 };

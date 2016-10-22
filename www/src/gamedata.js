@@ -17,6 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+Player = function(id) {
+        this.id = id;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+};
+
 GameDataService = function() {
     // Status objects
     this.bounds = [
@@ -26,28 +32,45 @@ GameDataService = function() {
     // Storage objects
     this.users = {};
 
-    // Player object
-    this.User = function(id) {
-        this.id = id;
-        this.active_player = {};
-        this.active_player.latitude = 0.0;
-        this.active_player.longitude = 0.0;
-    }
+    // Current player object
+    // FIXME get logged-in player from API
+    this.current_player_id = 1;
 
-    // FIXME Subscribe to signal
-    this.onGeolocationChanged = function(event, position) {
+    this.onGeolocationChanged = function() {
         // Update own location on server if logged in
-        if (API.loggedin()) {
-            // FIXME do update player location
-            resUser.update({
-                // Player.id from user in server_info (currently logged in)
-                id: APIBasicAuth.server_info.user.id
-            },
-            {
-                // Position from DeviceService
-                active_player.latitude: position.coords.latitude,
-                active_player.longitude: position.coords.longitude
+        if (this.current_player_id > -1) {
+            // Update location in player object
+            this.players[this.current_player_id].latitude = Device.position.coords.latitude;
+            this.players[this.current_player_id].longitude = Device.position.coords.longitude;
+
+            // Send the PATCH request
+            $.ajax({
+                dataType: "json",
+                contentType: "application/json",
+                url: "/api/player/" + this.current_player_id,
+                data: JSON.stringify(this.players[this.current_player_id]),
+                method: "PATCH",
             });
+        }
+    };
+
+    this.onReturnPlayers = function(data) {
+        // Iterate over data and merge into players store
+        for (var i = 0; i < data.objects.length; i++) {
+            var player = new Player(data.objects[i].id);
+            player.latitude = data.objects[i].latitude;
+            player.longitude = data.objects[i].longitude;
+            player.avatar = data.objects[i].avatar;
+            player.username = data.objects[i].username;
+            player.name = data.objects[i].username;
+            this.gd.players[player.id] = player;
+        }
+
+        // Call onUpdatedPlayers on all views
+        for (view of Veripeditus.views) {
+            if (view.onUpdatedPlayers) {
+                view.onUpdatedPlayers();
+            }
         }
     };
 
@@ -55,60 +78,55 @@ GameDataService = function() {
         // Construct JSON query filter for REST API
         var query = {
             'filters': [{
-                'and': [{
-                    'name': 'latitude',
-                    'op': 'ge',
-                    'val': this.bounds[0][0]
-                },
+                'or': [{
+                    'and': [{
+                        'name': 'latitude',
+                        'op': 'ge',
+                        'val': this.bounds[0][0]
+                    },
+                    {
+                        'name': 'latitude',
+                        'op': 'le',
+                        'val': this.bounds[1][0]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'ge',
+                        'val': this.bounds[0][1]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'le',
+                        'val': this.bounds[1][1]
+                    }]},
                 {
-                    'name': 'latitude',
-                    'op': 'le',
-                    'val': this.bounds[1][0]
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'ge',
-                    'val': this.bounds[0][1]
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'le',
-                    'val': this.bounds[1][1]
+                    'name': 'id',
+                    'op': 'eq',
+                    'val': this.current_player_id
                 }]
             }]
         };
 
-        function onReturnPlayers(data) {
-            // Iterate over data and merge into players store
-            for (var i = 0; i < data.length; i++) {
-                // Skip own player because it is handled separately
-                if (API.loggedin() && data[i].id == API.server_info.user.id) {
-                    continue;
-                }
-
-                var user = new User(data[i].id);
-                user.active_player = {};
-                user.active_player.latitude = data[i].latitude;
-                user.active_player.longitude = data[i].longitude;
-                user.active_player.avatar = data[i].avatar;
-                user.active_player.username = data[i].username;
-                user.active_player.name = data[i].username;
-                users[user.id] = user;
-            }
-
-            // Call onUpdatedPlayers on all views
-            for (view of Veripeditus.views) {
-                view.onUpdatedPlayers();
-            }
-        };
+        $.ajax({
+            dataType: "json",
+            contentType: "applicaiton/json",
+            url: "/api/player",
+            data: {
+                q: JSON.stringify(query),
+            },
+            gd: this,
+            success: this.onReturnPlayers
+        });
     };
-    // FIXME Send query to API
 
     // Public method to update view boundaries, e.g. from map view
     this.setBounds = function(southWest, northEast) {
         this.bounds[0] = southWest;
         this.bounds[1] = northEast;
+
+        this.updatePlayers();
     };
 };
 
 GameData = new GameDataService();
+Veripeditus.registerView(GameData);

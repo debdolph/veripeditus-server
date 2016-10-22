@@ -21,11 +21,16 @@ div#floating-messages {
 	position: fixed;
 	z-index: 9999;
 	padding-top: 20px;
+	top: 0px;
+	left: 0px;
 }
 
-div#map {
+div#map, div#camview {
 	height: 100%;
 	width: 100%;
+	top: 0px;
+	left: 0px;
+	position: fixed;
 }
 
 video#cam {
