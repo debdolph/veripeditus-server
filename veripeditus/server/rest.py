@@ -71,3 +71,6 @@ MANAGER.create_api(Player,
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
                                                    'description', 'author', 'license'],
                    methods=['GET'])
+
+MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],
+                   methods=['GET'])
