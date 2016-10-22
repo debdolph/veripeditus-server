@@ -32,11 +32,25 @@ GameDataService = function() {
     // Storage objects
     this.players = {};
 
-    // FIXME Subscribe to signal
-    this.onGeolocationChanged = function(event, position) {
+    // Current player object
+    // FIXME get logged-in player from API
+    this.current_player_id = 1;
+
+    this.onGeolocationChanged = function() {
         // Update own location on server if logged in
-        if (API.loggedin()) {
-            // FIXME do update player location
+        if (this.current_player_id > -1) {
+            // Update location in player object
+            this.players[this.current_player_id].latitude = Device.position.coords.latitude;
+            this.players[this.current_player_id].longitude = Device.position.coords.longitude;
+
+            // Send the PATCH request
+            $.ajax({
+                dataType: "json",
+                contentType: "application/json",
+                url: "/api/player/" + this.current_player_id,
+                data: JSON.stringify(this.players[this.current_player_id]),
+                method: "PATCH",
+            });
         }
     };
 
@@ -66,25 +80,31 @@ GameDataService = function() {
         // Construct JSON query filter for REST API
         var query = {
             'filters': [{
-                'and': [{
-                    'name': 'latitude',
-                    'op': 'ge',
-                    'val': this.bounds[0][0]
-                },
+                'or': [{
+                    'and': [{
+                        'name': 'latitude',
+                        'op': 'ge',
+                        'val': this.bounds[0][0]
+                    },
+                    {
+                        'name': 'latitude',
+                        'op': 'le',
+                        'val': this.bounds[1][0]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'ge',
+                        'val': this.bounds[0][1]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'le',
+                        'val': this.bounds[1][1]
+                    }]},
                 {
-                    'name': 'latitude',
-                    'op': 'le',
-                    'val': this.bounds[1][0]
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'ge',
-                    'val': this.bounds[0][1]
-                },
-                {
-                    'name': 'longitude',
-                    'op': 'le',
-                    'val': this.bounds[1][1]
+                    'name': 'id',
+                    'op': 'eq',
+                    'val': this.current_player_id
                 }]
             }]
         };
@@ -111,3 +131,4 @@ GameDataService = function() {
 };
 
 GameData = new GameDataService();
+Veripeditus.registerView(GameData);
