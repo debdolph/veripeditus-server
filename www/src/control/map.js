@@ -89,9 +89,9 @@ MapController = function() {
     };
 
     // Subscribe to event on change of map view
-    this.map.on('moveend', function() {
+    this.map.on('moveend', function(event) {
         // Update view bounds in GameDataService
-        var bounds = this.map.getBounds();
+        var bounds = event.target.getBounds();
         GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
     });
 
