@@ -24,6 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <link href="manifest.json" rel="manifest" />
   <link href="img/logo.svg" rel="icon" sizes="any" sizes="any" type="image/svg+xml" />
+  <link href="lib/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" media="screen" />
   <link href="lib/leaflet/leaflet.css"  rel="stylesheet" media="screen" />
   <link href="styles/main.css"  rel="stylesheet" media="screen" />
  </head>
@@ -42,16 +43,26 @@
     </div>
    </div>
 
+   <div id="control-overlay">
+    <div id="control-login" class="control control-round">
+     <img src="img/ui/btn-login.svg" class="control-round-icon" />
+    </div>
+   </div>
+
    <div id="floating-messages">
    </div>
   </div>
 
   <script src="lib/jquery/jquery.js"></script>
+  <!-- FIXME Replace with packaged version, or newer jQuery -->
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
+  <script src="lib/jquery-ui/jquery-ui.js"></script>
   <script src="lib/leaflet/leaflet.js"></script>
   <script src="src/util/leaflet-addons.js"></script>
   <script src="src/util/objringbuffer.js"></script>
   <script src="src/util/messages.js"></script>
   <script src="src/main.js"></script>
+  <script src="src/ui.js"></script>
   <script src="src/device.js"></script>
   <script src="src/gamedata.js"></script>
   <script src="src/control/map.js"></script>
