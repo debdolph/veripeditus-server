@@ -45,7 +45,9 @@ class ServerModelTests(unittest.TestCase):
         # The password to use for testing
         import random, string
         test_pw_len = random.randint(8, 16)
-        test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(test_pw_len))
+        test_pw = ''.join(random.choice(string.ascii_uppercase +
+                                        string.digits)
+                          for _ in range(test_pw_len))
 
         # Set the password on the test_player object
         self.test_user.password = test_pw
@@ -60,7 +62,8 @@ class ServerModelTests(unittest.TestCase):
         # The password to use for testing
         import random, string
         test_pw_len = random.randint(8, 16)
-        test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(test_pw_len))
+        test_pw = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                                        for _ in range(test_pw_len))
 
         # Set the password on the test_player object
         self.test_user.password = test_pw

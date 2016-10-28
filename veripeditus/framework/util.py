@@ -79,10 +79,10 @@ def get_game_data_file_name(restype, basename):
         _file = os.path.join(_respath, "%s.txt" % basename)
         if os.path.isfile(_file):
             return _file
-
-    # If we got here, no logic matched
-    raise NoSuchResourceError("No resource found for game %s, type %s, called %s."
-                              % (_module, restype, basename))
+    else:
+        # If we got here, no logic matched
+        raise NoSuchResourceError("No resource found for game %s, type %s, called %s."
+                                  % (_module, restype, basename))
 
 def get_game_data_file(restype, basename, mode=None):
     """
@@ -101,7 +101,7 @@ def get_game_data_file(restype, basename, mode=None):
     _filename = get_game_data_file_name(restype, basename)
 
     # Determine file mode
-    if not mode:
+    if not mode is None:
         _mode = "r"
         if restype in ["image"]:
             # These resource types are binary

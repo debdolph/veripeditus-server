@@ -95,7 +95,8 @@ def _check_auth():
                                             request.authorization.password)
         if not g.user:
             return Response('Authentication failed.', 401,
-                            {'WWW-Authenticate':'Basic realm="%s"' % APP.config['BASIC_REALM']})
+                            {'WWW-Authenticate':'Basic realm="%s"'
+                             % APP.config['BASIC_REALM']})
 
 def get_server_info():
     info = {}

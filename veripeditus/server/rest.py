@@ -53,23 +53,29 @@ def _api_strip_server_info(*args, **kwargs):
 
 _GLOBAL_GENERAL_PRE_PROCESSORS = [_api_strip_server_info]
 _GLOBAL_GENERAL_POST_PROCESSORS = [_api_add_server_info]
-_METHODS = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE', 'DELETE_MANY', 'DELETE_SINGLE', 'POST']
+_METHODS = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE',
+            'DELETE_MANY', 'DELETE_SINGLE', 'POST']
 _GLOBAL_PRE_PROCESSORS = {m: _GLOBAL_GENERAL_PRE_PROCESSORS for m in _METHODS}
 _GLOBAL_POST_PROCESSORS = {m: _GLOBAL_GENERAL_POST_PROCESSORS for m in _METHODS}
 
-MANAGER = APIManager(APP, flask_sqlalchemy_db=DB, preprocessors=_GLOBAL_PRE_PROCESSORS,
+MANAGER = APIManager(APP, flask_sqlalchemy_db=DB,
+                     preprocessors=_GLOBAL_PRE_PROCESSORS,
                      postprocessors=_GLOBAL_POST_PROCESSORS)
 
 MANAGER.create_api(User,
-                   include_columns=_INCLUDE+['username', 'email', 'players', 'players.name', 'players.longitude', 'players.latitude', 'players.avatar'],
+                   include_columns=_INCLUDE+['username', 'email', 'players',
+                   'players.name', 'players.longitude', 'players.latitude',
+                   'players.avatar'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Player,
-                   include_columns=_INCLUDE+['name', 'longitude', 'latitude', 'avatar', 'world', 'world.id'],
+                   include_columns=_INCLUDE+['name', 'longitude', 'latitude',
+                                             'avatar', 'world', 'world.id'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
-                                                   'description', 'author', 'license'],
+                                                   'description', 'author',
+                                                   'license'],
                    methods=['GET'])
 
 MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],

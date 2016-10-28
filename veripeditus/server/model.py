@@ -21,7 +21,8 @@ Main server data model
 from veripeditus.server.app import APP, DB
 
 from flask import g
-from sqlalchemy_utils import EmailType, PasswordType, UUIDType, force_auto_coercion
+from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
+                              force_auto_coercion)
 import base64
 import os
 from uuid import uuid4
@@ -33,19 +34,23 @@ class Base(DB.Model):
     __abstract__ = True
 
     id = DB.Column(DB.Integer(), primary_key=True)
-    uuid = DB.Column(UUIDType(binary=False), unique=True, default=uuid4, nullable=False)
+    uuid = DB.Column(UUIDType(binary=False), unique=True, default=uuid4,
+                     nullable=False)
 
     created = DB.Column(DB.DateTime(), default=DB.func.now())
-    updated = DB.Column(DB.DateTime(), default=DB.func.now(), onupdate=DB.func.now())
+    updated = DB.Column(DB.DateTime(), default=DB.func.now(),
+                        onupdate=DB.func.now())
 
 class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
-    password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']), nullable=False)
+    password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']),
+                         nullable=False)
     name = DB.Column(DB.String(64))
     email = DB.Column(EmailType())
 
     current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("player.id"))
-    current_player = DB.relationship("Player", foreign_keys=[current_player_id])
+    current_player = DB.relationship("Player",
+                                     foreign_keys=[current_player_id])
 
     @staticmethod
     def get_authenticated(username, password):
@@ -60,10 +65,14 @@ class Player(Base):
     avatar = DB.Column(DB.String(32), default="default", nullable=False)
 
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
-    user = DB.relationship("User", backref=DB.backref("players", lazy="dynamic"), foreign_keys=[user_id])
+    user = DB.relationship("User", backref=DB.backref("players",
+                                                      lazy="dynamic"),
+                           foreign_keys=[user_id])
 
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
-    world = DB.relationship("World", backref=DB.backref("players", lazy="dynamic"), foreign_keys=[world_id])
+    world = DB.relationship("World", backref=DB.backref("players",
+                                                        lazy="dynamic"),
+                            foreign_keys=[world_id])
 
     longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
@@ -76,7 +85,8 @@ class Game(Base):
     author = DB.Column(DB.String(32))
     license = DB.Column(DB.String(32))
 
-    __table_args__ = (DB.UniqueConstraint('package', 'name', 'version', name='_name_version_uc'),)
+    __table_args__ = (DB.UniqueConstraint('package', 'name', 'version',
+                                          name='_name_version_uc'),)
 
     @classmethod
     def _auth_pre_get_single(cls, instance_id=None, **kw):
@@ -97,7 +107,8 @@ class Game(Base):
 class World(Base):
     name = DB.Column(DB.String(32), unique=True, nullable=False)
     game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
-    game = DB.relationship('Game', backref=DB.backref('worlds', lazy='dynamic'))
+    game = DB.relationship('Game', backref=DB.backref('worlds',
+                                                      lazy='dynamic'))
 
 class GameItem(Base):
     pass

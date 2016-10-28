@@ -28,9 +28,12 @@ def server_main(): # pragma: no cover
     # parse arguments
     aparser = argparse.ArgumentParser()
     aparser.add_argument("-w", "--webapp", help="path to the webapp files")
-    aparser.add_argument("-d", "--debug", help="enable debug in Flask app", action="store_true")
-    aparser.add_argument("-H", "--host", help="the host address to listen on", default="127.0.0.1")
-    aparser.add_argument("-P", "--port", help="the port to listen on", default="5000")
+    aparser.add_argument("-d", "--debug", help="enable debug in Flask app",
+                         action="store_true")
+    aparser.add_argument("-H", "--host", help="the host address to listen on",
+                         default="127.0.0.1")
+    aparser.add_argument("-P", "--port", help="the port to listen on",
+                         default="5000")
     aparser.add_argument("-z", "--gzip", help="enable GZip compression for HTTP",
                          action="store_true")
     args = aparser.parse_args()

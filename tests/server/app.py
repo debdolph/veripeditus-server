@@ -34,7 +34,8 @@ class ServerAppTests(unittest.TestCase):
         # Verify all fields
         self.assertEqual(first_game.package, "test")
         self.assertEqual(first_game.name, first_game_module.NAME)
-        self.assertEqual(first_game.description, first_game_module.DESCRIPTION)
+        self.assertEqual(first_game.description,
+                         first_game_module.DESCRIPTION)
         self.assertEqual(first_game.author, first_game_module.AUTHOR)
         self.assertEqual(first_game.license, first_game_module.LICENSE)
         self.assertEqual(first_game.version, first_game_module.VERSION)
