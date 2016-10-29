@@ -76,11 +76,10 @@ class Player(GameObject):
                                                       lazy="dynamic"),
                            foreign_keys=[user_id])
 
-    inventory = DB.relationship("Item", backref="owner", lazy="dynamic")
-
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
-    owner_id = DB.Column(DB.Integer(), db.ForeignKey("owner.id"))
+    owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
+    owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"), foreign_keys=[owner_id])
