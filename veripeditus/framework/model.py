@@ -18,6 +18,9 @@
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm.collections import attribute_mapped_collection
+
 class _GameObjectMeta(type(Base)):
     """ Meta-class to allow generation of dynamic mapper args.
 
@@ -48,6 +51,11 @@ class _GameObjectMeta(type(Base)):
         setattr(obj, "__mapper_args__", mapperargs)
         return obj
 
+class Attribute(Base):
+    # Key/value pair
+    key = DB.Column(DB.Unicode(256))
+    value = DB.Column(DB.Unicode(256))
+
 class GameObject(Base, metaclass=_GameObjectMeta):
     __tablename__ = "gameobject"
 
@@ -62,6 +70,27 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
 
     type = DB.Column(DB.Unicode(256))
+
+    attributes = association_proxy("gameobjects_to_attributes", "value",
+                                 creator=lambda k, v: GameObjectsToAttributes(attribute=Attribute(key=k, value=v)))
+
+class GameObjectsToAttributes(Base):
+    __tablename__ = "gameobjects_to_attributes"
+
+    gameobject_id = DB.Column(DB.Integer(),
+                              DB.ForeignKey('gameobject.id'))
+    attribute_id = DB.Column(DB.Integer(),
+                             DB.ForeignKey('attribute.id'))
+
+    gameobject = DB.relationship(GameObject, foreign_keys=[gameobject_id],
+                                backref=DB.backref("gameobjects_to_attributes",
+                                                   collection_class=attribute_mapped_collection(
+                                                       "key"
+                                                   ), cascade="all, delete-orphan"))
+
+    attribute = DB.relationship(Attribute, foreign_keys=[attribute_id])
+    key = association_proxy("attribute", "key")
+    value = association_proxy("attribute", "value")
 
 class Player(GameObject):
     __tablename__ = "gameobject_player"
