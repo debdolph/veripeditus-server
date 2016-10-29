@@ -18,7 +18,7 @@
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 
-class GameObjectMeta(type(Base)):
+class _GameObjectMeta(type(Base)):
     """ Meta-class to allow generation of dynamic mapper args.
 
     Necessary because SQLAlchemy traverses __dict__ to find configuration
@@ -51,7 +51,7 @@ class GameObjectMeta(type(Base)):
         setattr(obj, "__mapper_args__", mapperargs)
         return obj
 
-class GameObject(Base, metaclass=GameObjectMeta):
+class GameObject(Base, metaclass=_GameObjectMeta):
     __tablename__ = "gameobject"
 
     id = DB.Column(DB.Integer(), primary_key=True)
