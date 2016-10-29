@@ -23,6 +23,4 @@ LICENSE = 'AGPL'
 VERSION = f.VERSION
 
 class Player(f.Player):
-    __mapper_args__ = {
-                       "polymorphic_identity": "game_test_player"
-                      }
+    pass
