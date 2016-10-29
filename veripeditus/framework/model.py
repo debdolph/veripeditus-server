@@ -42,14 +42,21 @@ class GameObject(Base):
         class_name = self.__class__.__name__
         module_name = self.__class__.__module__
 
-        if module_name == "veripeditus.framework.model" and class_name == "GameObject":
-            return {"polymorphic_on": self.__class__.type_, "with_polymorphic":"*"}
+        mapperargs = {}
+
+        if self.__class__ == GameObject:
+            mapperargs["polymorphic_on"] = self.__class__.type_
+            mapperargs["with_polymorphic"] = "*"
+
         if module_name == "veripeditus.framework.model":
-            return  {"polymorphic_identity": class_name}
+            mapperargs["polymorphic_identity"] = class_name
         elif module_name.startswith("veripeditus.game"):
-            return {"polymorphic_identity": "game_%s_%s" % \
-                                            (module_name.split(".")[2], class_name)
-                   }
+            mapperargs["polymorphic_identity"] =
+                "game_%s_%s" % (module_name.split(".")[2], class_name)
+        else:
+            raise RuntimeError("GameObject can only be derived in game modules.")
+
+        return mapperargs
 
 class Player(GameObject):
     __tablename__ = "gameobject_player"
