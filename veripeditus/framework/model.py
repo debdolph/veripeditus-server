@@ -30,20 +30,17 @@ class _GameObjectMeta(type(Base)):
     def __new__(cls, *args, **kwargs):
         obj = type(Base).__new__(cls, *args, **kwargs)
 
-        class_name = obj.__name__
-        module_name = obj.__module__
-
         mapperargs = {}
 
         if module_name == "veripeditus.framework.model":
             # We are a parent class in the framework
             mapperargs["polymorphic_on"] = obj.type
             mapperargs["with_polymorphic"] = "*"
-            mapperargs["polymorphic_identity"] = class_name
+            mapperargs["polymorphic_identity"] = obj.__name__
         elif module_name.startswith("veripeditus.game"):
             # We are an implementation in a game
             mapperargs["polymorphic_identity"] = \
-                "game_%s_%s" % (module_name.split(".")[2], class_name)
+                "game_%s_%s" % (obj.__module__.split(".")[2], obj.__name__)
         else:
             raise RuntimeError("GameObject can only be derived in game modules.")
 
