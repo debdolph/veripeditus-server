@@ -93,6 +93,3 @@ class World(Base):
     game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
     game = DB.relationship('Game', backref=DB.backref('worlds',
                                                       lazy='dynamic'))
-
-class GameItem(Base):
-    pass
