@@ -32,12 +32,12 @@ class _GameObjectMeta(type(Base)):
 
         mapperargs = {}
 
-        if module_name == "veripeditus.framework.model":
+        if obj.__module__ == "veripeditus.framework.model":
             # We are a parent class in the framework
             mapperargs["polymorphic_on"] = obj.type
             mapperargs["with_polymorphic"] = "*"
             mapperargs["polymorphic_identity"] = obj.__name__
-        elif module_name.startswith("veripeditus.game"):
+        elif obj.__module__.startswith("veripeditus.game"):
             # We are an implementation in a game
             mapperargs["polymorphic_identity"] = \
                 "game_%s_%s" % (obj.__module__.split(".")[2], obj.__name__)
