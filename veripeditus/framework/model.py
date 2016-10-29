@@ -17,33 +17,38 @@
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 
+# FIXME move to proper place
+class classproperty(object):
+    def __init__(self, getter):
+        self.getter= getter
+    def __get__(self, instance, owner):
+        return self.getter(owner)
+
 class GameObject(Base):
     __tablename__ = "gameobject"
 
-    id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
+    id = DB.Column(DB.Integer(), primary_key=True)
     
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
-    world = DB.relationship("World", backref=DB.backref("players",
+    world = DB.relationship("World", backref=DB.backref("gameobjects",
                                                         lazy="dynamic"),
                             foreign_keys=[world_id])
 
     longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
 
-    type_ = DB.Column(DB.Unicode(256))
+    type = DB.Column(DB.Unicode(256))
 
-    @property
-    def __mapper_args__(self):
-        class_name = self.__class__.__name__
-        module_name = self.__class__.__module__
+    @classproperty
+    def __mapper_args__(cls):
+        class_name = cls.__name__
+        module_name = cls.__module__
 
         mapperargs = {}
 
-        if self.__class__ == GameObject:
-            mapperargs["polymorphic_on"] = self.__class__.type_
-            mapperargs["with_polymorphic"] = "*"
-
         if module_name == "veripeditus.framework.model":
+            mapperargs["polymorphic_on"] = cls.type
+            mapperargs["with_polymorphic"] = "*"
             mapperargs["polymorphic_identity"] = class_name
         elif module_name.startswith("veripeditus.game"):
             mapperargs["polymorphic_identity"] = \
@@ -55,6 +60,8 @@ class GameObject(Base):
 
 class Player(GameObject):
     __tablename__ = "gameobject_player"
+
+    id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
     
     name = DB.Column(DB.String(32), unique=True, nullable=False)
     avatar = DB.Column(DB.String(32), default="default", nullable=False)

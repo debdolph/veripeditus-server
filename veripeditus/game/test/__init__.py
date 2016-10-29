@@ -23,4 +23,7 @@ LICENSE = 'AGPL'
 VERSION = f.VERSION
 
 class Player(f.Player):
-    pass
+    # FIXME should work with property from grandparent…
+    __mapper_args__ = {
+        "polymorphic_identity": "game_test_Player"
+    }

@@ -49,7 +49,7 @@ class User(Base):
     name = DB.Column(DB.String(64))
     email = DB.Column(EmailType())
 
-    current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("player.id"))
+    current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     current_player = DB.relationship("Player",
                                      foreign_keys=[current_player_id])
 
@@ -60,23 +60,6 @@ class User(Base):
             return user
         else:
             return None
-
-class Player(Base):
-    name = DB.Column(DB.String(32), unique=True, nullable=False)
-    avatar = DB.Column(DB.String(32), default="default", nullable=False)
-
-    user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
-    user = DB.relationship("User", backref=DB.backref("players",
-                                                      lazy="dynamic"),
-                           foreign_keys=[user_id])
-
-    world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
-    world = DB.relationship("World", backref=DB.backref("players",
-                                                        lazy="dynamic"),
-                            foreign_keys=[world_id])
-
-    longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
-    latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
 
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)
