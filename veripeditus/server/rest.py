@@ -26,41 +26,10 @@ from veripeditus.server.model import *
 # Global includes for all collections
 _INCLUDE = ['id', 'uuid', 'created', 'updated']
 
-def _api_add_server_info(*args, **kwargs):
-    if "data" in kwargs:
-        tbm = kwargs["data"]
-    elif "result" in kwargs:
-        tbm = kwargs["result"]
-    else:
-        return
-
-    if not isinstance(tbm, dict):
-        return
-
-    tbm["server_info"] = get_server_info()
-
-def _api_strip_server_info(*args, **kwargs):
-    if "data" in kwargs:
-        tbm = kwargs["data"]
-    else:
-        return
-
-    if not isinstance(tbm, dict):
-        return
-
-    if "server_info" in tbm:
-        del tbm["server_info"]
-
-_GLOBAL_GENERAL_PRE_PROCESSORS = [_api_strip_server_info]
-_GLOBAL_GENERAL_POST_PROCESSORS = [_api_add_server_info]
 _METHODS = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE',
             'DELETE_MANY', 'DELETE_SINGLE', 'POST']
-_GLOBAL_PRE_PROCESSORS = {m: _GLOBAL_GENERAL_PRE_PROCESSORS for m in _METHODS}
-_GLOBAL_POST_PROCESSORS = {m: _GLOBAL_GENERAL_POST_PROCESSORS for m in _METHODS}
 
-MANAGER = APIManager(APP, flask_sqlalchemy_db=DB,
-                     preprocessors=_GLOBAL_PRE_PROCESSORS,
-                     postprocessors=_GLOBAL_POST_PROCESSORS)
+MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 
 MANAGER.create_api(User,
                    include_columns=_INCLUDE+['username', 'email', 'players',

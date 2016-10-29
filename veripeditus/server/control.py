@@ -97,17 +97,3 @@ def _check_auth():
             return Response('Authentication failed.', 401,
                             {'WWW-Authenticate':'Basic realm="%s"'
                              % APP.config['BASIC_REALM']})
-
-def get_server_info():
-    info = {}
-
-    info["date"] = datetime.now().isoformat()
-    info["version"] = VERSION
-
-    info["user"] = {}
-    if not g.user is None:
-        info["user"]["id"] = g.user.id
-        info["user"]["name"] = g.user.name
-        info["user"]["username"] = g.user.username
-
-    return info
