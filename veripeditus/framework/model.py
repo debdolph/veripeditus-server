@@ -32,11 +32,6 @@ class GameObject(Base):
 
     type_ = DB.Column(DB.Unicode(256))
 
-    __mapper_args__ = {
-                       "polymorphic_identity": "gameobject",
-                       "polymorphic_on": type_
-                      }
-
     @property
     def __mapper_args__(self):
         class_name = self.__class__.__name__
