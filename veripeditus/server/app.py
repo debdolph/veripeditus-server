@@ -21,6 +21,7 @@ Main server application
 from flask import Flask, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_restless import url_for
+from osmalchemy import OSMAlchemy
 
 from veripeditus.server.util import get_data_path
 
@@ -41,6 +42,7 @@ def _serve_static_data(path):
     return send_from_directory(get_data_path(), path)
 
 DB = SQLAlchemy(APP)
+OA = OSMAlchemy(DB, overpass=True)
 from veripeditus.server.model import *
 DB.create_all()
 
