@@ -18,14 +18,40 @@
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 
-# FIXME move to proper place
-class classproperty(object):
-    def __init__(self, getter):
-        self.getter= getter
-    def __get__(self, instance, owner):
-        return self.getter(owner)
+class GameObjectMeta(type(Base)):
+    """ Meta-class to allow generation of dynamic mapper args.
 
-class GameObject(Base):
+    Necessary because SQLAlchemy traverses __dict__ to find configuration
+    attributes, and our inherited classes in games obviously don't get
+    inherited __mapper_args__ in their __dict__. This method injects
+    the dictionary to the __dict__ upon instantiation as meta-class.
+    """
+
+    def __new__(cls, *args, **kwargs):
+        obj = type(Base).__new__(cls, *args, **kwargs)
+
+        class_name = obj.__name__
+        module_name = obj.__module__
+
+        mapperargs = {}
+
+        if module_name == "veripeditus.framework.model":
+            # We are a parent class in the framework
+            mapperargs["polymorphic_on"] = obj.type
+            mapperargs["with_polymorphic"] = "*"
+            mapperargs["polymorphic_identity"] = class_name
+        elif module_name.startswith("veripeditus.game"):
+            # We are an implementation in a game
+            mapperargs["polymorphic_identity"] = \
+                "game_%s_%s" % (module_name.split(".")[2], class_name)
+        else:
+            raise RuntimeError("GameObject can only be derived in game modules.")
+
+        # Inject into class
+        setattr(obj, "__mapper_args__", mapperargs)
+        return obj
+
+class GameObject(Base, metaclass=GameObjectMeta):
     __tablename__ = "gameobject"
 
     id = DB.Column(DB.Integer(), primary_key=True)
@@ -39,25 +65,6 @@ class GameObject(Base):
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
 
     type = DB.Column(DB.Unicode(256))
-
-    @classproperty
-    def __mapper_args__(cls):
-        class_name = cls.__name__
-        module_name = cls.__module__
-
-        mapperargs = {}
-
-        if module_name == "veripeditus.framework.model":
-            mapperargs["polymorphic_on"] = cls.type
-            mapperargs["with_polymorphic"] = "*"
-            mapperargs["polymorphic_identity"] = class_name
-        elif module_name.startswith("veripeditus.game"):
-            mapperargs["polymorphic_identity"] = \
-                "game_%s_%s" % (module_name.split(".")[2], class_name)
-        else:
-            raise RuntimeError("GameObject can only be derived in game modules.")
-
-        return mapperargs
 
 class Player(GameObject):
     __tablename__ = "gameobject_player"
