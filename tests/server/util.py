@@ -47,6 +47,15 @@ class ServerUtilTests(unittest.TestCase):
         # test should be a key
         self.assertIn("test", games)
 
+
+    def test_get_game_by_name(self):
+        """ Test getting a game module object by its name """
+
+        from veripeditus.server.util import get_game_by_name
+
+        # Get game module object
+        game = get_game_by_name("test")
+
         # The test key should refer to the test game module
         import veripeditus.game.test as testgame
-        self.assertIs(games["test"], testgame)
+        self.assertIs(game, testgame)

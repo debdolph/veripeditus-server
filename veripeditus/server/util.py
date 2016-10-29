@@ -50,6 +50,13 @@ def get_games():
 
     return _pkgs
 
+def get_game_by_name(name):
+    """
+    Get a game module object by its name.
+    """
+
+    return get_games()[name]
+
 def get_data_path():
     """
     Get the full path of the server module data directory.
