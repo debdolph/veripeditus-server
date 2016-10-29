@@ -30,6 +30,10 @@ class GameObject(Base):
 
     type_ = DB.Column(DB.Unicode(256))
 
+    __mapper_args__ = {
+                       "polymorphic_identity": "gameobject",
+                       "polymorphic_on": type_
+                      }
 
 class Player(GameObject):
     __tablename__ = "gameobject_player"
