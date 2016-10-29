@@ -32,6 +32,10 @@ GameDataService = function() {
     // Storage objects
     this.players = {};
 
+    // Login info
+    this.username = "";
+    this.password = "";
+
     // Current player object
     // FIXME get logged-in player from API
     this.current_player_id = 1;
@@ -54,6 +58,8 @@ GameDataService = function() {
                 url: "/api/player/" + this.current_player_id,
                 data: JSON.stringify(this.players[this.current_player_id]),
                 method: "PATCH",
+                username: this.username,
+                password: this.password,
             });
         }
     };
@@ -127,6 +133,8 @@ GameDataService = function() {
             data: {
                 q: JSON.stringify(query),
             },
+            username: this.username,
+            password: this.password,
             gd: this,
             success: this.onReturnPlayers
         });
@@ -138,6 +146,19 @@ GameDataService = function() {
         this.bounds[1] = northEast;
 
         this.updatePlayers();
+    };
+
+    this.login = function(username, password) {
+        this.username = username;
+        this.password = password;
+        alert("foo");
+        // FIXME Update game state here
+    };
+
+    this.logout = function() {
+        this.username = "";
+        this.password = "";
+        // FIXME Update game state here
     };
 };
 
