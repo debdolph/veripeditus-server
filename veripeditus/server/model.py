@@ -19,6 +19,7 @@ Main server data model
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from veripeditus.server.app import APP, DB
+from veripeditus.server.util import get_game_by_name
 
 from flask import g
 from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
@@ -87,6 +88,10 @@ class Game(Base):
 
     __table_args__ = (DB.UniqueConstraint('package', 'name', 'version',
                                           name='_name_version_uc'),)
+
+    @property
+    def module(self):
+        return get_game_by_name(self.package)
 
 class World(Base):
     name = DB.Column(DB.String(32), unique=True, nullable=False)
