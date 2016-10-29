@@ -14,9 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.framework import VERSION
+from veripeditus import framework as f
 
 NAME = 'Veripeditus Test Game'
 DESCRIPTION = 'A useless test game bundled with the server framework'
 AUTHOR = 'Dominik George <nik@naturalnet.de>'
 LICENSE = 'AGPL'
+VERSION = f.VERSION
+
+class Player(f.Player):
+    __mapper_args__ = {
+                       "polymorphic_identity": "game_test_player"
+                      }
