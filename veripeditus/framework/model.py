@@ -46,7 +46,7 @@ class GameObject(Base):
         if module_name == "veripeditus.framework.model":
             mapperargs["polymorphic_identity"] = class_name
         elif module_name.startswith("veripeditus.game"):
-            mapperargs["polymorphic_identity"] =
+            mapperargs["polymorphic_identity"] = \
                 "game_%s_%s" % (module_name.split(".")[2], class_name)
         else:
             raise RuntimeError("GameObject can only be derived in game modules.")
