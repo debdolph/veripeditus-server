@@ -72,7 +72,7 @@ def _add_data():
         world = World()
         world.name = "Default World"
         world.game = Game.query.first()
-        player = Player()
+        player = world.game.module.Player()
         player.name = "Default Player"
         player.longitude = random.uniform(-180.0, 180.0)
         player.latitude = random.uniform(-90.0, 90.0)
