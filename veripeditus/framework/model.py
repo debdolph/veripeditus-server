@@ -35,6 +35,21 @@ class GameObject(Base):
                        "polymorphic_on": type_
                       }
 
+    @property
+    def __mapper_args__(self):
+        class_name = self.__class__.__name__
+        module_name = self.__class__.__module__
+
+        mapperargs = {"polymorphic_on": self.__class__.type_}
+        
+        if module_name == "veripeditus.framework.model":
+            mapperargs["polymorphic_identity"] = class_name
+        elif module_name.startswith("veripeditus.game"):
+            mapperargs["polymorphic_identity"] = "game_%s_%s" % \
+                                                 (module_name.split(".")[2], class_name)
+
+        return mapperargs
+
 class Player(GameObject):
     __tablename__ = "gameobject_player"
     
@@ -45,7 +60,3 @@ class Player(GameObject):
     user = DB.relationship("User", backref=DB.backref("players",
                                                       lazy="dynamic"),
                            foreign_keys=[user_id])
-
-    __mapper_args__ = {
-                       "polymorphic_identity": "player"
-                      }
