@@ -19,6 +19,8 @@ from veripeditus.server.model import Base
 
 class GameObject(Base):
     __tablename__ = "gameobject"
+
+    id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
     
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
     world = DB.relationship("World", backref=DB.backref("players",
