@@ -19,6 +19,7 @@ Utility functions for framework components
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib
+import magic
 import os
 import pkgutil
 import sys
@@ -73,3 +74,14 @@ def api_method(f):
     """ Decorator to mark a method as runnable by the REST API. """
     f.is_api_method = True
     return f
+
+if "MIME" in vars(magic):
+    # libmagic bindings
+    _ms = magic.open(magic.MIME)
+    _ms.load()
+    def guess_mime_type(data):
+        return _ms.buffer(data)
+else:
+    # python-magic
+    def guess_mime_type(data):
+        return magic.from_buffer(data)

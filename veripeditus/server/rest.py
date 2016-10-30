@@ -18,10 +18,11 @@ API endpoint definitions
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from flask import make_response
 from flask_restless import APIManager
 from veripeditus.server.app import APP, DB
 from veripeditus.server.model import *
-
+from veripeditus.server.util import guess_mime_type
 
 # Global includes for all collections
 _INCLUDE = ['id', 'uuid', 'created', 'updated']
@@ -70,12 +71,22 @@ def _get_gameobject_method_result(id_, method):
         # Check whether execution is allowed
         if m.is_api_method:
             # Return method result verbatim
-            return m()
+            ret = m()
+            if isinstance(ret, tuple):
+                # We got a tuple of type and data
+                res = make_response(ret[1])
+                res.headers["Content-Type"] = ret[0]
+            else:
+                # We need to guess the MIME type
+                res = make_response(ret)
+                res.headers["Content-Type"] = guess_mime_type(ret)
         else:
             # Return 403 Forbidden
             # FIXME more specific error
-            return ("", 403)
+            res = ("", 403)
     else:
         # Return 404 Not Found
         # FIXME more specific error
-        return ("", 404)
+        res = ("", 404)
+
+    return res
