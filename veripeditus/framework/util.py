@@ -144,27 +144,36 @@ def get_game_data_object(restype, basename):
 
 def get_image_path(game_mod, basename):
     """
-    Get the path for an image file (.png or .svg).
+    Get the path for an image file (.svg or .png, in order).
 
     Keyword arguments:
 
     game_mod -- reference to the game module
-
     basename -- name of the file without its extension
     """
 
+    # Get module paths of framework and the provided game
     _path_framework = os.path.dirname(veripeditus.framework.__file__)
     _path_game = os.path.dirname(game_mod.__file__)
 
+    # Get data sub-directories
     _respath_framework = os.path.join(_path_framework, "data")
     _respath_game = os.path.join(_path_game, "data")
 
+    # Define extensions and paths to search
     _extensions = (".svg", ".png")
     _paths = (_respath_framework, _respath_game)
 
-    _possibilities = [(os.path.join(_path, basename+_extension) for _path in _paths) for _extension in _extensions]
+    # Define fallback image if nothing else is found
+    _fallback = os.path.join(_respath_framework, "dummy.svg")
+
+    # Generate a list of all possibilities
+    _possibilities = ([os.path.join(_path, basename+_extension)
+                           for _extension in _extensions
+                               for _path in _paths] +
+                       [_fallback])
+
+    # Iterate over all possibilities and return the first existing resource
     for _possibility in _possibilities:
         if os.isfile(_possibility):
             return _possibility
-
-    return os.path.join(_respath_framework, "dummy.svg")
