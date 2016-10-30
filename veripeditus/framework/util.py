@@ -54,5 +54,5 @@ def get_image_path(game_mod, basename):
 
     # Iterate over all possibilities and return the first existing resource
     for _possibility in _possibilities:
-        if os.isfile(_possibility):
+        if os.path.isfile(_possibility):
             return _possibility
