@@ -55,7 +55,8 @@ for go in [GameObject] + GameObject.__subclasses__():
                        methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 @APP.route("/api/gameobject/<int:id_>/<string:method>")
-def _get_gameobject_method_result(id_, method):
+@APP.route("/api/gameobject/<int:id_>/<string:method>/<arg>")
+def _get_gameobject_method_result(id_, method, arg=None):
     """ Runs method on the object defined by the id and returns it verbatim
     if the object was found and has the method, or 404 if not.
     """
@@ -70,8 +71,12 @@ def _get_gameobject_method_result(id_, method):
 
         # Check whether execution is allowed
         if method_impl.is_api_method:
-            # Return method result verbatim
-            ret = method_impl()
+            # Run method
+            if arg is None:
+                ret = method_impl()
+            else:
+                ret = method_impl(arg)
+
             if isinstance(ret, tuple):
                 # We got a tuple of type and data
                 res = make_response(ret[1])
