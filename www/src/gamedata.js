@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Player = function(id) {
+GameObject = function(id) {
     this.id = id;
     this.latitude = 0.0;
     this.longitude = 0.0;
@@ -30,13 +30,13 @@ GameDataService = function() {
         [0.0, 0.0]];
 
     // Storage objects
-    this.players = {};
+    this.gameobjects = {};
 
     // Current player object
     // FIXME get logged-in player from API
     this.current_player_id = 1;
-    this.players[1] = new Player(1);
-    this.players[1].world = {
+    this.gameobjects[1] = new GameObject(1);
+    this.gameobjects[1].world = {
         "id": 1
     };
 
@@ -44,42 +44,42 @@ GameDataService = function() {
         // Update own location on server if logged in
         if (this.current_player_id > -1) {
             // Update location in player object
-            this.players[this.current_player_id].latitude = Device.position.coords.latitude;
-            this.players[this.current_player_id].longitude = Device.position.coords.longitude;
+            this.gameobjects[this.current_player_id].latitude = Device.position.coords.latitude;
+            this.gameobjects[this.current_player_id].longitude = Device.position.coords.longitude;
 
             // Send the PATCH request
             $.ajax({
                 dataType: "json",
                 contentType: "application/json",
-                url: "/api/player/" + this.current_player_id,
-                data: JSON.stringify(this.players[this.current_player_id]),
+                url: "/api/gameobject/" + this.current_player_id,
+                data: JSON.stringify(this.gameobjects[this.current_player_id]),
                 method: "PATCH",
-                username: this.username,
-                password: this.password,
+                username: localStorage.getItem("username"),
+                password: localStorage.getitem("password"),
             });
         }
     };
 
-    this.onReturnPlayers = function(data) {
-        // Iterate over data and merge into players store
+    this.onReturngameObjects = function(data) {
+        // Iterate over data and merge into gameobjects store
         for (var i = 0; i < data.objects.length; i++) {
-            var player = new Player(data.objects[i].id);
-            player.latitude = data.objects[i].latitude;
-            player.longitude = data.objects[i].longitude;
-            player.avatar = data.objects[i].avatar;
-            player.name = data.objects[i].name;
-            this.gd.players[player.id] = player;
+            var go = new GameObject(data.objects[i].id);
+            go.latitude = data.objects[i].latitude;
+            go.longitude = data.objects[i].longitude;
+            go.avatar = data.objects[i].avatar;
+            go.name = data.objects[i].name;
+            this.gd.gameobjects[go.id] = go;
         }
 
-        // Call onUpdatedPlayers on all views
+        // Call onUpdatedGameObjects on all views
         for (view of Veripeditus.views) {
-            if (view.onUpdatedPlayers) {
-                view.onUpdatedPlayers();
+            if (view.onUpdatedGameObjects) {
+                view.onUpdatedgameObjects();
             }
         }
     };
 
-    this.updatePlayers = function() {
+    this.updateGameObjects = function() {
         // Construct JSON query filter for REST API
         var query = {
             'filters': [{
@@ -110,7 +110,7 @@ GameDataService = function() {
                         'val': {
                             'name': 'id',
                             'op': 'eq',
-                            'val': this.players[this.current_player_id].world.id
+                            'val': this.gameobjects[this.current_player_id].world.id
                         }
                     }]
                 },
@@ -125,14 +125,14 @@ GameDataService = function() {
         $.ajax({
             dataType: "json",
             contentType: "applicaiton/json",
-            url: "/api/player",
+            url: "/api/gameobject",
             data: {
                 q: JSON.stringify(query),
             },
             username: localStorage.getItem("username"),
             password: localStorage.getItem("password"),
             gd: this,
-            success: this.onReturnPlayers
+            success: this.onReturnGameObjects
         });
     };
 
@@ -141,12 +141,13 @@ GameDataService = function() {
         this.bounds[0] = southWest;
         this.bounds[1] = northEast;
 
-        this.updatePlayers();
+        this.updateGameObjects();
     };
 
     this.login = function(username, password) {
         localStorage.setItem("username", username);
         localStorage.setItem("password", password);
+        alert(localStorage.username);
         // FIXME Update game state here
     };
 

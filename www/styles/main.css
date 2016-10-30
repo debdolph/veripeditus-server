@@ -84,7 +84,7 @@ div#arview {
 	-webkit-perspective: 800px;
 }
 
-div#arview img.arplayer {
+div#arview img.argameobject {
 	height: 95%;
 	max-width: 95%;
 	position: absolute;
