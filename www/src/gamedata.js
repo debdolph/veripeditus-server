@@ -60,13 +60,13 @@ GameDataService = function() {
         }
     };
 
-    this.onReturngameObjects = function(data) {
+    this.onReturnGameObjects = function(data) {
         // Iterate over data and merge into gameobjects store
         for (var i = 0; i < data.objects.length; i++) {
             var go = new GameObject(data.objects[i].id);
             go.latitude = data.objects[i].latitude;
             go.longitude = data.objects[i].longitude;
-            go.avatar = data.objects[i].avatar;
+            go.image = data.objects[i].image;
             go.name = data.objects[i].name;
             this.gd.gameobjects[go.id] = go;
         }
@@ -74,7 +74,7 @@ GameDataService = function() {
         // Call onUpdatedGameObjects on all views
         for (view of Veripeditus.views) {
             if (view.onUpdatedGameObjects) {
-                view.onUpdatedgameObjects();
+                view.onUpdatedGameObjects();
             }
         }
     };

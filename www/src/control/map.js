@@ -44,7 +44,7 @@ MapController = function() {
     this.onUpdatedGameObjects = function() {
         // Iterate over gameobjects and add map markers
         for (id of Object.keys(GameData.gameobjects)) {
-            var player = GameData.players[id];
+            var gameobject = GameData.gameobjects[id];
 
             // Look for already created marker for this gameobject id
             var marker = this.gameobject_markers[gameobject.id];
@@ -53,9 +53,9 @@ MapController = function() {
                 marker.setLatLng([gameobject.latitude, gameobject.longitude]);
             } else {
                 // Marker does not exist
-                // Construct marker icon from avatar name
+                // Construct marker icon from gameobject image
                 var picon = L.icon({
-                    'iconUrl': '/api/data/avatar_' + gameobject.avatar + '.svg',
+                    'iconUrl': '/api/gameobject/' + gameobject.id + '/image_raw',
                     'iconSize': [32, 32],
                 });
 
@@ -69,7 +69,7 @@ MapController = function() {
 
                 // Add marker to map and store to known markers
                 marker.addTo(this.map);
-                this.gameobject_markers[player.id] = marker;
+                this.gameobject_markers[gameobject.id] = marker;
             }
         }
     };
