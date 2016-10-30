@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from veripeditus.framework.util import get_image_path
+
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 
@@ -78,6 +80,10 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     def gameobject_type(self):
         return self.__tablename__
+
+    @property
+    def image_path(self):
+        return get_image_path(self.world.game.module, self.image)
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"

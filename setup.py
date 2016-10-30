@@ -47,7 +47,6 @@ setup(
                       'passlib',
                       'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
-                      'Wand',
                      ],
     test_suite='tests',
     entry_points={
