@@ -105,6 +105,8 @@ class Player(GameObject):
                                                       lazy="dynamic"),
                            foreign_keys=[user_id])
 
+    api_exclude = ["user.password"]
+
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 

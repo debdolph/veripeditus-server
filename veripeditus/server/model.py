@@ -43,6 +43,8 @@ class Base(DB.Model):
     updated = DB.Column(DB.DateTime(), default=DB.func.now(),
                         onupdate=DB.func.now())
 
+    api_exclude = []
+
 class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']),

@@ -36,10 +36,6 @@ MANAGER.create_api(User,
                    'players.avatar'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
-MANAGER.create_api(Player,
-                   include_columns=_INCLUDE+['name', 'longitude', 'latitude',
-                                             'avatar', 'world', 'world.id'],
-                   methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
                                                    'description', 'author',
@@ -48,3 +44,8 @@ MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
 
 MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],
                    methods=['GET'])
+
+# Create APIs for all GameObjects
+for go in [GameObject] + GameObject.__subclasses__():
+    MANAGER.create_api(go, exclude_columns=go.api_exclude,
+                       methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
