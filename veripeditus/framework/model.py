@@ -34,23 +34,31 @@ class _GameObjectMeta(type(Base)):
     """
 
     def __new__(cls, *args, **kwargs):
-        obj = type(Base).__new__(cls, *args, **kwargs)
+        """ Called upon deriving from GameObject, which uses this meta-class. """
 
+        # Create a new instance by calling __new__ on our parent class,
+        # which is the meta-class of the used SQLAlchemy declarative base
+        obj = super().__new__(cls, *args, **kwargs)
+
+        # Later filled with the relevant mapper args
         mapperargs = {}
 
         if obj.__module__ == "veripeditus.framework.model":
-            # We are a parent class in the framework
+            # We are a parent class in the framework, so we need to configure
+            # the polymorphism to use
             mapperargs["polymorphic_on"] = obj.type
             mapperargs["with_polymorphic"] = "*"
             mapperargs["polymorphic_identity"] = obj.__name__
         elif obj.__module__.startswith("veripeditus.game"):
-            # We are an implementation in a game
+            # We are an implementation in a game, so we only need to set the identity
+            # It is the game module and the class name defined there prefixed with game
             mapperargs["polymorphic_identity"] = \
                 "game_%s_%s" % (obj.__module__.split(".")[2], obj.__name__)
         else:
+            # We are somwhere else, which is a bug
             raise RuntimeError("GameObject can only be derived in game modules.")
 
-        # Inject into class
+        # Inject into class and return the new instance
         setattr(obj, "__mapper_args__", mapperargs)
         return obj
 
