@@ -60,6 +60,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     __tablename__ = "gameobject"
 
     id = DB.Column(DB.Integer(), primary_key=True)
+
+    image = DB.Column(DB.String(32), default="default", nullable=False)
     
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
     world = DB.relationship("World", backref=DB.backref("gameobjects",
@@ -98,7 +100,6 @@ class Player(GameObject):
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
     
     name = DB.Column(DB.String(32), unique=True, nullable=False)
-    avatar = DB.Column(DB.String(32), default="default", nullable=False)
 
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
     user = DB.relationship("User", backref=DB.backref("players",
