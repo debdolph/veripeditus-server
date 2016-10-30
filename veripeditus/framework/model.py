@@ -15,14 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from veripeditus.framework.util import get_image_path
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm.collections import attribute_mapped_collection
 
+from veripeditus.framework.util import get_image_path
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 from veripeditus.server.util import api_method
-
-from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.orm.collections import attribute_mapped_collection
 
 class _GameObjectMeta(type(Base)):
     """ Meta-class to allow generation of dynamic mapper args.
@@ -73,7 +72,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     id = DB.Column(DB.Integer(), primary_key=True)
 
     image = DB.Column(DB.String(32), default="dummy", nullable=False)
-    
+
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
     world = DB.relationship("World", backref=DB.backref("gameobjects",
                                                         lazy="dynamic"),
@@ -85,7 +84,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     type = DB.Column(DB.Unicode(256))
 
     attributes = association_proxy("gameobjects_to_attributes", "value",
-                                 creator=lambda k, v: GameObjectsToAttributes(attribute=Attribute(key=k, value=v)))
+                                   creator=lambda k, v: GameObjectsToAttributes(
+                                       attribute=Attribute(key=k, value=v)))
 
     def gameobject_type(self):
         return self.__tablename__
@@ -96,8 +96,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @api_method
     def image_raw(self):
-        with open(self.image_path, "rb") as f:
-            return f.read()
+        with open(self.image_path, "rb") as file:
+            return file.read()
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
@@ -108,10 +108,10 @@ class GameObjectsToAttributes(Base):
                              DB.ForeignKey('attribute.id'))
 
     gameobject = DB.relationship(GameObject, foreign_keys=[gameobject_id],
-                                backref=DB.backref("gameobjects_to_attributes",
-                                                   collection_class=attribute_mapped_collection(
-                                                       "key"
-                                                   ), cascade="all, delete-orphan"))
+                                 backref=DB.backref("gameobjects_to_attributes",
+                                                    collection_class=attribute_mapped_collection(
+                                                        "key"),
+                                                    cascade="all, delete-orphan"))
 
     attribute = DB.relationship(Attribute, foreign_keys=[attribute_id])
     key = association_proxy("attribute", "key")
@@ -121,7 +121,7 @@ class Player(GameObject):
     __tablename__ = "gameobject_player"
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
-    
+
     name = DB.Column(DB.String(32), unique=True, nullable=False)
 
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
@@ -132,8 +132,8 @@ class Player(GameObject):
     api_exclude = ["user.password"]
 
     def __init__(self, **kwargs):
-        GameObject.__init__(self, **kwargs)
-        if not "image" in kwargs:
+        super().__init__(self, **kwargs)
+        if "image" not in kwargs:
             self.image = "avatar_default"
 
 class Item(GameObject):
@@ -142,7 +142,8 @@ class Item(GameObject):
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
-    owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"), foreign_keys=[owner_id])
+    owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"),
+                            foreign_keys=[owner_id])
 
 class NPC(GameObject):
     __tablename__ = "gameobject_npc"

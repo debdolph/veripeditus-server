@@ -19,10 +19,11 @@ Utility functions for framework components
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib
-import magic
 import os
 import pkgutil
 import sys
+
+import magic
 
 def get_game_names():
     """
@@ -70,17 +71,17 @@ def get_data_path():
 
     return _respath
 
-def api_method(f):
+def api_method(func):
     """ Decorator to mark a method as runnable by the REST API. """
-    f.is_api_method = True
-    return f
+    func.is_api_method = True
+    return func
 
 if "MIME" in vars(magic):
     # libmagic bindings
-    _ms = magic.open(magic.MIME)
-    _ms.load()
+    _MS = magic.open(magic.MIME)
+    _MS.load()
     def guess_mime_type(data):
-        return _ms.buffer(data)
+        return _MS.buffer(data)
 else:
     # python-magic
     def guess_mime_type(data):

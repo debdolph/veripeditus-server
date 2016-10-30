@@ -35,10 +35,10 @@ for cfg in CFGLIST:
 
 DB = SQLAlchemy(APP)
 OA = OSMAlchemy(DB, overpass=True)
-from veripeditus.server.model import *
+import veripeditus.server.model
 DB.create_all()
 
-from veripeditus.server.rest import *
+import veripeditus.server.rest
 
-from veripeditus.server.control import *
+from veripeditus.server.control import init
 init()

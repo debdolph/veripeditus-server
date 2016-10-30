@@ -19,8 +19,9 @@ Main server application
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-from flask import send_from_directory
 from os.path import realpath
+
+from flask import send_from_directory
 
 from veripeditus.server.app import APP
 

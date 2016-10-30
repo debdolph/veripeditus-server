@@ -48,9 +48,9 @@ def get_image_path(game_mod, basename):
 
     # Generate a list of all possibilities
     _possibilities = ([os.path.join(_path, basename+_extension)
-                           for _extension in _extensions
-                               for _path in _paths] +
-                       [_fallback])
+                       for _extension in _extensions
+                       for _path in _paths] +
+                      [_fallback])
 
     # Iterate over all possibilities and return the first existing resource
     for _possibility in _possibilities:

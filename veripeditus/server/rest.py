@@ -34,8 +34,8 @@ MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 
 MANAGER.create_api(User,
                    include_columns=_INCLUDE+['username', 'email', 'players',
-                   'players.name', 'players.longitude', 'players.latitude',
-                   'players.avatar'],
+                                             'players.name', 'players.longitude',
+                                             'players.latitude', 'players.avatar'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 
@@ -61,17 +61,17 @@ def _get_gameobject_method_result(id_, method):
     """
 
     # Get the GameObject
-    go = GameObject.query.get(id_)
+    gameobject = GameObject.query.get(id_)
 
     # Check for existence and method existence
-    if go is not None and getattr(go, method):
+    if gameobject is not None and getattr(go, method):
         # Get method object
-        m = getattr(go, method)
+        method_impl = getattr(gameobject, method)
 
         # Check whether execution is allowed
-        if m.is_api_method:
+        if method_impl.is_api_method:
             # Return method result verbatim
-            ret = m()
+            ret = method_impl()
             if isinstance(ret, tuple):
                 # We got a tuple of type and data
                 res = make_response(ret[1])

@@ -18,16 +18,14 @@ Main server data model
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from uuid import uuid4
+
+from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
+                              force_auto_coercion)
+
 from veripeditus.server.app import APP, DB
 from veripeditus.server.auth import Roles
 from veripeditus.server.util import get_game_by_name
-
-from flask import g
-from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
-                              force_auto_coercion)
-import base64
-import os
-from uuid import uuid4
 
 # Activiate auto coercion of data types
 force_auto_coercion()

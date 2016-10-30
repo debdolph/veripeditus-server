@@ -19,12 +19,10 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
 import random
 from flask import request, Response, g
 
 
-from veripeditus.framework import VERSION
 from veripeditus.server.app import DB, APP
 from veripeditus.server.auth import Roles
 from veripeditus.server.model import *
@@ -95,8 +93,8 @@ def _check_auth():
         g.user = None
     else:
         g.user = User.get_authenticated(request.authorization.username,
-                                            request.authorization.password)
+                                        request.authorization.password)
         if not g.user:
             return Response('Authentication failed.', 401,
-                            {'WWW-Authenticate':'Basic realm="%s"'
-                             % APP.config['BASIC_REALM']})
+                            {'WWW-Authenticate': 'Basic realm="%s"'
+                                                 % APP.config['BASIC_REALM']})
