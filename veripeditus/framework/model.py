@@ -112,3 +112,10 @@ class Item(GameObject):
 
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"), foreign_keys=[owner_id])
+
+class NPC(GameObject):
+    __tablename__ = "gameobject_npc"
+
+    id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
+
+    name = DB.Column(DB.String(32), nullable=False)
