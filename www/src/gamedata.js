@@ -32,10 +32,6 @@ GameDataService = function() {
     // Storage objects
     this.players = {};
 
-    // Login info
-    this.username = "";
-    this.password = "";
-
     // Current player object
     // FIXME get logged-in player from API
     this.current_player_id = 1;
@@ -133,8 +129,8 @@ GameDataService = function() {
             data: {
                 q: JSON.stringify(query),
             },
-            username: this.username,
-            password: this.password,
+            username: localStorage.getItem("username"),
+            password: localStorage.getItem("password"),
             gd: this,
             success: this.onReturnPlayers
         });
@@ -149,15 +145,14 @@ GameDataService = function() {
     };
 
     this.login = function(username, password) {
-        this.username = username;
-        this.password = password;
-        alert("foo");
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
         // FIXME Update game state here
     };
 
     this.logout = function() {
-        this.username = "";
-        this.password = "";
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
         // FIXME Update game state here
     };
 };
