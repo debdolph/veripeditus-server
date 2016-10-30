@@ -147,7 +147,6 @@ GameDataService = function() {
     this.login = function(username, password) {
         localStorage.setItem("username", username);
         localStorage.setItem("password", password);
-        alert(localStorage.username);
         // FIXME Update game state here
     };
 
