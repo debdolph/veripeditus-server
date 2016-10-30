@@ -36,7 +36,7 @@ setup(
                        ],
     include_package_data=True,
     package_data={
-                  'veripeditus.server': ['data/*'],
+                  'veripeditus.framework': ['data/*'],
                  },
     zip_safe=False,
     install_requires=[
