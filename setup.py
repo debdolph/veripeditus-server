@@ -45,6 +45,7 @@ setup(
                       'Flask-SQLAlchemy',
                       'OSMAlchemy',
                       'passlib',
+                      'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
                       'Wand',
                      ],
