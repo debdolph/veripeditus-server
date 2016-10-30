@@ -23,6 +23,7 @@ import inspect
 import os
 import pkgutil
 import sys
+import veripeditus.framework
 from wand.image import Image
 
 class NoSuchResourceError(Exception):
@@ -140,3 +141,30 @@ def get_game_data_object(restype, basename):
     # Close file and return
     _file.close()
     return _obj
+
+def get_image_path(game_mod, basename):
+    """
+    Get the path for an image file (.png or .svg).
+
+    Keyword arguments:
+
+    game_mod -- reference to the game module
+
+    basename -- name of the file without its extension
+    """
+
+    _path_framework = os.path.dirname(veripeditus.framework.__file__)
+    _path_game = os.path.dirname(game_mod.__file__)
+
+    _respath_framework = os.path.join(_path_framework, "data")
+    _respath_game = os.path.join(_path_game, "data")
+
+    _extensions = (".svg", ".png")
+    _paths = (_respath_framework, _respath_game)
+
+    _possibilities = [(os.path.join(_path, basename+_extension) for _path in _paths) for _extension in _extensions]
+    for _possibility in _possibilities:
+        if os.isfile(_possibility):
+            return _possibility
+
+    return os.path.join(_respath_framework, "dummy.svg")
