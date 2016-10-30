@@ -81,5 +81,6 @@ class World(Base):
     game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
     game = DB.relationship('Game', backref=DB.backref('worlds',
                                                       lazy='dynamic'))
+    enabled = DB.Column(DB.Boolean())
 
 from veripeditus.framework.model import *
