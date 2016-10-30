@@ -22,6 +22,7 @@ from flask_restless import APIManager
 from veripeditus.server.app import APP, DB
 from veripeditus.server.model import *
 
+
 # Global includes for all collections
 _INCLUDE = ['id', 'uuid', 'created', 'updated']
 
@@ -52,6 +53,11 @@ for go in [GameObject] + GameObject.__subclasses__():
                        exclude_columns=go.api_exclude,
                        methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
+def api_method(f):
+    """ Decorator to mark a method as runnable by the REST API. """
+    f.is_api_method = True
+    return f
+
 @APP.route("/api/gameobject/<int:id_>/<string:method>")
 def _get_gameobject_method_result(id_, method):
     """ Runs method on the object defined by the id and returns it verbatim
@@ -63,8 +69,17 @@ def _get_gameobject_method_result(id_, method):
 
     # Check for existence and method existence
     if go is not None and method in vars(go):
-        # Return method result verbatim
-        return vars(go)[method]()
+        # Get method object
+        m = vars(go)[method]
+
+        # Check whether execution is allowed
+        if m.is_api_method:
+            # Return method result verbatim
+            return m()
+        else:
+            # Return 403 Forbidden
+            # FIXME more specific error
+            return ("", 403)
     else:
         # Return 404 Not Found
         # FIXME more specific error
