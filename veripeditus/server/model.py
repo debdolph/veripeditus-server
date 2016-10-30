@@ -42,12 +42,6 @@ class Base(DB.Model):
     updated = DB.Column(DB.DateTime(), default=DB.func.now(),
                         onupdate=DB.func.now())
 
-class UsersToRoles(Base):
-    __tablename__ = "users_to_roles"
-
-    user_id = DB.Column(DB.Integer(), DB.ForeignKey('user.id'))
-    role_id = DB.Column(DB.Integer(), DB.ForeignKey('role.id'))
-
 class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']),
@@ -59,8 +53,6 @@ class User(Base):
     current_player = DB.relationship("Player",
                                      foreign_keys=[current_player_id])
 
-    roles = DB.relationship("Role", secondary=UsersToRoles, backref="users")
-
     @staticmethod
     def get_authenticated(username, password):
         user = User.query.filter_by(username=username).first()
@@ -68,9 +60,6 @@ class User(Base):
             return user
         else:
             return None
-
-class Role(Base):
-    name = DB.Column(DB.String(32), unique=True, nullable=False)
 
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)
