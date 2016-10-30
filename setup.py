@@ -48,7 +48,7 @@ setup(
                       'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
                      ],
-    test_suite='tests',
+    test_suite='test',
     entry_points={
                   'console_scripts': [
                                       'veripeditus-standalone = veripeditus.server:server_main'
