@@ -53,11 +53,6 @@ for go in [GameObject] + GameObject.__subclasses__():
                        exclude_columns=go.api_exclude,
                        methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
-def api_method(f):
-    """ Decorator to mark a method as runnable by the REST API. """
-    f.is_api_method = True
-    return f
-
 @APP.route("/api/gameobject/<int:id_>/<string:method>")
 def _get_gameobject_method_result(id_, method):
     """ Runs method on the object defined by the id and returns it verbatim
@@ -68,9 +63,9 @@ def _get_gameobject_method_result(id_, method):
     go = GameObject.query.get(id_)
 
     # Check for existence and method existence
-    if go is not None and method in vars(go):
+    if go is not None and getattr(go, method):
         # Get method object
-        m = vars(go)[method]
+        m = getattr(go, method)
 
         # Check whether execution is allowed
         if m.is_api_method:

@@ -19,6 +19,7 @@ from veripeditus.framework.util import get_image_path
 
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
+from veripeditus.server.util import api_method
 
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
@@ -84,6 +85,11 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     @property
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
+
+    @api_method
+    def image_raw(self):
+        with open(self.image_path, "rb") as f:
+            return f.read()
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"

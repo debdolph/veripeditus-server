@@ -68,3 +68,8 @@ def get_data_path():
     _respath = os.path.join(_modpath, "data")
 
     return _respath
+
+def api_method(f):
+    """ Decorator to mark a method as runnable by the REST API. """
+    f.is_api_method = True
+    return f
