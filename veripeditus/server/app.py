@@ -36,11 +36,6 @@ CFGLIST = ['/var/lib/veripeditus/dbconfig.cfg', '/etc/veripeditus/server.cfg']
 for cfg in CFGLIST:
     APP.config.from_pyfile(cfg, silent=True)
 
-# Serve static files from data path
-@APP.route('/api/data/<path:path>')
-def _serve_static_data(path):
-    return send_from_directory(get_data_path(), path)
-
 DB = SQLAlchemy(APP)
 OA = OSMAlchemy(DB, overpass=True)
 from veripeditus.server.model import *

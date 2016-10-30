@@ -51,3 +51,21 @@ for go in [GameObject] + GameObject.__subclasses__():
                        include_methods=["gameobject_type"],
                        exclude_columns=go.api_exclude,
                        methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+
+@APP.route("/api/gameobject/<int:id_>/<string:method>")
+def _get_gameobject_method_result(id_, method):
+    """ Runs method on the object defined by the id and returns it verbatim
+    if the object was found and has the method, or 404 if not.
+    """
+
+    # Get the GameObject
+    go = GameObject.query.get(id_)
+
+    # Check for existence and method existence
+    if go is not None and method in vars(go):
+        # Return method result verbatim
+        return vars(go)[method]()
+    else:
+        # Return 404 Not Found
+        # FIXME more specific error
+        return ("", 404)
