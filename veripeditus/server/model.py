@@ -53,6 +53,10 @@ class User(Base):
     current_player = DB.relationship("Player",
                                      foreign_keys=[current_player_id])
 
+    role_id = DB.Column(DB.Integer(), DB.ForeignKey("UserRole.id"))
+    role = DB.relationship("UserRole", backref=DB.backref("possessors", lazy="dynamic"),
+                                                          foreign_keys=[role_id])
+
     @staticmethod
     def get_authenticated(username, password):
         user = User.query.filter_by(username=username).first()
@@ -60,6 +64,9 @@ class User(Base):
             return user
         else:
             return None
+
+class UserRole(Base):
+    name = DB.Column(DB.String(32), unique=True, nullable=False)
 
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)
