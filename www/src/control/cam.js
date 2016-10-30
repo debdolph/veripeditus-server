@@ -34,8 +34,8 @@ CamController = function() {
     // Start camera
     Device.startCamera();
     // FIXME Stop on leave
-    // Utility functions for generating player images
-    this.getARStyle = function(player) {
+    // Utility functions for generating gameobject images
+    this.getARStyle = function(gameobject) {
         // Target object
         var style = {}
 
@@ -44,17 +44,17 @@ CamController = function() {
         var perspective = 800;
 
         // Center image first
-        var width = $("#arplayer-" + player.id).width;
+        var width = $("#argameobject-" + gameobject.id).width;
         style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
         var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
-        // Get player LatLng
-        var player_latlng = L.latLng(player.latitude, player.longitude);
+        // Get gameobject LatLng
+        var gameobject_latlng = L.latLng(gameobject.latitude, gameobject.longitude);
 
         // Get distance and bearing
-        var distance = own_latlng.distanceTo(player_latlng);
-        var bearing = own_latlng.bearingTo(player_latlng);
+        var distance = own_latlng.distanceTo(gameobject_latlng);
+        var bearing = own_latlng.bearingTo(gameobject_latlng);
         // Determine difference of bearing and device orientation
         var bearing_diff = Device.orientation.alpha - bearing;
 
@@ -81,12 +81,12 @@ CamController = function() {
     };
 
     // FIXME Move to GameDataService
-    this.getPlayerAvatar = function(player) {
-        return '/api/data/avatar_' + player.avatar + '.svg';
+    this.getGameObjectAvatar = function(gameobject) {
+        return '/api/data/avatar_' + gameobject.avatar + '.svg';
     };
 
-    // Called by GameDataService on player update
-    this.onUpdatedPlayers = function() {
+    // Called by GameDataService on gameobject update
+    this.onUpdatedGameObjects = function() {
         // FIXME do something
     };
 

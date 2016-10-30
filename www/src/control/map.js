@@ -37,39 +37,39 @@ MapController = function() {
     // Initially center map view to own position
     this.map.setView(this.marker_self.getLatLng(), 16);
 
-    // Already created markers for players will be stored here.
-    this.player_markers = {};
+    // Already created markers for gameobjects will be stored here.
+    this.gameobject_markers = {};
 
-    // Called by GameDataService on player update
-    this.onUpdatedPlayers = function() {
-        // Iterate over players and add map markers
-        for (id of Object.keys(GameData.players)) {
+    // Called by GameDataService on gameobjects update
+    this.onUpdatedGameObjects = function() {
+        // Iterate over gameobjects and add map markers
+        for (id of Object.keys(GameData.gameobjects)) {
             var player = GameData.players[id];
 
-            // Look for already created marker for this player id
-            var marker = this.player_markers[player.id];
+            // Look for already created marker for this gameobject id
+            var marker = this.gameobject_markers[gameobject.id];
             if (marker) {
                 // Marker exists, store location
-                marker.setLatLng([player.latitude, player.longitude]);
+                marker.setLatLng([gameobject.latitude, gameobject.longitude]);
             } else {
                 // Marker does not exist
                 // Construct marker icon from avatar name
                 var picon = L.icon({
-                    'iconUrl': '/api/data/avatar_' + player.avatar + '.svg',
+                    'iconUrl': '/api/data/avatar_' + gameobject.avatar + '.svg',
                     'iconSize': [32, 32],
                 });
 
-                // Create marker at player location
-                marker = L.marker([player.latitude, player.longitude], {
+                // Create marker at gameobject location
+                marker = L.marker([gameobject.latitude, gameobject.longitude], {
                     'icon': picon
                 });
 
                 // Create simple popup with basic information
-                marker.bindPopup("<p>Name: " + player.name + "</p>");
+                marker.bindPopup("<p>Name: " + gameobject.name + "</p>");
 
                 // Add marker to map and store to known markers
                 marker.addTo(this.map);
-                this.player_markers[player.id] = marker;
+                this.gameobject_markers[player.id] = marker;
             }
         }
     };

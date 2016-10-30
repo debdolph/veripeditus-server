@@ -19,6 +19,7 @@ Main server data model
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from veripeditus.server.app import APP, DB
+from veripeditus.server.auth import Roles
 from veripeditus.server.util import get_game_by_name
 
 from flask import g
@@ -42,11 +43,7 @@ class Base(DB.Model):
     updated = DB.Column(DB.DateTime(), default=DB.func.now(),
                         onupdate=DB.func.now())
 
-class UsersToRoles(Base):
-    __tablename__ = "users_to_roles"
-
-    user_id = DB.Column(DB.Integer(), DB.ForeignKey('user.id'))
-    role_id = DB.Column(DB.Integer(), DB.ForeignKey('role.id'))
+    api_exclude = []
 
 class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
@@ -59,7 +56,8 @@ class User(Base):
     current_player = DB.relationship("Player",
                                      foreign_keys=[current_player_id])
 
-    roles = DB.relationship("Role", secondary=UsersToRoles, backref="users")
+#    role = DB.Column(DB.Enum(Roles), default=Roles.player, nullable=False)
+    role = DB.Column(DB.Unicode(32), default="PLAYER", nullable=False)
 
     @staticmethod
     def get_authenticated(username, password):
@@ -68,9 +66,6 @@ class User(Base):
             return user
         else:
             return None
-
-class Role(Base):
-    name = DB.Column(DB.String(32), unique=True, nullable=False)
 
 class Game(Base):
     package = DB.Column(DB.String(128), nullable=False)

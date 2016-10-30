@@ -26,6 +26,7 @@ from flask import request, Response, g
 
 from veripeditus.framework import VERSION
 from veripeditus.server.app import DB, APP
+from veripeditus.server.auth import Roles
 from veripeditus.server.model import *
 from veripeditus.server.util import get_games
 
@@ -69,6 +70,8 @@ def _add_data():
         user.password = "admin"
         user.name = "The Boss"
         user.email = "theboss@example.com"
+#        user.role = Roles.admin
+        user.role = "ADMIN"
         world = World()
         world.name = "Default World"
         world.game = Game.query.first()
