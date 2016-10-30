@@ -18,12 +18,9 @@ Main server application
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_restless import url_for
 from osmalchemy import OSMAlchemy
-
-from veripeditus.server.util import get_data_path
 
 APP = Flask(__name__)
 
