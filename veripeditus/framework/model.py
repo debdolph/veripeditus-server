@@ -74,6 +74,9 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     attributes = association_proxy("gameobjects_to_attributes", "value",
                                  creator=lambda k, v: GameObjectsToAttributes(attribute=Attribute(key=k, value=v)))
 
+    def gameobject_type(self):
+        return self.__tablename__
+
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
 

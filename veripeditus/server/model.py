@@ -56,7 +56,8 @@ class User(Base):
     current_player = DB.relationship("Player",
                                      foreign_keys=[current_player_id])
 
-    role = DB.Column(DB.Enum(Roles), default=Roles.player, nullable=False)
+#    role = DB.Column(DB.Enum(Roles), default=Roles.player, nullable=False)
+    role = DB.Column(DB.Unicode(32), default="PLAYER", nullable=False)
 
     @staticmethod
     def get_authenticated(username, password):

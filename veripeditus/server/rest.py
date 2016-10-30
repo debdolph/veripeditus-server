@@ -47,5 +47,7 @@ MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],
 
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():
-    MANAGER.create_api(go, exclude_columns=go.api_exclude,
+    MANAGER.create_api(go,
+                       include_methods=["gameobject_type"],
+                       exclude_columns=go.api_exclude,
                        methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])

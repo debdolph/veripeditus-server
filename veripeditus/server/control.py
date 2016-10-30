@@ -70,7 +70,8 @@ def _add_data():
         user.password = "admin"
         user.name = "The Boss"
         user.email = "theboss@example.com"
-        user.role = Roles.admin
+#        user.role = Roles.admin
+        user.role = "ADMIN"
         world = World()
         world.name = "Default World"
         world.game = Game.query.first()
