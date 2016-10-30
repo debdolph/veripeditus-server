@@ -64,7 +64,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     id = DB.Column(DB.Integer(), primary_key=True)
 
-    image = DB.Column(DB.String(32), default="default", nullable=False)
+    image = DB.Column(DB.String(32), default="dummy", nullable=False)
     
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
     world = DB.relationship("World", backref=DB.backref("gameobjects",
@@ -122,6 +122,11 @@ class Player(GameObject):
                            foreign_keys=[user_id])
 
     api_exclude = ["user.password"]
+
+    def __init__(self, **kwargs):
+        GameObject.__init__(self, **kwargs)
+        if not "image" in kwargs:
+            self.image = "avatar_default"
 
 class Item(GameObject):
     __tablename__ = "gameobject_item"
