@@ -29,6 +29,16 @@ function control_click() {
 
         // UI magic
         if (view == "player") {
+            $('button#dialog-player-login-button').click(function () {
+                var username = $('dialog-player-login-username').val();
+                var password = $('dialog-player-login-password').val();
+                GameData.login(username, password);
+            });
+
+            $('button#dialog-player-logout-button').click(function () {
+                GameData.logout();
+            });
+
             if (localStorage.getItem("username")) {
                 $("#dialog-player-login").hide();
                 $("#dialog-player-logout").show();

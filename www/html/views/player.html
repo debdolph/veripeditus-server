@@ -4,18 +4,18 @@
  <h2>Login</h2>
 
  <label for="username">Username:</label>
- <input type="text" name="username" size="20" />
+ <input type="text" name="username" id="dialog-player-login-username" size="20" />
 
  <label for="password">Password:</label>
- <input type="password" name="password" size="20" />
+ <input type="password" name="password" id="dialog-player-login-password" size="20" />
 
- <button onclick="GameData.login(username.value, password.value)">
+ <button id="dialog-player-login-button">
   Login
  </button>
 </div>
 
 <div id="dialog-player-logout">
- <button onclick="GameData.logout()">
+ <button id="dialog-player-logout-button">
   Logout
  </button>
 </div>
