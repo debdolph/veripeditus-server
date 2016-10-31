@@ -46,6 +46,11 @@ MapController = function() {
         for (id of Object.keys(GameData.gameobjects)) {
             var gameobject = GameData.gameobjects[id];
 
+            // Check whether item should be shown on the map
+            if (! gameobject.isonmap) {
+                continue;
+            }
+
             // Look for already created marker for this gameobject id
             var marker = this.gameobject_markers[gameobject.id];
             if (marker) {
