@@ -37,21 +37,18 @@ MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 MANAGER.create_api(User,
                    include_columns=_INCLUDE+['username', 'email', 'players',
                                              'players.name', 'players.longitude',
-                                             'players.latitude', 'players.avatar', 'current_player'],
-                   methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+                                             'players.latitude', 'players.avatar', 'current_player'])
 
 
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
                                                    'description', 'author',
-                                                   'license'],
-                   methods=['GET'])
+                                                   'license'])
 # FIXME make this API method less special
 @APP.route("/api/game/<int:id_>/world_create")
 def _world_create(id_):
     return Game.query.get(id_).world_create()
 
-MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],
-                   methods=['GET'])
+MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'])
 # FIXME make this API method less special
 @APP.route("/api/world/<int:id_>/player_join")
 def _world_join(id_):
@@ -61,8 +58,7 @@ def _world_join(id_):
 for go in [GameObject] + GameObject.__subclasses__():
     MANAGER.create_api(go,
                        include_methods=["gameobject_type"],
-                       exclude_columns=go.api_exclude,
-                       methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+                       exclude_columns=go.api_exclude)
 
 @APP.route("/api/gameobject/<int:id_>/<string:method>")
 @APP.route("/api/gameobject/<int:id_>/<string:method>/<arg>")
