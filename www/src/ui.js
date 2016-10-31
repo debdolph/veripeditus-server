@@ -30,8 +30,8 @@ function control_click() {
         // UI magic
         if (view == "player") {
             $('button#dialog-player-login-button').click(function () {
-                var username = $('dialog-player-login-username').val();
-                var password = $('dialog-player-login-password').val();
+                var username = $('#dialog-player-login-username').val();
+                var password = $('#dialog-player-login-password').val();
                 GameData.login(username, password);
             });
 
