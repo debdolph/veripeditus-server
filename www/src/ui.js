@@ -35,15 +35,14 @@ function control_click() {
 
                 // Generate inventory list
                 $('table#inventory-table').empty();
-                for (i in GameData.gameobjects[GameData.current_player_id].inventory) {
-                    var item = GameData.gameobjects[GameData.current_player_id].inventory[i];
+                $.each(GameData.gameobjects[GameData.current_player_id].inventory, function (i, item) {
                     var html = "<tr>";
                     html += "<td><img src='/api/gameobject/" + item.id + "/image_raw' /></td>";
                     html += "<td>" + item.name + "</td>";
                     html += "</tr>";
                     var elem = $(html);
                     $('table#inventory-table').append(elem);
-                }
+                });
             } else {
                 $("#dialog-player-login").show();
                 $("#dialog-player-logout").hide();
