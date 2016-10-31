@@ -59,14 +59,14 @@ MapController = function() {
             } else {
                 // Marker does not exist
                 // Construct marker icon from gameobject image
-                var picon = L.icon({
+                var icon = L.icon({
                     'iconUrl': '/api/gameobject/' + gameobject.id + '/image_raw',
                     'iconSize': [32, 32],
                 });
 
                 // Create marker at gameobject location
                 marker = L.marker([gameobject.latitude, gameobject.longitude], {
-                    'icon': picon
+                    'icon': icon
                 });
 
                 // Create simple popup with basic information
