@@ -52,7 +52,8 @@ GameDataService = function() {
                 url: "/api/gameobject/" + this.current_player_id + "/update_position/" + this.gameobjects[this.current_player_id].latitude + "," + this.gameobjects[this.current_player_id].longitude,
                 username: localStorage.getItem("username"),
                 password: localStorage.getItem("password"),
-            });        }
+            });
+        }
     };
 
     this.onReturnGameObjects = function(data) {
