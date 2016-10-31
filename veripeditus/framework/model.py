@@ -171,6 +171,9 @@ class Player(GameObject):
         DB.session.add(self)
         DB.session.commit()
 
+        # Redirect to own object
+        return redirect("/api/gameobject_player/%i" % self.id)
+
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 
