@@ -63,12 +63,7 @@ GameDataService = function() {
     this.onReturnGameObjects = function(data) {
         // Iterate over data and merge into gameobjects store
         for (var i = 0; i < data.objects.length; i++) {
-            var go = new GameObject(data.objects[i].id);
-            go.latitude = data.objects[i].latitude;
-            go.longitude = data.objects[i].longitude;
-            go.image = data.objects[i].image;
-            go.name = data.objects[i].name;
-            go.world = data.objects[i].world;
+            var go = data.objects[i];
             this.gd.gameobjects[go.id] = go;
         }
 
