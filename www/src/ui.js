@@ -19,23 +19,22 @@
 
 function control_click() {
     var view = $(this).attr("id").substr(8);
-    var dialog = $('<div></div>').load("html/views/" + view + ".html");
-    // FIXME fix title extraction
-    //var head = dialog.children().filter("h1");
-    //var title = head.text();
-    //dialog.attr("title", title);
-    //head.remove();
-    dialog.attr("title", view);
+    var dialog = $('<div id="dialog-' + view + '"></div>').load("html/views/" + view + ".html");
+    var head = $('div#dialog-' + view + ' h1');
+    alert(head[0]);
+    var title = head.text();
+    dialog.attr("title", title);
+    head.remove();
     dialog.dialog();
 
     // UI magic
     if (view == "player") {
         if (localStorage.getItem("username")) {
-            dialog.filter("#dialog-player-login").hide();
-            dialog.filter("#dialog-player-logout").show();
+            $("#dialog-player-login").hide();
+            $("#dialog-player-logout").show();
         } else {
-            dialog.filter("#dialog-player-login").show();
-            dialog.filter("#dialog-player-logout").hide();
+            $("#dialog-player-login").show();
+            $("#dialog-player-logout").hide();
         }
     }
 }
