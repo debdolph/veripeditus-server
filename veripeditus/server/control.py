@@ -103,3 +103,9 @@ def _check_auth():
             return Response('Authentication failed.', 401,
                             {'WWW-Authenticate': 'Basic realm="%s"'
                                                  % APP.config['BASIC_REALM']})
+
+@APP.after_request
+def _run_spawns(res):
+    for go in GameObject.__subclasses__():
+        go.spawn()
+    return res

@@ -104,6 +104,11 @@ class GameObject(Base, metaclass=_GameObjectMeta):
         with open(self.image_path, "rb") as file:
             return file.read()
 
+    @classmethod
+    def spawn(cls):
+        for go in cls.__subclasses__():
+            go.spawn()
+
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
 
