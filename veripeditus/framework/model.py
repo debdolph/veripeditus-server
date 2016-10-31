@@ -169,7 +169,7 @@ class Player(GameObject):
         # Update position
         self.latitude, self.longitude = [float(x) for x in latlon.split(",")]
         DB.session.add(self)
-        DB.session.commit(self)
+        DB.session.commit()
 
 class Item(GameObject):
     __tablename__ = "gameobject_item"
