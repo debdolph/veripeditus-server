@@ -24,54 +24,73 @@ GameObject = function(id) {
 };
 
 GameDataService = function() {
+    var self = this;
+
     // Status objects
-    this.bounds = [
+    self.bounds = [
         [0.0, 0.0],
         [0.0, 0.0]];
 
     // Storage objects
-    this.gameobjects = {};
+    self.gameobjects = {};
+    self.gameobjects_temp = {};
+    self.gameobjects_missing = 0;
+    self.gameobject_types = ["player", "item", "npc"];
 
     // Current player object
     // FIXME get logged-in player from API
-    this.current_player_id = 1;
-    this.gameobjects[1] = new GameObject(1);
-    this.gameobjects[1].world = {
+    self.current_player_id = 1;
+    self.gameobjects[1] = new GameObject(1);
+    self.gameobjects[1].world = {
         "id": 1
     };
 
-    this.onGeolocationChanged = function() {
+    self.onGeolocationChanged = function() {
         // Update own location on server if logged in
-        if (this.current_player_id > -1) {
+        if (self.current_player_id > -1) {
             // Update location in player object
-            this.gameobjects[this.current_player_id].latitude = Device.position.coords.latitude;
-            this.gameobjects[this.current_player_id].longitude = Device.position.coords.longitude;
+            self.gameobjects[self.current_player_id].latitude = Device.position.coords.latitude;
+            self.gameobjects[self.current_player_id].longitude = Device.position.coords.longitude;
 
             // Send the update request
             $.ajax({
-                url: "/api/gameobject/" + this.current_player_id + "/update_position/" + this.gameobjects[this.current_player_id].latitude + "," + this.gameobjects[this.current_player_id].longitude,
+                url: "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude,
                 username: localStorage.getItem("username"),
                 password: localStorage.getItem("password"),
             });
         }
     };
 
-    this.onReturnGameObjects = function(data) {
+    self.onReturnGameObjects = function(data) {
         // Iterate over data and merge into gameobjects store
         for (var i = 0; i < data.objects.length; i++) {
             var go = data.objects[i];
-            this.gd.gameobjects[go.id] = go;
+            self.gameobjects_temp[go.id] = go;
         }
 
-        // Call onUpdatedGameObjects on all views
-        for (view of Veripeditus.views) {
-            if (view.onUpdatedGameObjects) {
-                view.onUpdatedGameObjects();
+        // Reduce missing objects counter
+        self.gameobjects_missing -= 1;
+
+        if (self.gameobjects_missing == 0) {
+            // Move gameobjects to working copy
+            self.gameobjects = self.gameobjects_temp;
+            self.gameobjects_temp = {};
+
+            // Call onUpdatedGameObjects on all views
+            for (view of Veripeditus.views) {
+                if (view.onUpdatedGameObjects) {
+                    view.onUpdatedGameObjects();
+                }
             }
         }
     };
 
-    this.updateGameObjects = function() {
+    self.updateGameObjects = function() {
+        // Skip if gameobjects are still missing from previous load
+        if (self.gameobjects_missing > 0) {
+            return;
+        }
+
         // Construct JSON query filter for REST API
         var query = {
             'filters': [{
@@ -79,22 +98,22 @@ GameDataService = function() {
                     'and': [{
                         'name': 'latitude',
                         'op': 'ge',
-                        'val': this.bounds[0][0]
+                        'val': self.bounds[0][0]
                     },
                     {
                         'name': 'latitude',
                         'op': 'le',
-                        'val': this.bounds[1][0]
+                        'val': self.bounds[1][0]
                     },
                     {
                         'name': 'longitude',
                         'op': 'ge',
-                        'val': this.bounds[0][1]
+                        'val': self.bounds[0][1]
                     },
                     {
                         'name': 'longitude',
                         'op': 'le',
-                        'val': this.bounds[1][1]
+                        'val': self.bounds[1][1]
                     },
                     {
                         'name': 'world',
@@ -102,23 +121,25 @@ GameDataService = function() {
                         'val': {
                             'name': 'id',
                             'op': 'eq',
-                            'val': this.gameobjects[this.current_player_id].world.id
+                            'val': self.gameobjects[self.current_player_id].world.id
                         }
                     }]
                 },
                 {
                     'name': 'id',
                     'op': 'eq',
-                    'val': this.current_player_id
+                    'val': self.current_player_id
                 }]
             }]
         };
 
-        // Clear out gameobjects
-        this.gameobjects = {};
+        // Define and trace gameobject types to load
+        self.gameobjects_missing = self.gameobject_types.length;
 
-        var gameobject_types = ["player", "item", "npc"];
-        for (gameobject_type of gameobject_types) {
+        // Clear out gameobjects
+        self.gameobjects_temp = {};
+
+        $.each(self.gameobject_types, function (i, gameobject_type) {
             $.ajax({
                 dataType: "json",
                 contentType: "applicaiton/json",
@@ -128,33 +149,32 @@ GameDataService = function() {
                 },
                 username: localStorage.getItem("username"),
                 password: localStorage.getItem("password"),
-                gd: this,
-                success: this.onReturnGameObjects
+                success: self.onReturnGameObjects
             });
-        }
+        });
     };
 
     // Public method to update view boundaries, e.g. from map view
-    this.setBounds = function(southWest, northEast) {
-        this.bounds[0] = southWest;
-        this.bounds[1] = northEast;
+    self.setBounds = function(southWest, northEast) {
+        self.bounds[0] = southWest;
+        self.bounds[1] = northEast;
 
-        this.updateGameObjects();
+        self.updateGameObjects();
     };
 
-    this.login = function(username, password) {
+    self.login = function(username, password) {
         localStorage.setItem("username", username);
         localStorage.setItem("password", password);
         // FIXME Update game state here
     };
 
-    this.logout = function() {
+    self.logout = function() {
         localStorage.removeItem("username");
         localStorage.removeItem("password");
         // FIXME Update game state here
     };
 
-    this.item_collect = function(id) {
+    self.item_collect = function(id) {
         $.ajax({
             url: "/api/gameobject/" + id + "/collect",
             username: localStorage.getItem("username"),

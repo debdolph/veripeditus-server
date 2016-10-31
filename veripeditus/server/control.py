@@ -92,18 +92,13 @@ def init():
 
 @APP.before_request
 def _check_auth():
-    if request.path.startswith("/api/") and not request.authorization:
-        return Response('Authentication failed.', 401,
-                        {'WWW-Authenticate': 'Basic realm="%s"'
-                                             % APP.config['BASIC_REALM']})
-    elif request.authorization:
+    g.user = None
+
+    if request.authorization:
         g.user = User.get_authenticated(request.authorization.username,
                                         request.authorization.password)
-        if not g.user:
-            return Response('Authentication failed.', 401,
-                            {'WWW-Authenticate': 'Basic realm="%s"'
-                                                 % APP.config['BASIC_REALM']})
-    else:
+
+    if request.path.startswith("/api/") and g.user is None:
         return Response('Authentication failed.', 401,
                         {'WWW-Authenticate': 'Basic realm="%s"'
                                              % APP.config['BASIC_REALM']})
