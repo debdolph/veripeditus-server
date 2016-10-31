@@ -138,6 +138,9 @@ class Player(GameObject):
         if "image" not in kwargs:
             self.image = "avatar_default"
 
+    def may_accept_handover(self, item):
+        return True
+
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 
@@ -148,6 +151,7 @@ class Item(GameObject):
                             foreign_keys=[owner_id])
 
     collectible = True
+    handoverable = True
 
     @api_method
     def collect(self):
@@ -168,10 +172,28 @@ class Item(GameObject):
             # FIXME throw proper error
             return None
 
+    @api_method
+    def handover(self, target_player):
+        if self.owner is not None and self.handoverable and self.may_handover(target_player) and target_player.may_accept_handover(self):
+            self.owner = target_player
+            self.on_handedover()
+            DB.session.add(self)
+            DB.session.commit()
+            return redirect("/api/gameobject_item/%i" % self.id)
+        else:
+            # FIXME throw proper error
+            return None
+
     def may_collect(self, player):
         return True
 
+    def may_handover(self, player):
+        return True
+
     def on_collected(self):
+        pass
+
+    def on_handedover(self):
         pass
 
 class NPC(GameObject):
