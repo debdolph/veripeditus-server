@@ -134,7 +134,7 @@ class Player(GameObject):
     api_exclude = ["user.password"]
 
     def __init__(self, **kwargs):
-        super().__init__(self, **kwargs)
+        GameObject.__init__(self, **kwargs)
         if "image" not in kwargs:
             self.image = "avatar_default"
 
