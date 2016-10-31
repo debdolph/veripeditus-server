@@ -45,9 +45,17 @@ MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
                                                    'description', 'author',
                                                    'license'],
                    methods=['GET'])
+# FIXME make this API method less special
+@APP.route("/api/game/<int:id_>/world_create")
+def _world_create(id_):
+    return Game.query.get(id_).world_create()
 
 MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'],
                    methods=['GET'])
+# FIXME make this API method less special
+@APP.route("/api/world/<int:id_>/player_join")
+def _world_join(id_):
+    return World.query.get(id_).player_join()
 
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():

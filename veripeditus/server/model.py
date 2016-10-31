@@ -20,12 +20,13 @@ Main server data model
 
 from uuid import uuid4
 
+from flask import g, redirect
 from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
                               force_auto_coercion)
 
 from veripeditus.server.app import APP, DB
 from veripeditus.server.auth import Roles
-from veripeditus.server.util import get_game_by_name
+from veripeditus.server.util import api_method, get_game_by_name
 
 # Activiate auto coercion of data types
 force_auto_coercion()
@@ -80,11 +81,48 @@ class Game(Base):
     def module(self):
         return get_game_by_name(self.package)
 
+    @api_method
+    def world_create(self):
+        world = World()
+        world.name = self.name
+        world.game = self
+        DB.session.add(world)
+        DB.session.commit()
+
+        # Redirect to new player object
+        return redirect("/api/world/%i" % world.id)
+
 class World(Base):
     name = DB.Column(DB.String(32), unique=True, nullable=False)
     game_id = DB.Column(DB.Integer, DB.ForeignKey('game.id'))
     game = DB.relationship('Game', backref=DB.backref('worlds',
                                                       lazy='dynamic'))
     enabled = DB.Column(DB.Boolean(), default=True, nullable=False)
+
+    @api_method
+    def player_join(self):
+        # Check whether a user logged in
+        if g.user is None:
+            # FIXME proper error
+            return None
+
+        # Check whether the user has a player in this world
+        player = Player.query.filter_by(user=g.user, world=self).scalar()
+        if player is None:
+            # Create a new player in this world
+            player = self.game.module.Player()
+            player.name = g.user.name
+            player.world = self
+            player.user = g.user
+            DB.session.add(player)
+            DB.session.commit()
+
+        # Update current_player
+        g.user.current_player = player
+        DB.session.add(g.user)
+        DB.session.commit()
+
+        # Redirect to new player object
+        return redirect("/api/gameobject_player/%i" % player.id)
 
 from veripeditus.framework.model import *

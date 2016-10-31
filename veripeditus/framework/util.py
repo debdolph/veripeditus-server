@@ -22,6 +22,7 @@ import os
 
 import geopy
 
+from veripeditus.server.app import DB
 import veripeditus.framework
 
 def get_image_path(game_mod, basename):
@@ -63,3 +64,7 @@ def get_image_path(game_mod, basename):
 def get_gameobject_distance(obj1, obj2):
     return gpxpy.geo.haversine_distance(obj1.latitude, obj1.longitude,
                                         obj2.latitude, obj2.longitude)
+
+def add(obj):
+    DB.session.add(obj)
+    DB.session.commit()
