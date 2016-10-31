@@ -21,7 +21,7 @@ from sqlalchemy.orm.collections import attribute_mapped_collection
 
 from veripeditus.framework.util import get_image_path, get_gameobject_distance
 from veripeditus.server.app import DB
-from veripeditus.server.model import Base
+from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
 
 class _GameObjectMeta(type(Base)):
@@ -105,9 +105,15 @@ class GameObject(Base, metaclass=_GameObjectMeta):
             return file.read()
 
     @classmethod
-    def spawn(cls):
-        for go in cls.__subclasses__():
-            go.spawn()
+    def spawn(cls, world=None):
+        if world is None:
+            # Iterate over all defined GameObject classes
+            for go in cls.__subclasses__():
+                # Iterate over all worlds using the game
+                worlds = World.query.filter(World.game.has(package=go.__module__.split(".")[2])).all()
+                for world in worlds:
+                    # Call spawn for each world
+                    go.spawn(world)
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
