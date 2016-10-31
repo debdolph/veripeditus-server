@@ -26,11 +26,7 @@ from veripeditus.server.app import APP, DB
 from veripeditus.server.model import *
 from veripeditus.server.util import guess_mime_type
 
-# Global includes for all collections
 _INCLUDE = ['id', 'uuid', 'created', 'updated']
-
-_METHODS = ['GET_MANY', 'GET_SINGLE', 'PATCH_MANY', 'PATCH_SINGLE',
-            'DELETE_MANY', 'DELETE_SINGLE', 'POST']
 
 MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 
