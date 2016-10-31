@@ -67,9 +67,6 @@ DeviceService = function() {
         } else {
             msg = "Unknown error acquiring location.";
         }
-
-        // Add floating message
-        Messages.add("danger", msg);
     };
 
     // Start watching Geolocation
@@ -121,10 +118,7 @@ DeviceService = function() {
                         view.onCameraChanged();
                     }
                 }
-            }).
-            catch(function(error) {
-                Messages.add("danger", error.message);
-            });
+            });.
         }
     };
 
