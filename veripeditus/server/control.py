@@ -96,13 +96,17 @@ def _check_auth():
         return Response('Authentication failed.', 401,
                         {'WWW-Authenticate': 'Basic realm="%s"'
                                              % APP.config['BASIC_REALM']})
-    else:
+    elif request.authorization:
         g.user = User.get_authenticated(request.authorization.username,
                                         request.authorization.password)
         if not g.user:
             return Response('Authentication failed.', 401,
                             {'WWW-Authenticate': 'Basic realm="%s"'
                                                  % APP.config['BASIC_REALM']})
+    else:
+        return Response('Authentication failed.', 401,
+                        {'WWW-Authenticate': 'Basic realm="%s"'
+                                             % APP.config['BASIC_REALM']})
 
 @APP.after_request
 def _run_spawns(res):
