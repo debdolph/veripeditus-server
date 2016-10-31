@@ -20,6 +20,8 @@ API endpoint definitions
 
 from flask import make_response
 from flask_restless import APIManager
+from werkzeug.wrappers import Response
+
 from veripeditus.server.app import APP, DB
 from veripeditus.server.model import *
 from veripeditus.server.util import guess_mime_type
@@ -35,7 +37,7 @@ MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 MANAGER.create_api(User,
                    include_columns=_INCLUDE+['username', 'email', 'players',
                                              'players.name', 'players.longitude',
-                                             'players.latitude', 'players.avatar'],
+                                             'players.latitude', 'players.avatar', 'current_player'],
                    methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
 
 
@@ -65,7 +67,7 @@ def _get_gameobject_method_result(id_, method, arg=None):
     gameobject = GameObject.query.get(id_)
 
     # Check for existence and method existence
-    if gameobject is not None and getattr(go, method):
+    if gameobject is not None and getattr(gameobject, method):
         # Get method object
         method_impl = getattr(gameobject, method)
 
@@ -77,7 +79,10 @@ def _get_gameobject_method_result(id_, method, arg=None):
             else:
                 ret = method_impl(arg)
 
-            if isinstance(ret, tuple):
+            if isinstance(ret, Response):
+                # We got a complete Response object
+                res = ret
+            elif isinstance(ret, tuple):
                 # We got a tuple of type and data
                 res = make_response(ret[1])
                 res.headers["Content-Type"] = ret[0]

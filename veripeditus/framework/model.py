@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from flask import g, redirect
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
@@ -80,6 +81,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
+    isonmap = DB.Column(DB.Boolean(), default=True, nullable=False)
 
     type = DB.Column(DB.Unicode(256))
 
@@ -144,6 +146,33 @@ class Item(GameObject):
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"),
                             foreign_keys=[owner_id])
+
+    collectible = True
+
+    @api_method
+    def collect(self):
+        if g.user is not None and g.user.current_player is not None:
+            player = g.user.current_player
+        else:
+            # FIXME throw proper error
+            return None
+
+        if self.collectible and self.isonmap and self.may_collect(player):
+            self.owner = player
+            self.isonmap = False
+            self.on_collected()
+            DB.session.add(self)
+            DB.session.commit()
+            return redirect("/api/gameobject_item/%i" % self.id)
+        else:
+            # FIXME throw proper error
+            return None
+
+    def may_collect(self, player):
+        return True
+
+    def on_collected(self):
+        pass
 
 class NPC(GameObject):
     __tablename__ = "gameobject_npc"

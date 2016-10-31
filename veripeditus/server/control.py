@@ -80,6 +80,9 @@ def _add_data():
         player.user = user
         player.world = world
         # Add user to database
+        DB.session.add(player)
+        DB.session.commit()
+        user.current_player = player
         DB.session.add(user)
         DB.session.commit()
 

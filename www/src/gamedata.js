@@ -68,6 +68,7 @@ GameDataService = function() {
             go.longitude = data.objects[i].longitude;
             go.image = data.objects[i].image;
             go.name = data.objects[i].name;
+            go.world = data.objects[i].world;
             this.gd.gameobjects[go.id] = go;
         }
 

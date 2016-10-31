@@ -118,7 +118,7 @@ DeviceService = function() {
                         view.onCameraChanged();
                     }
                 }
-            });.
+            });
         }
     };
 
