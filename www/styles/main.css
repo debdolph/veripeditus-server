@@ -87,3 +87,11 @@ div#arview img.argameobject {
 p.map_popup_image, p.map_popup_image img {
 	width: 100%;
 }
+
+table#inventory-table {
+	width: 100%;
+}
+
+table#inventory-table td img {
+	width: 32px;
+}

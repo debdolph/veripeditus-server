@@ -117,18 +117,24 @@ GameDataService = function() {
             }]
         };
 
-        $.ajax({
-            dataType: "json",
-            contentType: "applicaiton/json",
-            url: "/api/gameobject",
-            data: {
-                q: JSON.stringify(query),
-            },
-            username: localStorage.getItem("username"),
-            password: localStorage.getItem("password"),
-            gd: this,
-            success: this.onReturnGameObjects
-        });
+        // Clear out gameobjects
+        this.gameobjects = {};
+
+        var gameobject_types = ["player", "item", "npc"];
+        for (gameobject_type of gameobject_types) {
+            $.ajax({
+                dataType: "json",
+                contentType: "applicaiton/json",
+                url: "/api/gameobject_" + gameobject_type,
+                data: {
+                    q: JSON.stringify(query),
+                },
+                username: localStorage.getItem("username"),
+                password: localStorage.getItem("password"),
+                gd: this,
+                success: this.onReturnGameObjects
+            });
+        }
     };
 
     // Public method to update view boundaries, e.g. from map view

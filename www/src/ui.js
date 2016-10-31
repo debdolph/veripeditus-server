@@ -21,7 +21,6 @@ function control_click() {
     var view = $(this).attr("id").substr(8);
     var dialog = $('<div id="dialog-' + view + '"></div>').load("html/views/" + view + ".html");
     var head = $('div#dialog-' + view + ' h1');
-    alert(head[0]);
     var title = head.text();
     dialog.attr("title", title);
     head.remove();
@@ -32,6 +31,18 @@ function control_click() {
         if (localStorage.getItem("username")) {
             $("#dialog-player-login").hide();
             $("#dialog-player-logout").show();
+
+            // Generate inventory list
+            $('table#inventory-table').empty();
+            for (i in GameData.gameobjects[GameData.current_player_id].inventory) {
+                var item = GameData.gameobjects[GameData.current_player_id].inventory[i];
+                var html = "<tr>";
+                html += "<td><img src='/api/gameobject/" + item.id + "/image_raw' /></td>";
+                html += "<td>" + item.name + "</td>";
+                html += "</tr>";
+                var elem = $(html);
+                $('table#inventory-table').append(elem);
+            }
         } else {
             $("#dialog-player-login").show();
             $("#dialog-player-logout").hide();
