@@ -27,6 +27,17 @@ function control_click() {
     //head.remove();
     dialog.attr("title", view);
     dialog.dialog();
+
+    // UI magic
+    if (view == "player") {
+        if (localStorage.getItem("username")) {
+            dialog.filter("#dialog-player-login").hide();
+            dialog.filter("#dialog-player-logout").show();
+        } else {
+            dialog.filter("#dialog-player-login").show();
+            dialog.filter("#dialog-player-logout").hide();
+        }
+    }
 }
 
 $('div.control').on("click", control_click);

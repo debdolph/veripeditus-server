@@ -1,6 +1,6 @@
 <h1>Login</h1>
 
-<form name="login" action="#">
+<div id="dialog-player-login">
  <label for="username">Username:</label>
  <input type="text" name="username" size="20" />
 
@@ -10,7 +10,10 @@
  <button onclick="GameData.login(username.value, password.value)">
   Login
  </button>
+</div>
+
+<div id="dialog-player-logout">
  <button onclick="GameData.logout()">
   Logout
  </button>
-</form>
+</div>
