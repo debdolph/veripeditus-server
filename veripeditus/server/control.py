@@ -92,8 +92,10 @@ def init():
 
 @APP.before_request
 def _check_auth():
-    if not request.authorization:
-        g.user = None
+    if request.path.startswith("/api/") and not request.authorization:
+        return Response('Authentication failed.', 401,
+                        {'WWW-Authenticate': 'Basic realm="%s"'
+                                             % APP.config['BASIC_REALM']})
     else:
         g.user = User.get_authenticated(request.authorization.username,
                                         request.authorization.password)
