@@ -19,7 +19,7 @@ from flask import g, redirect
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
-from veripeditus.framework.util import get_image_path
+from veripeditus.framework.util import get_image_path, get_gameobject_distance
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base
 from veripeditus.server.util import api_method
@@ -92,6 +92,9 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def gameobject_type(self):
         return self.__tablename__
 
+    def distance_to(obj):
+        return get_gameobject_distance(self, obj)
+
     @property
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
@@ -151,6 +154,7 @@ class Item(GameObject):
                             foreign_keys=[owner_id])
 
     collectible = True
+    collectible_max_distance = None
     handoverable = True
 
     @api_method
@@ -160,6 +164,11 @@ class Item(GameObject):
         else:
             # FIXME throw proper error
             return None
+
+        if self.collectible_max_distance is not None:
+            if self.collectible_max_distance > self.distance_to(player):
+                # FIXME throw proper error
+                return None
 
         if self.collectible and self.isonmap and self.may_collect(player):
             self.owner = player

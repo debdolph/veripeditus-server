@@ -19,6 +19,9 @@ Utility functions for framework components
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+
+import geopy
+
 import veripeditus.framework
 
 def get_image_path(game_mod, basename):
@@ -56,3 +59,7 @@ def get_image_path(game_mod, basename):
     for _possibility in _possibilities:
         if os.path.isfile(_possibility):
             return _possibility
+
+def get_gameobject_distance(obj1, obj2):
+    return gpxpy.geo.haversine_distance(obj1.latitude, obj1.longitude,
+                                        obj2.latitude, obj2.longitude)
