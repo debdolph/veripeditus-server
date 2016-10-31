@@ -83,3 +83,7 @@ div#arview img.argameobject {
 	transform-style: preserve-3d;
 	-webkit-transform-style: preserve-3d;
 }
+
+p.map_popup_image, p.map_popup_image img {
+	width: 100%;
+}

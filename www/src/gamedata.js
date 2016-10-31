@@ -55,9 +55,8 @@ GameDataService = function() {
                 data: JSON.stringify(this.gameobjects[this.current_player_id]),
                 method: "PATCH",
                 username: localStorage.getItem("username"),
-                password: localStorage.getitem("password"),
-            });
-        }
+                password: localStorage.getItem("password"),
+            });        }
     };
 
     this.onReturnGameObjects = function(data) {
@@ -151,6 +150,14 @@ GameDataService = function() {
         localStorage.removeItem("password");
         // FIXME Update game state here
     };
+
+    this.item_collect = function(id) {
+        $.ajax({
+            url: "/api/gameobject/" + id + "/collect",
+            username: localStorage.getItem("username"),
+            password: localStorage.getItem("password"),
+        });
+    }
 };
 
 GameData = new GameDataService();

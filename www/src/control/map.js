@@ -69,8 +69,13 @@ MapController = function() {
                     'icon': icon
                 });
 
-                // Create simple popup with basic information
-                marker.bindPopup("<p>Name: " + gameobject.name + "</p>");
+                // Create popup
+                var html = "<h1>" + gameobject.name + "</h1>";
+                html += "<p class='map_popup_image'><img src='/api/gameobject/" + gameobject.id + "/image_raw' /></p>";
+                if (gameobject.gameobject_type == "gameobject_item") {
+                    html += "<button class='map_popup_button' onClick='GameData.item_collect(" + gameobject.id + ")'>Collect</button>";
+                }
+                marker.bindPopup(html);
 
                 // Add marker to map and store to known markers
                 marker.addTo(this.map);
