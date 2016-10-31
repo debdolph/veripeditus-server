@@ -52,7 +52,7 @@ class User(Base):
     email = DB.Column(EmailType())
 
     current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
-    current_player = DB.relationship("Player",
+    current_player = DB.relationship("veripeditus.framework.model.Player",
                                      foreign_keys=[current_player_id])
 
 #    role = DB.Column(DB.Enum(Roles), default=Roles.player, nullable=False)

@@ -177,7 +177,7 @@ class Item(GameObject):
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
-    owner = DB.relationship("Player", backref=DB.backref("inventory", lazy="dynamic"),
+    owner = DB.relationship("veripeditus.framework.model.Player", backref=DB.backref("inventory", lazy="dynamic"),
                             foreign_keys=[owner_id])
 
     collectible = True
