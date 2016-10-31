@@ -155,6 +155,22 @@ class Player(GameObject):
     def may_accept_handover(self, item):
         return True
 
+    @api_method
+    def update_position(self, latlon):
+        if g.user is None:
+            # FIXME proper error
+            return None
+
+        # Only the own position may be updated
+        if g.user is not self.user:
+            # FIXME proper error
+            return None
+
+        # Update position
+        self.latitude, self.longitude = [float(x) for x in latlon.split(",")]
+        DB.session.add(self)
+        DB.session.commit(self)
+
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 

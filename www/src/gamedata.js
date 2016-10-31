@@ -47,13 +47,9 @@ GameDataService = function() {
             this.gameobjects[this.current_player_id].latitude = Device.position.coords.latitude;
             this.gameobjects[this.current_player_id].longitude = Device.position.coords.longitude;
 
-            // Send the PATCH request
+            // Send the update request
             $.ajax({
-                dataType: "json",
-                contentType: "application/json",
-                url: "/api/gameobject/" + this.current_player_id,
-                data: JSON.stringify(this.gameobjects[this.current_player_id]),
-                method: "PATCH",
+                url: "/api/gameobject/" + this.current_player_id + "/update_position/" + this.gameobjects[this.current_player_id].latitude + "," + this.gameobjects[this.current_player_id].longitude,
                 username: localStorage.getItem("username"),
                 password: localStorage.getItem("password"),
             });        }
