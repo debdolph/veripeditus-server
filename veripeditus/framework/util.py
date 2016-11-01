@@ -19,6 +19,7 @@ Utility functions for framework components
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import random
 
 import geopy
 
@@ -68,3 +69,6 @@ def get_gameobject_distance(obj1, obj2):
 def add(obj):
     DB.session.add(obj)
     DB.session.commit()
+
+def randfloat(a, b):
+    return a + (b - a)*random.random()

@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import Sequence
 from flask import g, redirect
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
-from veripeditus.framework.util import get_image_path, get_gameobject_distance
+from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat
 from veripeditus.server.app import DB
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
@@ -112,8 +113,51 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                 # Iterate over all worlds using the game
                 worlds = World.query.filter(World.game.has(package=go.__module__.split(".")[2])).all()
                 for world in worlds:
-                    # Call spawn for each world
-                    go.spawn(world)
+                    if "spawn" in vars(go):
+                        # Call spawn for each world
+                        go.spawn(world)
+                    else:
+                        # Call parameterised default spawn code
+                        go.spawn_default(world)
+
+    @classmethod
+    def spawn_default(cls, world):
+        # Determine spawn location
+        if "spawn_latlon" in vars(cls):
+            latlon = cls.spawn_latlon
+
+            if isinstance(latlon[0], Sequence):
+                # We got a rect like ((lat, lon), (lat, lon))
+                # Randomise coordinates within that rect
+                latlon = (randfloat(latlon[0][0], latlon[1][0]), randfloat(latlon[0][1], latlon[1][1]))
+        else:
+            # Do nothing if we cannot determine a location
+            return
+
+        # Determine existing number of objects on map
+        existing = cls.query.filter_by(world=world, isonmap=True).count()
+        if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
+            to_spawn = cls.spawn_max - existing
+        elif existing == 0:
+            to_spawn = 1
+        else:
+            to_spawn = 0
+
+        # Spawn the determined number of objects
+        for i in range(0, to_spawn):
+            # Create a new object
+            obj = cls()
+            obj.world = world
+            obj.latitude = latlon[0]
+            obj.longitude = latlon[1]
+
+            # Determine any defaults
+            for k in vars(cls):
+                if k.startswith("default_"):
+                    setattr(obj, k[8:], getattr(cls, k))
+
+            # Add to session
+            add(obj)
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
@@ -173,6 +217,10 @@ class Player(GameObject):
 
         # Redirect to own object
         return redirect("/api/gameobject_player/%i" % self.id)
+
+    @classmethod
+    def spawn_default(cls, world):
+        pass
 
 class Item(GameObject):
     __tablename__ = "gameobject_item"
