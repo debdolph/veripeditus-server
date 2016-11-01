@@ -45,6 +45,34 @@ GameDataService = function() {
         "id": 1
     };
 
+    self.doRequest = function (method, url, cb, data) {
+        // Fill options here
+        var options = {};
+        options.method = method;
+        options.url = url;
+        if (cb) {
+            options.success = cb;
+        }
+        if (data) {
+            options.dataType = "json";
+            options.contentType = "applicaiton/json";
+            options.data = data;
+        }
+
+        // Check whether a username was provided
+        if (localStorage.username) {
+            // Add username and password
+            options.username = localStorage.getItem("username");
+            options.password = localStorage.getItem("password");
+
+            // Do the request
+            return $.ajax(options);
+        } else {
+            // Skip request
+            return false;
+        }
+    };
+
     self.onGeolocationChanged = function() {
         // Update own location on server if logged in
         if (self.current_player_id > -1) {
@@ -53,11 +81,7 @@ GameDataService = function() {
             self.gameobjects[self.current_player_id].longitude = Device.position.coords.longitude;
 
             // Send the update request
-            $.ajax({
-                url: "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude,
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
-            });
+            self.doRequest("GET", "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
         }
     };
 
@@ -133,25 +157,20 @@ GameDataService = function() {
             }]
         };
 
-        // Define and trace gameobject types to load
-        self.gameobjects_missing = self.gameobject_types.length;
+        // Only run if logged-in
+        if (localStorage.username) {
+            // Define and trace gameobject types to load
+            self.gameobjects_missing = self.gameobject_types.length;
 
-        // Clear out gameobjects
-        self.gameobjects_temp = {};
+            // Clear out gameobjects
+            self.gameobjects_temp = {};
 
-        $.each(self.gameobject_types, function (i, gameobject_type) {
-            $.ajax({
-                dataType: "json",
-                contentType: "applicaiton/json",
-                url: "/api/gameobject_" + gameobject_type,
-                data: {
-                    q: JSON.stringify(query),
-                },
-                username: localStorage.getItem("username"),
-                password: localStorage.getItem("password"),
-                success: self.onReturnGameObjects
+            $.each(self.gameobject_types, function (i, gameobject_type) {
+                self.doRequest("GET", "/api/gameobject_" + gameobject_type, self.onReturnGameObjects, {
+                    q: JSON.stringify(query)
+                });
             });
-        });
+        }
     };
 
     // Public method to update view boundaries, e.g. from map view
@@ -165,22 +184,18 @@ GameDataService = function() {
     self.login = function(username, password) {
         localStorage.setItem("username", username);
         localStorage.setItem("password", password);
-        // FIXME Update game state here
+        self.updateGameObjects();
     };
 
     self.logout = function() {
         localStorage.removeItem("username");
         localStorage.removeItem("password");
-        // FIXME Update game state here
+        // FIXME Do something to invalidate the gmae here
     };
 
     self.item_collect = function(id) {
-        $.ajax({
-            url: "/api/gameobject/" + id + "/collect",
-            username: localStorage.getItem("username"),
-            password: localStorage.getItem("password"),
-        });
-    }
+        self.doRequest("GET", "/api/gameobject/" + id + "/collect");
+    };
 };
 
 GameData = new GameDataService();
