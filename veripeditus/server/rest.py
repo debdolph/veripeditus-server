@@ -54,7 +54,8 @@ def _world_join(id_):
 for go in [GameObject] + GameObject.__subclasses__():
     MANAGER.create_api(go,
                        include_methods=["gameobject_type"],
-                       exclude_columns=go.api_exclude)
+                       exclude_columns=go.api_exclude,
+                       results_per_page=-1)
 
 @APP.route("/api/gameobject/<int:id_>/<string:method>")
 @APP.route("/api/gameobject/<int:id_>/<string:method>/<arg>")
