@@ -43,6 +43,7 @@ setup(
                       'Flask>=0.10',
                       'Flask-Restless==0.17.0',
                       'Flask-SQLAlchemy',
+                      'gpxpy',
                       'OSMAlchemy',
                       'passlib',
                       'SQLAlchemy>=1.1.0',
