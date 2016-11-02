@@ -63,7 +63,7 @@ def get_image_path(game_mod, basename):
             return _possibility
 
 def get_gameobject_distance(obj1, obj2):
-    return gpxpy.geo.haversine_distance(obj1.latitude, obj1.longitude,
+    return geopy.geo.haversine_distance(obj1.latitude, obj1.longitude,
                                         obj2.latitude, obj2.longitude)
 
 def add(obj):
