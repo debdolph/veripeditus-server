@@ -19,11 +19,12 @@ from collections import Sequence
 from numbers import Real
 
 from flask import g, redirect
+from sqlalchemy import and_ as sa_and
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
 from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat
-from veripeditus.server.app import DB
+from veripeditus.server.app import DB, OA
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
 
@@ -86,6 +87,11 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
     isonmap = DB.Column(DB.Boolean(), default=True, nullable=False)
 
+    osm_element_id = DB.Column(DB.Integer(), DB.ForeignKey("osm_elements.id"))
+    osm_element = DB.relationship(OA.element, backref=DB.backref("osm_elements",
+                                                                 lazy="dynamic"),
+                                  foreign_keys=[osm_element_id])
+
     type = DB.Column(DB.Unicode(256))
 
     attributes = association_proxy("gameobjects_to_attributes", "value",
@@ -124,6 +130,9 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @classmethod
     def spawn_default(cls, world):
+        # Get current player
+        current_player = None if g.user is None else g.user.current_player
+
         # Determine spawn location
         if "spawn_latlon" in vars(cls):
             latlon = cls.spawn_latlon
@@ -147,34 +156,64 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     pass
                 else:
                     raise TypeError("Unknown value for spawn_latlon.")
+
+            # Define a single spawn point with no linked OSM element
+            spawn_points = {latlon: None}
+        elif "spawn_osm" in vars(cls):
+            # Skip if no current player or current player not in this world
+            if current_player is None or current_player.world is not world:
+                return
+
+            # Define bounding box around current player
+            # FIXME do something more intelligent here
+            lat_min = current_player.latitude - 0.001
+            lat_max = current_player.latitude + 0.001
+            lon_min = current_player.longitude - 0.001
+            lon_max = current_player.longitude + 0.001
+            bbox_queries = [OA.node.latitude>lat_min, OA.node.latitude<lat_max,
+                            OA.node.longitude>lon_min, OA.node.longitude<lon_max]
+
+            # Build list of tag values using OSMAlchemy
+            has_queries = [OA.node.tags.any(key=k, value=v) for k, v in cls.spawn_osm.items()]
+            and_query = sa_and(*bbox_queries, *has_queries)
+
+            # Do query
+            # FIXME support more than plain nodes
+            nodes = DB.session.query(OA.node).filter(and_query).all()
+
+            # Extract latitude and longitude information and build spawn_points
+            latlons = [(node.latitude, node.longitude) for node in nodes]
+            spawn_points = dict(zip(latlons, nodes))
         else:
             # Do nothing if we cannot determine a location
             return
 
-        # Determine existing number of objects on map
-        existing = cls.query.filter_by(world=world, isonmap=True).count()
-        if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
-            to_spawn = cls.spawn_max - existing
-        elif existing == 0:
-            to_spawn = 1
-        else:
-            to_spawn = 0
+        for latlon, osm_element in spawn_points.items():
+            # Determine existing number of objects on map
+            existing = cls.query.filter_by(world=world, isonmap=True, osm_element=osm_element).count()
+            if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
+                to_spawn = cls.spawn_max - existing
+            elif existing == 0:
+                to_spawn = 1
+            else:
+                to_spawn = 0
 
-        # Spawn the determined number of objects
-        for i in range(0, to_spawn):
-            # Create a new object
-            obj = cls()
-            obj.world = world
-            obj.latitude = latlon[0]
-            obj.longitude = latlon[1]
+            # Spawn the determined number of objects
+            for i in range(0, to_spawn):
+                # Create a new object
+                obj = cls()
+                obj.world = world
+                obj.latitude = latlon[0]
+                obj.longitude = latlon[1]
+                obj.osm_element = osm_element
 
-            # Determine any defaults
-            for k in vars(cls):
-                if k.startswith("default_"):
-                    setattr(obj, k[8:], getattr(cls, k))
+                # Determine any defaults
+                for k in vars(cls):
+                    if k.startswith("default_"):
+                        setattr(obj, k[8:], getattr(cls, k))
 
-            # Add to session
-            add(obj)
+                # Add to session
+                add(obj)
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
