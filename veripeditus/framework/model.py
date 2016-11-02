@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import Sequence
+from numbers import Real
+
 from flask import g, redirect
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
@@ -126,10 +128,25 @@ class GameObject(Base, metaclass=_GameObjectMeta):
         if "spawn_latlon" in vars(cls):
             latlon = cls.spawn_latlon
 
-            if isinstance(latlon[0], Sequence):
-                # We got a rect like ((lat, lon), (lat, lon))
-                # Randomise coordinates within that rect
-                latlon = (randfloat(latlon[0][0], latlon[1][0]), randfloat(latlon[0][1], latlon[1][1]))
+            if isinstance(latlon, Sequence):
+                # We got one of:
+                #  (lat, lon)
+                #  ((lat, lon), (lat, lon))
+                #  ((lat, lon), radius)
+                if isinstance(latlon[0], Sequence) and isinstance(latlon[1], Sequence):
+                    # We got a rect like ((lat, lon), (lat, lon))
+                    # Randomise coordinates within that rect
+                    latlon = (randfloat(latlon[0][0], latlon[1][0]), randfloat(latlon[0][1], latlon[1][1]))
+                elif isinstance(latlon[0], Sequence) and isinstance(latlon[1], Real):
+                    # We got a circle like ((lat, lon), radius)
+                    # FIXME implement
+                    raise RuntimeError("Not implemented.")
+                elif isinstance(latlon[0], Real) and isinstance(latlon[1], Real):
+                    # We got a single point like (lat, lon)
+                    # Nothing to do, we can use that as is
+                    pass
+                else:
+                    raise TypeError("Unknown value for spawn_latlon.")
         else:
             # Do nothing if we cannot determine a location
             return
