@@ -73,6 +73,7 @@ MapController = function() {
                 var html = "<h1>" + gameobject.name + "</h1>";
                 html += "<p class='map_popup_image'><img src='/api/gameobject/" + gameobject.id + "/image_raw' /></p>";
                 if (gameobject.gameobject_type == "gameobject_item") {
+                    // FIXME also check for collectible
                     html += "<button class='map_popup_button' onClick='MapView.item_collect(" + gameobject.id + ")'>Collect</button>";
                 }
                 marker.bindPopup(html);
