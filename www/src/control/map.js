@@ -49,7 +49,7 @@ MapController = function() {
 
     // Add initial marker for own position
     self.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
-    self.marker_self.addTo(self.map);
+//    self.marker_self.addTo(self.map);
     self.circle_self = L.circle(self.marker_self.getLatLng(), 0);
     self.circle_self.addTo(self.map);
 
@@ -65,6 +65,11 @@ MapController = function() {
         $.each(GameData.gameobjects, function (id, gameobject) {
             // Check whether item should be shown on the map
             if (! gameobject.isonmap) {
+                return;
+            }
+
+            // Skip if object is own player
+            if (id == GameData.current_player_id) {
                 return;
             }
 
