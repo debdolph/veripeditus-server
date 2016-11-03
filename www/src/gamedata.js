@@ -46,11 +46,12 @@ GameDataService = function() {
         options.method = method;
         options.url = url;
         if (cb) {
+            options.dataType = "json";
             options.success = cb;
         }
         if (data) {
             options.dataType = "json";
-            options.contentType = "applicaiton/json";
+            options.contentType = "application/json";
             options.data = data;
         }
 
@@ -213,8 +214,8 @@ GameDataService = function() {
     };
 
     self.item_collect = function(id, view) {
-        self.doRequest("GET", "/api/gameobject/" + id + "/collect", function () {
-            view.onGameObjectActionDone();
+        self.doRequest("GET", "/api/gameobject/" + id + "/collect", function (data) {
+            view.onGameObjectActionDone(data);
             self.updateGameObjects();
         });
     };

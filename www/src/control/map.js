@@ -145,8 +145,20 @@ MapController = function() {
     };
 
     // Called by GameData routines to close the popup something was called from.
-    self.onGameObjectActionDone = function () {
+    self.onGameObjectActionDone = function (data) {
         self.map.closePopup();
+
+        // Show any message as a dialog
+        // FIXME come up with something prettyer
+        if (data.message) {
+            var dialog = $('div#dialog');
+            dialog.empty();
+            dialog.attr("title", GameData.gameobjects[data.gameobject].name);
+            var html = "<p>" + data.message + "</p>";
+            var elem = $(html);
+            dialog.append(elem);
+            dialog.dialog();
+        }
     };
 };
 
