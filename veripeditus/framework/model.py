@@ -23,7 +23,7 @@ from sqlalchemy import and_ as sa_and
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm.collections import attribute_mapped_collection
 
-from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat
+from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat, send_action
 from veripeditus.server.app import DB, OA
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
@@ -345,3 +345,6 @@ class NPC(GameObject):
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
     name = DB.Column(DB.String(32), nullable=False)
+
+    def say(self, message):
+        return send_action("say", self, message)

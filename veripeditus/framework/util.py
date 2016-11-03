@@ -21,6 +21,7 @@ Utility functions for framework components
 import os
 import random
 
+from flask import g
 from gpxpy import geo
 
 from veripeditus.server.app import DB
@@ -72,3 +73,13 @@ def add(obj):
 
 def randfloat(a, b):
     return a + (b - a)*random.random()
+
+def current_player():
+    return None if g.user is None else g.user.current_player
+
+def send_action(action, gameobject, message):
+    return json.dumps({
+                       "action": action,
+                       "gameobject": gameobject.id,
+                       "message": message
+                      })
