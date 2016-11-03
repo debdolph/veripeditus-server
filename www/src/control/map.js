@@ -18,41 +18,41 @@
  */
 
 MapController = function() {
+    var self = this;
+
     // Set up map view
-    this.map = L.map("map", {
+    self.map = L.map("map", {
         zoomControl: false,
         worldCopyJump: true
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(this.map);
+    }).addTo(self.map);
 
     // Add initial marker for own position
-    this.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
-    this.marker_self.addTo(this.map);
-    this.circle_self = L.circle(this.marker_self.getLatLng(), 0);
-    this.circle_self.addTo(this.map);
+    self.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
+    self.marker_self.addTo(self.map);
+    self.circle_self = L.circle(self.marker_self.getLatLng(), 0);
+    self.circle_self.addTo(self.map);
 
     // Initially center map view to own position
-    this.map.setView(this.marker_self.getLatLng(), 16);
+    self.map.setView(self.marker_self.getLatLng(), 16);
 
     // Already created markers for gameobjects will be stored here.
-    this.gameobject_markers = {};
+    self.gameobject_markers = {};
 
     // Called by GameDataService on gameobjects update
-    this.onUpdatedGameObjects = function() {
+    self.onUpdatedGameObjects = function() {
         // Iterate over gameobjects and add map markers
-        for (id of Object.keys(GameData.gameobjects)) {
-            var gameobject = GameData.gameobjects[id];
-
+        $.each(GameData.gameobjects, function (id, gameobject) {
             // Check whether item should be shown on the map
             if (! gameobject.isonmap) {
-                continue;
+                return;
             }
 
-            // Look for already created marker for this gameobject id
-            var marker = this.gameobject_markers[gameobject.id];
+            // Look for already created marker for self gameobject id
+            var marker = self.gameobject_markers[gameobject.id];
             if (marker) {
                 // Marker exists, store location
                 marker.setLatLng([gameobject.latitude, gameobject.longitude]);
@@ -78,34 +78,43 @@ MapController = function() {
                 marker.bindPopup(html);
 
                 // Add marker to map and store to known markers
-                marker.addTo(this.map);
-                this.gameobject_markers[gameobject.id] = marker;
+                marker.addTo(self.map);
+                self.gameobject_markers[gameobject.id] = marker;
             }
-        }
+        });
+
+        // Iterate over found markers and remove everything not found in gameobjects
+        $.each(self.gameobject_markers, function (id, marker) {
+            if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
+                // Remove marker if object vanished from gameobjects
+                marker.remove();
+                delete self.gameobject_markers[id];
+            }
+        });
     };
 
     // Called by DeviceService on geolocation update
-    this.onGeolocationChanged = function() {
+    self.onGeolocationChanged = function() {
         // Update position of own marker
-        this.marker_self.setLatLng([Device.position.coords.latitude, Device.position.coords.longitude]);
+        self.marker_self.setLatLng([Device.position.coords.latitude, Device.position.coords.longitude]);
 
         // Update accuracy radius around own marker
-        this.circle_self.setLatLng(this.marker_self.getLatLng());
-        this.circle_self.setRadius(Device.position.coords.accuracy);
+        self.circle_self.setLatLng(self.marker_self.getLatLng());
+        self.circle_self.setRadius(Device.position.coords.accuracy);
 
         // Center map at own marker
-        this.map.setView(this.marker_self.getLatLng());
+        self.map.setView(self.marker_self.getLatLng());
     };
 
     // Subscribe to event on change of map view
-    this.map.on('moveend', function(event) {
+    self.map.on('moveend', function(event) {
         // Update view bounds in GameDataService
         var bounds = event.target.getBounds();
         GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
     });
 
     // Initially set bounds in GameDataService
-    var bounds = this.map.getBounds();
+    var bounds = self.map.getBounds();
     GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
 };
 
