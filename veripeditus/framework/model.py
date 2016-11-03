@@ -297,6 +297,7 @@ class Item(GameObject):
     collectible = True
     collectible_max_distance = None
     handoverable = True
+    owned_max = None
 
     @api_method
     def collect(self):
@@ -308,6 +309,11 @@ class Item(GameObject):
 
         if self.collectible_max_distance is not None:
             if self.collectible_max_distance > self.distance_to(player):
+                # FIXME throw proper error
+                return None
+
+        if self.owned_max is not None:
+            if player.has_item(self.__class__) >= self.owned_max:
                 # FIXME throw proper error
                 return None
 
@@ -355,3 +361,10 @@ class NPC(GameObject):
 
     def say(self, message):
         return send_action("say", self, message)
+
+    def on_talk(self):
+        pass
+
+    @api_method
+    def talk(self):
+        return self.on_talk()
