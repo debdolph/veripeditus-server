@@ -87,7 +87,7 @@ MapController = function() {
         $.each(self.gameobject_markers, function (id, marker) {
             if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
                 // Remove marker if object vanished from gameobjects
-                marker.remove();
+                self.map.removeLayer(marker);
                 delete self.gameobject_markers[id];
             } else if (! GameData.gameobjects[id].isonmap) {
                 // Remove marker if object is not visible on map anymore
