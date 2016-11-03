@@ -252,6 +252,13 @@ class Player(GameObject):
         if "image" not in kwargs:
             self.image = "avatar_default"
 
+    def has_item(self, itemclass):
+        count = 0
+        for item in self.inventory:
+            if isinstance(item, itemclass):
+                count += 1
+        return count
+
     def may_accept_handover(self, item):
         return True
 
