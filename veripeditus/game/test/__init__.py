@@ -24,3 +24,8 @@ VERSION = f.VERSION
 
 class Player(f.Player):
     pass
+
+class Kangoo(f.Item):
+    spawn_osm = {"public_transport": "platform"}
+    default_name = "Kangoo"
+    default_image = "avatar_kangaroo"
