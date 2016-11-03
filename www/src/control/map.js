@@ -89,6 +89,10 @@ MapController = function() {
                 // Remove marker if object vanished from gameobjects
                 marker.remove();
                 delete self.gameobject_markers[id];
+            } else if (! GameData.gameobjects[id].isonmap) {
+                // Remove marker if object is not visible on map anymore
+                marker.remove();
+                delete self.gameobject_markers[id];
             }
         });
     };
