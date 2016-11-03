@@ -37,13 +37,8 @@ GameDataService = function() {
     self.gameobjects_missing = 0;
     self.gameobject_types = ["player", "item", "npc"];
 
-    // Current player object
-    // FIXME get logged-in player from API
-    self.current_player_id = 1;
-    self.gameobjects[1] = new GameObject(1);
-    self.gameobjects[1].world = {
-        "id": 1
-    };
+    // Current player id
+    self.current_player_id = -1;
 
     self.doRequest = function (method, url, cb, data) {
         // Fill options here
@@ -115,50 +110,50 @@ GameDataService = function() {
             return;
         }
 
-        // Construct JSON query filter for REST API
-        var query = {
-            'filters': [{
-                'or': [{
-                    'and': [{
-                        'name': 'latitude',
-                        'op': 'ge',
-                        'val': self.bounds[0][0]
-                    },
-                    {
-                        'name': 'latitude',
-                        'op': 'le',
-                        'val': self.bounds[1][0]
-                    },
-                    {
-                        'name': 'longitude',
-                        'op': 'ge',
-                        'val': self.bounds[0][1]
-                    },
-                    {
-                        'name': 'longitude',
-                        'op': 'le',
-                        'val': self.bounds[1][1]
-                    },
-                    {
-                        'name': 'world',
-                        'op': 'has',
-                        'val': {
-                            'name': 'id',
-                            'op': 'eq',
-                            'val': self.gameobjects[self.current_player_id].world.id
-                        }
-                    }]
-                },
-                {
-                    'name': 'id',
-                    'op': 'eq',
-                    'val': self.current_player_id
-                }]
-            }]
-        };
-
         // Only run if logged-in
-        if (localStorage.username) {
+        if (self.current_player_id > -1) {
+            // Construct JSON query filter for REST API
+            var query = {
+                'filters': [{
+                    'or': [{
+                        'and': [{
+                            'name': 'latitude',
+                            'op': 'ge',
+                            'val': self.bounds[0][0]
+                        },
+                        {
+                            'name': 'latitude',
+                            'op': 'le',
+                            'val': self.bounds[1][0]
+                        },
+                        {
+                            'name': 'longitude',
+                            'op': 'ge',
+                            'val': self.bounds[0][1]
+                        },
+                        {
+                            'name': 'longitude',
+                            'op': 'le',
+                            'val': self.bounds[1][1]
+                        },
+                        {
+                            'name': 'world',
+                            'op': 'has',
+                            'val': {
+                                'name': 'id',
+                                'op': 'eq',
+                                'val': self.gameobjects[self.current_player_id].world.id
+                            }
+                        }]
+                    },
+                    {
+                        'name': 'id',
+                        'op': 'eq',
+                        'val': self.current_player_id
+                    }]
+                }]
+            };
+
             // Define and trace gameobject types to load
             self.gameobjects_missing = self.gameobject_types.length;
 
@@ -170,7 +165,26 @@ GameDataService = function() {
                     q: JSON.stringify(query)
                 });
             });
+        } else {
+            // Invalidate game
+            self.gameobjects = {};
+
+            // Call onUpdatedGameObjects on all views
+            for (view of Veripeditus.views) {
+                if (view.onUpdatedGameObjects) {
+                    view.onUpdatedGameObjects();
+                }
+            }
         }
+    };
+
+    self.updateSelf = function () {
+        // Request own player item
+        self.doRequest("GET", "/api/gameobject_player/self", function (data) {
+            self.current_player_id = data.id;
+            self.gameobjects[data.id] = data;
+            self.updateGameObjects();
+        });
     };
 
     // Public method to update view boundaries, e.g. from map view
@@ -184,13 +198,18 @@ GameDataService = function() {
     self.login = function(username, password) {
         localStorage.setItem("username", username);
         localStorage.setItem("password", password);
-        self.updateGameObjects();
+
+        // Update own player state
+        self.updateSelf();
     };
 
     self.logout = function() {
         localStorage.removeItem("username");
         localStorage.removeItem("password");
-        // FIXME Do something to invalidate the gmae here
+
+        // This wil invalidate the game
+        self.current_player_id = -1;
+        self.updateGameObjects();
     };
 
     self.item_collect = function(id, view) {
@@ -202,4 +221,10 @@ GameDataService = function() {
 };
 
 GameData = new GameDataService();
+
+// Do re-login for self-update
+if (localStorage.username) {
+    GameData.updateSelf();
+}
+
 Veripeditus.registerView(GameData);
