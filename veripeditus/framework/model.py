@@ -98,6 +98,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                                    creator=lambda k, v: GameObjectsToAttributes(
                                        attribute=Attribute(key=k, value=v)))
 
+    distance_max = None
+
     def gameobject_type(self):
         return self.__tablename__
 
@@ -295,7 +297,6 @@ class Item(GameObject):
                             foreign_keys=[owner_id])
 
     collectible = True
-    collectible_max_distance = None
     handoverable = True
     owned_max = None
 
@@ -307,8 +308,8 @@ class Item(GameObject):
             # FIXME throw proper error
             return None
 
-        if self.collectible_max_distance is not None:
-            if self.collectible_max_distance < self.distance_to(player):
+        if self.distance_max is not None:
+            if self.distance_max < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
         if self.owned_max is not None:
@@ -355,6 +356,8 @@ class NPC(GameObject):
 
     name = DB.Column(DB.String(32), nullable=False)
 
+    talkable = True
+
     def say(self, message):
         return send_action("say", self, message)
 
@@ -363,4 +366,20 @@ class NPC(GameObject):
 
     @api_method
     def talk(self):
-        return self.on_talk()
+        if g.user is not None and g.user.current_player is not None:
+            player = g.user.current_player
+        else:
+            # FIXME throw proper error
+            return None
+
+        if self.distance_max is not None:
+            if self.distance_max < self.distance_to(player):
+                return send_action("notice", self, "You are too far away!")
+
+        if self.talkable and self.isonmap and self.may_talk(player):
+            return self.on_talk()
+        else:
+            return send_action("notice", self, "You cannot tolk to this character!")
+
+    def may_talk(self, player):
+        return True
