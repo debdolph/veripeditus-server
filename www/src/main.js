@@ -21,5 +21,9 @@ Veripeditus = {
     views: [],
     registerView: function(view) {
         this.views.push(view);
-    }
+    },
+    debug: false
 };
+
+// Uncomment to enable debugging in webapp
+Veripeditus.debug = true;

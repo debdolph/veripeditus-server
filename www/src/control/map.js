@@ -30,6 +30,23 @@ MapController = function() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(self.map);
 
+    // Add debugging handlers if debugging is enabled
+    if (Veripeditus.debug) {
+        self.map.on('click', function (event) {
+            if (event.originalEvent.ctrlKey) {
+                fake_pos = {
+                    "timestamp": Date.now(),
+                    "coords": {
+                        "latitude": event.latlng.lat,
+                        "longitude": event.latlng.lng,
+                        "accuracy": 1
+                    }
+                };
+                Device.onLocationUpdate(fake_pos);
+            }
+        });
+    }
+
     // Add initial marker for own position
     self.marker_self = L.marker([Device.position.coords.latitude, Device.position.coords.longitude]);
     self.marker_self.addTo(self.map);
