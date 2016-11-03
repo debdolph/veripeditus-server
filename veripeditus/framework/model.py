@@ -308,7 +308,7 @@ class Item(GameObject):
             return None
 
         if self.collectible_max_distance is not None:
-            if self.collectible_max_distance > self.distance_to(player):
+            if self.collectible_max_distance < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
         if self.owned_max is not None:
