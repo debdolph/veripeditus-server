@@ -101,7 +101,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def gameobject_type(self):
         return self.__tablename__
 
-    def distance_to(obj):
+    def distance_to(self, obj):
         return get_gameobject_distance(self, obj)
 
     @property
@@ -309,13 +309,11 @@ class Item(GameObject):
 
         if self.collectible_max_distance is not None:
             if self.collectible_max_distance > self.distance_to(player):
-                # FIXME throw proper error
-                return None
+                return send_action("notice", self, "You are too far away!")
 
         if self.owned_max is not None:
             if player.has_item(self.__class__) >= self.owned_max:
-                # FIXME throw proper error
-                return None
+                return send_action("notice", self, "You have already collected enough of this!")
 
         if self.collectible and self.isonmap and self.may_collect(player):
             self.owner = player
@@ -325,8 +323,7 @@ class Item(GameObject):
             DB.session.commit()
             return redirect("/api/gameobject_item/%i" % self.id)
         else:
-            # FIXME throw proper error
-            return None
+            return send_action("notice", self, "You cannot collect this!")
 
     @api_method
     def handover(self, target_player):
@@ -337,8 +334,7 @@ class Item(GameObject):
             DB.session.commit()
             return redirect("/api/gameobject_item/%i" % self.id)
         else:
-            # FIXME throw proper error
-            return None
+            return send_action("notice", self, "You cannot hand this over.")
 
     def may_collect(self, player):
         return True
