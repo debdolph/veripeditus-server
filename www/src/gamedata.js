@@ -193,8 +193,11 @@ GameDataService = function() {
         // FIXME Do something to invalidate the gmae here
     };
 
-    self.item_collect = function(id) {
-        self.doRequest("GET", "/api/gameobject/" + id + "/collect");
+    self.item_collect = function(id, view) {
+        self.doRequest("GET", "/api/gameobject/" + id + "/collect", function () {
+            view.onGameObjectActionDone();
+            self.updateGameObjects();
+        });
     };
 };
 

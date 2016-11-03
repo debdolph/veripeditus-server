@@ -73,7 +73,7 @@ MapController = function() {
                 var html = "<h1>" + gameobject.name + "</h1>";
                 html += "<p class='map_popup_image'><img src='/api/gameobject/" + gameobject.id + "/image_raw' /></p>";
                 if (gameobject.gameobject_type == "gameobject_item") {
-                    html += "<button class='map_popup_button' onClick='GameData.item_collect(" + gameobject.id + ")'>Collect</button>";
+                    html += "<button class='map_popup_button' onClick='MapView.item_collect(" + gameobject.id + ")'>Collect</button>";
                 }
                 marker.bindPopup(html);
 
@@ -120,6 +120,16 @@ MapController = function() {
     // Initially set bounds in GameDataService
     var bounds = self.map.getBounds();
     GameData.setBounds([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
+
+    // Pass item_collect to GameData with self reference
+    self.item_collect = function (id) {
+        GameData.item_collect(id, self);
+    };
+
+    // Called by GameData routines to close the popup something was called from.
+    self.onGameObjectActionDone = function () {
+        self.map.closePopup();
+    };
 };
 
 // Instantiate controller and register to services
