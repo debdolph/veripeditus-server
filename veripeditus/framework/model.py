@@ -76,6 +76,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     id = DB.Column(DB.Integer(), primary_key=True)
 
+    name = DB.Column(DB.String(32), nullable=False)
     image = DB.Column(DB.String(32), default="dummy", nullable=False)
 
     world_id = DB.Column(DB.Integer(), DB.ForeignKey("world.id"))
@@ -240,7 +241,6 @@ class Player(GameObject):
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
-    name = DB.Column(DB.String(32), unique=True, nullable=False)
 
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
     user = DB.relationship("User", backref=DB.backref("players",
@@ -353,8 +353,6 @@ class NPC(GameObject):
     __tablename__ = "gameobject_npc"
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
-
-    name = DB.Column(DB.String(32), nullable=False)
 
     talkable = True
 
