@@ -1,6 +1,4 @@
-# Veripeditus AR Game Server
-
-Server component for the Veripeditus augmented-reality game framework
+# Veripeditus - The Free AR Game Framework for Everyone
 
 ## What is Veripeditus?
 
@@ -57,8 +55,8 @@ Rumour has it that there is also a version for iOS.
 ## Testing system
 
 A testing system is available at http://nightly.veripeditus.org/ . This
-machine is a Docker container that is auto-deployed from the latest Git
-commit.
+machine runs the current development version of Veripeditus and is
+auto-deployed from Git.
 
 It is unstable and might be broken. It will also lose data regularly.
 
