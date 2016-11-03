@@ -219,6 +219,13 @@ GameDataService = function() {
             self.updateGameObjects();
         });
     };
+
+    self.npc_talk = function(id, view) {
+        self.doRequest("GET", "/api/gameobject/" + id + "/talk", function (data) {
+            view.onGameObjectActionDone(data);
+            self.updateGameObjects();
+        });
+    };
 };
 
 GameData = new GameDataService();

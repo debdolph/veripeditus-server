@@ -98,6 +98,10 @@ MapController = function() {
                     // FIXME also check for collectible
                     html += "<button class='map_popup_button' onClick='MapView.item_collect(" + gameobject.id + ")'>Collect</button>";
                 }
+                if (gameobject.gameobject_type == "gameobject_npc") {
+                    // FIXME also check for talkable
+                    html += "<button class='map_popup_button' onClick='MapView.npc_talk(" + gameobject.id + ")'>Talk</button>";
+                }
                 marker.bindPopup(html);
 
                 // Add marker to map and store to known markers
@@ -147,6 +151,11 @@ MapController = function() {
     // Pass item_collect to GameData with self reference
     self.item_collect = function (id) {
         GameData.item_collect(id, self);
+    };
+
+    // Pass npc_talk to GameData with self reference
+    self.npc_talk = function (id) {
+        GameData.npc_talk(id, self);
     };
 
     // Called by GameData routines to close the popup something was called from.
