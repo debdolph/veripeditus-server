@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg4229"
+   viewBox="0 0 571.6984 401.14252"
+   height="113.21133mm"
+   width="161.34599mm"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="tshirt-front.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1026"
+     id="namedview51"
+     showgrid="false"
+     inkscape:zoom="0.58831962"
+     inkscape:cx="285.8492"
+     inkscape:cy="200.57125"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4229" />
+  <defs
+     id="defs4231">
+    <radialGradient
+       r="117.98"
+       gradientTransform="matrix(-0.67828,-1.6411,1.962,-0.8186,828.32,1315.7)"
+       cx="612.52002"
+       cy="117"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient3150">
+      <stop
+         offset="0"
+         style="stop-color:#0046e8"
+         id="stop3781" />
+      <stop
+         offset="1"
+         style="stop-color:#bee7ff"
+         id="stop3783" />
+    </radialGradient>
+    <radialGradient
+       r="104.76"
+       gradientTransform="matrix(-0.089524,-3.5256,-2.5006,0.063543,677.268,2520.09)"
+       cx="551.77002"
+       cy="65.547997"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient3195">
+      <stop
+         offset="0"
+         style="stop-color:#d7fd7f"
+         id="stop13174" />
+      <stop
+         offset=".41667"
+         style="stop-color:#5c9524"
+         id="stop13178" />
+      <stop
+         offset="1"
+         style="stop-color:#281306"
+         id="stop13176" />
+    </radialGradient>
+    <linearGradient
+       x1="586.13"
+       y1="247"
+       x2="567.46997"
+       gradientUnits="userSpaceOnUse"
+       y2="118.83"
+       id="linearGradient3154">
+      <stop
+         offset="0"
+         style="stop-color:#000000;stop-opacity:.80392"
+         id="stop20975" />
+      <stop
+         offset="1"
+         style="stop-color:#646464;stop-opacity:0"
+         id="stop20973" />
+    </linearGradient>
+    <radialGradient
+       r="117.98"
+       gradientTransform="matrix(-0.43484,1.0632,-1.1038,-0.46596,876.34,-680.65)"
+       cx="654.58002"
+       cy="47.956001"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient3156">
+      <stop
+         offset="0"
+         style="stop-color:#e2f2ff"
+         id="stop13197" />
+      <stop
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0"
+         id="stop13199" />
+    </radialGradient>
+    <radialGradient
+       r="322.95001"
+       cx="348"
+       cy="352"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient3158">
+      <stop
+         offset="0"
+         style="stop-color:black"
+         id="stop7984" />
+      <stop
+         offset="0.7"
+         style="stop-color:black"
+         id="stop7990" />
+      <stop
+         offset="1"
+         style="stop-color:#0093ff;stop-opacity:0"
+         id="stop7986" />
+    </radialGradient>
+    <filter
+       x="-0.18311"
+       y="-0.15565"
+       width="1.3662"
+       height="1.3113"
+       id="filter6611"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         stdDeviation="3.6029111"
+         id="feGaussianBlur6613" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter5128">
+      <feGaussianBlur
+         stdDeviation="3"
+         result="result10"
+         id="feGaussianBlur5130" />
+      <feBlend
+         in2="SourceGraphic"
+         result="result5"
+         mode="multiply"
+         in="result10"
+         id="feBlend5132" />
+      <feComposite
+         in2="SourceGraphic"
+         in="result5"
+         result="fbSourceGraphic"
+         operator="over"
+         id="feComposite5134" />
+      <feGaussianBlur
+         result="result9"
+         stdDeviation="5"
+         id="feGaussianBlur5136" />
+      <feSpecularLighting
+         in="result9"
+         result="result1"
+         lighting-color="#ffffff"
+         surfaceScale="1"
+         specularConstant="2.20000005"
+         specularExponent="45"
+         id="feSpecularLighting5138">
+        <fePointLight
+           x="-5000"
+           y="-10000"
+           z="20000"
+           id="fePointLight5140" />
+      </feSpecularLighting>
+      <feComposite
+         in2="fbSourceGraphic"
+         in="result1"
+         result="result2"
+         operator="in"
+         id="feComposite5142" />
+      <feComposite
+         in="result2"
+         result="result4"
+         operator="arithmetic"
+         k2="2"
+         k3="0.8"
+         in2="fbSourceGraphic"
+         id="feComposite5144"
+         k1="0"
+         k4="0" />
+      <feBlend
+         in="result4"
+         in2="result4"
+         mode="multiply"
+         id="feBlend5146" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata4234">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(945.19842,-83.010776)"
+     id="layer1">
+    <text
+       transform="scale(0.92140328,1.0853011)"
+       id="text3394"
+       y="361.88925"
+       x="-750.40503"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.24101257px;line-height:125%;font-family:'Acid Reflux BRK';-inkscape-font-specification:'Acid Reflux BRK';letter-spacing:0px;word-spacing:0px;fill:#ff7f2a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Lethargic BRK';-inkscape-font-specification:'Lethargic BRK';fill:#ff7f2a;fill-opacity:1"
+         y="361.88925"
+         x="-750.40503"
+         id="tspan3396">Veripeditus</tspan></text>
+    <text
+       transform="scale(1.0232922,0.97723797)"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.02366447px;line-height:125%;font-family:'Acid Reflux BRK';-inkscape-font-specification:'Acid Reflux BRK';letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-368.50122"
+       y="433.22037"
+       id="text3398"><tspan
+         id="tspan3400"
+         x="-368.50122"
+         y="433.22037"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Lethargic BRK';-inkscape-font-specification:'Lethargic BRK';text-align:end;text-anchor:end;fill:#ff5555;fill-opacity:1">The Free</tspan><tspan
+         id="tspan3404"
+         x="-368.50122"
+         y="461.99994"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Lethargic BRK';-inkscape-font-specification:'Lethargic BRK';text-align:end;text-anchor:end;fill:#ff5555;fill-opacity:1">AR Game Framework</tspan><tspan
+         id="tspan3402"
+         x="-368.50122"
+         y="490.77954"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Lethargic BRK';-inkscape-font-specification:'Lethargic BRK';text-align:end;text-anchor:end;fill:#ff5555;fill-opacity:1">for Everyone</tspan></text>
+    <text
+       id="text4469"
+       y="100.40881"
+       x="-944.56787"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.83306503px;line-height:125%;font-family:'Acid Reflux BRK';-inkscape-font-specification:'Acid Reflux BRK';letter-spacing:0px;word-spacing:0px;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="100.40881"
+         x="-944.56787"
+         id="tspan4471">from veripeditus import framework as f</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         id="tspan4473"
+         y="127.99542"
+         x="-944.56787" /><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         id="tspan4475"
+         y="155.58203"
+         x="-944.56787">class AnyChild(f.NPC):</tspan><tspan
+         id="tspan4477"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="183.16864"
+         x="-944.56787">    spawn_osm = {&quot;building&quot;: &quot;school&quot;}</tspan><tspan
+         id="tspan4479"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="210.75525"
+         x="-944.56787">    default_image = &quot;schoolkid&quot;</tspan><tspan
+         id="tspan4495"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="238.34186"
+         x="-944.56787" /><tspan
+         id="tspan4497"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="265.92847"
+         x="-944.56787">    def on_talk(self):</tspan><tspan
+         id="tspan4501"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="293.51508"
+         x="-944.56787">        return f.say(</tspan><tspan
+         id="tspan4503"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
+         y="321.10168"
+         x="-944.56787">            &quot;I can make AR Games :)!&quot;)</tspan></text>
+  </g>
+</svg>
