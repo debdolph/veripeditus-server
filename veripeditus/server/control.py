@@ -19,6 +19,7 @@ Main server control code
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import random
 from flask import request, Response, g
 
@@ -75,6 +76,19 @@ def _add_data():
         world.game = Game.query.first()
         DB.session.add(user)
         DB.session.add(world)
+        DB.session.commit()
+
+    # Check for existance of account list file
+    if os.path.isfile("/etc/veripeditus/accounts.lst"):
+        with open("/etc/veripeditus/accounts.lst", "r") as file:
+            for line in file.readlines():
+                username, password = line.split(" ")
+                if not User.query.filter_by(username=username).scalar():
+                    user = User()
+                    user.username = username
+                    user.password = password
+                    user.name = username
+                    DB.session.add(user)
         DB.session.commit()
 
 def init():
