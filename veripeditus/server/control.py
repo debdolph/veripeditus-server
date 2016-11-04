@@ -62,7 +62,7 @@ def _add_data():
 
     # Return if a User exists
     if len(User.query.all()) == 0:
-        # Create new user, player and world
+        # Create new user and world
         user = User()
         user.username = "admin"
         user.password = "admin"
@@ -73,17 +73,8 @@ def _add_data():
         world = World()
         world.name = "Default World"
         world.game = Game.query.first()
-        player = world.game.module.Player()
-        player.name = "Default Player"
-        player.longitude = random.uniform(-180.0, 180.0)
-        player.latitude = random.uniform(-90.0, 90.0)
-        player.user = user
-        player.world = world
-        # Add user to database
-        DB.session.add(player)
-        DB.session.commit()
-        user.current_player = player
         DB.session.add(user)
+        DB.session.add(world)
         DB.session.commit()
 
 def init():
