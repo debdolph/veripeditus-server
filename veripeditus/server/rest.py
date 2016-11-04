@@ -110,7 +110,7 @@ def _get_own_player():
         res = ("", 404)
 
     if g.user.current_player is None:
-        if g.user.players:
+        if g.user.players.count() > 0:
             # Set current player to the first available player of the current user
             g.user.current_player = g.user.players[0]
         else:
