@@ -235,4 +235,22 @@ if (localStorage.username) {
     GameData.updateSelf();
 }
 
+// Bind global error handler
+$(document).bind("ajaxError", function (req, status, error) {
+    if ((status.readyState == 4) && (status.status == 401)) {
+        // Login failed or not logged in for some reason
+        // Invalidate
+        GameData.logout();
+
+        // Show message
+        var dialog = $('div#dialog');
+        dialog.empty();
+        dialog.attr("title", "Login Error");
+        var html = "<p>Your login failed. Please try again!</p>";
+        var elem = $(html);
+        dialog.append(elem);
+        dialog.dialog();
+    }
+});
+
 Veripeditus.registerView(GameData);
