@@ -215,6 +215,12 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     if k.startswith("default_"):
                         setattr(obj, k[8:], getattr(cls, k))
 
+                # Derive missing defaults from class name
+                if obj.image is None:
+                    obj.image = cls.__name__.lower()
+                if obj.name is None:
+                    obj.name = cls.__name__.lower()
+
                 # Add to session
                 add(obj)
 
@@ -264,6 +270,12 @@ class Player(GameObject):
         for k in vars(itemclass):
             if k.startswith("default_"):
                 setattr(item, k[8:], getattr(itemclass, k))
+
+        # Derive missing defaults from class name
+        if item.image is None:
+            item.image = itemclass.__name__.lower()
+        if item.name is None:
+            item.name = itemclass.__name__.lower()
 
         DB.session.add(item)
         DB.session.add(self)
