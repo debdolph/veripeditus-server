@@ -82,7 +82,7 @@ def _add_data():
     if os.path.isfile("/etc/veripeditus/accounts.lst"):
         with open("/etc/veripeditus/accounts.lst", "r") as file:
             for line in file.readlines():
-                username, password = line.split(" ")
+                username, password = line.strip().split(" ")
                 if not User.query.filter_by(username=username).scalar():
                     user = User()
                     user.username = username
