@@ -261,6 +261,24 @@ class Player(GameObject):
                 count += 1
         return count
 
+    def has_items(self, *itemclasses):
+        for itemclass in itemclasses:
+            if not self.has_item(itemclass):
+                return False
+
+        return True
+
+    def drop_item(self, itemclass):
+        for item in self.inventory:
+            if isinstance(item, itemclass):
+                DB.session.delete(item)
+                DB.session.commit()
+        return count
+
+    def drop_items(self, *itemclasses):
+        for itemclass in itemclasses:
+            self.drop_item(itemclass)
+
     def may_accept_handover(self, item):
         return True
 
