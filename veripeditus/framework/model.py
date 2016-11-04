@@ -288,7 +288,6 @@ class Player(GameObject):
             if isinstance(item, itemclass):
                 DB.session.delete(item)
                 DB.session.commit()
-        return count
 
     def drop_items(self, *itemclasses):
         for itemclass in itemclasses:
