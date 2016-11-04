@@ -254,6 +254,21 @@ class Player(GameObject):
         if "image" not in kwargs:
             self.image = "avatar_default"
 
+    def new_item(self, itemclass):
+        item = itemclass()
+        item.world = self.world
+        item.isonmap = False
+        item.owner = self
+
+        # Determine any defaults
+        for k in vars(itemclass):
+            if k.startswith("default_"):
+                setattr(item, k[8:], getattr(itemclass, k))
+
+        DB.session.add(item)
+        DB.session.add(self)
+        DB.session.commit()
+
     def has_item(self, itemclass):
         count = 0
         for item in self.inventory:
