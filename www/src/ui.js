@@ -32,10 +32,12 @@ function control_click() {
             $('button#dialog-player-login-button').click(function () {
                 var username = $('#dialog-player-login-username').val();
                 var password = $('#dialog-player-login-password').val();
+                $('#dialog').dialog("close");
                 GameData.login(username, password);
             });
 
             $('button#dialog-player-logout-button').click(function () {
+                $('#dialog').dialog("close");
                 GameData.logout();
             });
 
