@@ -107,7 +107,7 @@ def _get_own_player():
     if g.user is None:
         # Return 404 Not Found
         # FIXME more specific error
-        res = ("", 404)
+        return ("", 404)
 
     if g.user.current_player is None:
         if g.user.players.count() > 0:
@@ -115,6 +115,6 @@ def _get_own_player():
             g.user.current_player = g.user.players[0]
         else:
             # Create a new player in the first world found
-            World.query.first().player_join()
+            World.query.filter_by(enabled=True).first().player_join()
 
     return redirect("/api/gameobject_player/%i" % g.user.current_player.id)
