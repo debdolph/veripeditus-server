@@ -45,11 +45,11 @@ DeviceService = function() {
         this.position.timestamp = newpos.timestamp;
 
         // Call onGeolocationChanged on all views
-        for (view of Veripeditus.views) {
+        $.each(Veripeditus.views, function (id, view) {
             if (view.onGeolocationChanged) {
                 view.onGeolocationChanged();
             }
-        }
+        });
     };
 
     // Callback for Geolocation errors
@@ -113,11 +113,11 @@ DeviceService = function() {
                 this.cameraUrl = window.URL.createObjectURL(stream);
 
                 // Call onCameraChanged on all views
-                for (view of Veripeditus.views) {
+                $.each(Veripeditus.views, function (id, view) {
                     if (view.onCameraChanged) {
                         view.onCameraChanged();
                     }
-                }
+                });
             });
         }
     };
@@ -129,11 +129,11 @@ DeviceService = function() {
             this.cameraStream = undefined;
 
             // Call onCameraChanged on all views
-            for (view of Veripeditus.views) {
+            $.each(Veripeditus.views, function (id, view) {
                 if (view.onCameraChanged) {
                     view.onCameraChanged();
                 }
-            }
+            });
         }
     }
 
@@ -190,11 +190,11 @@ DeviceService = function() {
         this.orientation.gamma = event.gamma;
 
         // Call onOrientationChanged on all views
-        for (view of Veripeditus.views) {
+        $.each(Veripeditus.views, function (id, view) {
             if (view.onOrientationChanged) {
                 view.onOrientationChanged();
             }
-        }
+        });
     };
 
     // Start listening for orientation events

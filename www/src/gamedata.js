@@ -101,11 +101,11 @@ GameDataService = function() {
             self.gameobjects_temp = {};
 
             // Call onUpdatedGameObjects on all views
-            for (view of Veripeditus.views) {
+            $.each(Veripeditus.views, function (id, view) {
                 if (view.onUpdatedGameObjects) {
                     view.onUpdatedGameObjects();
                 }
-            }
+            });
         }
     };
 
@@ -180,11 +180,11 @@ GameDataService = function() {
             self.gameobjects = {};
 
             // Call onUpdatedGameObjects on all views
-            for (view of Veripeditus.views) {
+            $.each(Veripeditus.views, function (id, view) {
                 if (view.onUpdatedGameObjects) {
                     view.onUpdatedGameObjects();
                 }
-            }
+            });
         }
     };
 
