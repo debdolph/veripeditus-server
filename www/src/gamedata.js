@@ -58,8 +58,7 @@ GameDataService = function() {
         // Check whether a username was provided
         if (localStorage.username) {
             // Add username and password
-            options.username = localStorage.getItem("username");
-            options.password = localStorage.getItem("password");
+            options.headers = {"Authorization": "Basic " + btoa(localStorage.username + ":" + localStorage.password)};
 
             // Do the request
             return $.ajax(options);
@@ -69,6 +68,7 @@ GameDataService = function() {
         }
     };
 
+    self.last_location_update = Date.now();
     self.onGeolocationChanged = function() {
         // Update own location on server if logged in
         if (self.current_player_id > -1) {
@@ -76,8 +76,12 @@ GameDataService = function() {
             self.gameobjects[self.current_player_id].latitude = Device.position.coords.latitude;
             self.gameobjects[self.current_player_id].longitude = Device.position.coords.longitude;
 
-            // Send the update request
-            self.doRequest("GET", "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
+            // Check time of last update
+            if (Date.now() - self.last_location_update > 5000) {
+                // Send the update request
+                self.doRequest("GET", "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
+                self.last_location_update = Date.now();
+            }
         }
     };
 
@@ -145,6 +149,11 @@ GameDataService = function() {
                                 'op': 'eq',
                                 'val': self.gameobjects[self.current_player_id].world.id
                             }
+                        },
+			{
+                            'name': 'isonmap',
+                            'op': 'eq',
+                            'val': true
                         }]
                     },
                     {

@@ -79,6 +79,11 @@ MapController = function() {
                 // Marker exists, store location
                 marker.setLatLng([gameobject.latitude, gameobject.longitude]);
             } else {
+                if (gameobject.gameobject_type == "gameobject_player") {
+			// Skip for now to prevent map crowding
+			return;
+		}
+
                 // Marker does not exist
                 // Construct marker icon from gameobject image
                 var icon = L.icon({

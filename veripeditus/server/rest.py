@@ -44,7 +44,7 @@ MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
 def _world_create(id_):
     return Game.query.get(id_).world_create()
 
-MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game'])
+MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game', 'enabled'])
 # FIXME make this API method less special
 @APP.route("/api/world/<int:id_>/player_join")
 def _world_join(id_):
