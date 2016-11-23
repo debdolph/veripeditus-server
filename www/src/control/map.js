@@ -87,7 +87,7 @@ MapController = function() {
                 // Marker does not exist
                 // Construct marker icon from gameobject image
                 var icon = L.icon({
-                    'iconUrl': '/api/gameobject/' + gameobject.id + '/image_raw',
+                    'iconUrl': '/api/v2/gameobject/' + gameobject.id + '/image_raw',
                     'iconSize': [32, 32],
                 });
 
@@ -98,7 +98,7 @@ MapController = function() {
 
                 // Create popup
                 var html = "<h1>" + gameobject.name + "</h1>";
-                html += "<p class='map_popup_image'><img src='/api/gameobject/" + gameobject.id + "/image_raw' /></p>";
+                html += "<p class='map_popup_image'><img src='/api/v2/gameobject/" + gameobject.id + "/image_raw' /></p>";
                 if (gameobject.gameobject_type == "gameobject_item") {
                     // FIXME also check for collectible
                     html += "<button class='map_popup_button' onClick='MapView.item_collect(" + gameobject.id + ")'>Collect</button>";

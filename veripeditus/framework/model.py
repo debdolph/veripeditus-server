@@ -111,7 +111,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
 
-    @api_method
+    @api_method(authenticated=False)
     def image_raw(self):
         with open(self.image_path, "rb") as file:
             return file.read()
@@ -308,7 +308,7 @@ class Player(GameObject):
     def may_accept_handover(self, item):
         return True
 
-    @api_method
+    @api_method(authenticated=True)
     def update_position(self, latlon):
         if g.user is None:
             # FIXME proper error
@@ -344,7 +344,7 @@ class Item(GameObject):
     handoverable = True
     owned_max = None
 
-    @api_method
+    @api_method(authenticated=True)
     def collect(self):
         if g.user is not None and g.user.current_player is not None:
             player = g.user.current_player
@@ -370,7 +370,7 @@ class Item(GameObject):
         else:
             return send_action("notice", self, "You cannot collect this!")
 
-    @api_method
+    @api_method(authenticated=True)
     def handover(self, target_player):
         if self.owner is not None and self.handoverable and self.may_handover(target_player) and target_player.may_accept_handover(self):
             self.owner = target_player
@@ -406,7 +406,7 @@ class NPC(GameObject):
     def on_talk(self):
         pass
 
-    @api_method
+    @api_method(authenticated=True)
     def talk(self):
         if g.user is not None and g.user.current_player is not None:
             player = g.user.current_player

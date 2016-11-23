@@ -79,7 +79,7 @@ GameDataService = function() {
             // Check time of last update
             if (Date.now() - self.last_location_update > 5000) {
                 // Send the update request
-                self.doRequest("GET", "/api/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
+                self.doRequest("GET", "/api/v2/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
                 self.last_location_update = Date.now();
             }
         }
@@ -190,7 +190,7 @@ GameDataService = function() {
 
     self.updateSelf = function () {
         // Request own player item
-        self.doRequest("GET", "/api/gameobject_player/self", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject_player/self", function (data) {
             self.current_player_id = data.id;
             self.gameobjects[data.id] = data;
             self.updateGameObjects();
@@ -223,14 +223,14 @@ GameDataService = function() {
     };
 
     self.item_collect = function(id, view) {
-        self.doRequest("GET", "/api/gameobject/" + id + "/collect", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject/" + id + "/collect", function (data) {
             view.onGameObjectActionDone(data);
             self.updateGameObjects();
         });
     };
 
     self.npc_talk = function(id, view) {
-        self.doRequest("GET", "/api/gameobject/" + id + "/talk", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject/" + id + "/talk", function (data) {
             view.onGameObjectActionDone(data);
             self.updateGameObjects();
         });

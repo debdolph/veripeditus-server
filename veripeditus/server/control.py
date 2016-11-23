@@ -103,10 +103,10 @@ def _check_auth():
         g.user = User.get_authenticated(request.authorization.username,
                                         request.authorization.password)
 
-    if request.path.startswith("/api/") and g.user is None:
-        return Response('Authentication failed.', 401,
-                        {'WWW-Authenticate': 'Basic realm="%s"'
-                                             % APP.config['BASIC_REALM']})
+def needs_authentication():
+    return Response('Authentication failed.', 401,
+                    {'WWW-Authenticate': 'Basic realm="%s"'
+                                         % APP.config['BASIC_REALM']})
 
 @APP.after_request
 def _run_spawns(res):

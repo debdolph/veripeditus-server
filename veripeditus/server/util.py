@@ -71,10 +71,13 @@ def get_data_path():
 
     return _respath
 
-def api_method(func):
-    """ Decorator to mark a method as runnable by the REST API. """
-    func.is_api_method = True
-    return func
+def api_method(authenticated=True):
+    def api_method(func):
+        """ Decorator to mark a method as runnable by the REST API. """
+        func.is_api_method = True
+        func.authenticated = authenticated
+        return func
+    return api_method
 
 if "MIME" in vars(magic):
     # libmagic bindings

@@ -81,7 +81,7 @@ class Game(Base):
     def module(self):
         return get_game_by_name(self.package)
 
-    @api_method
+    @api_method(authenticated=True)
     def world_create(self):
         world = World()
         world.name = self.name
@@ -99,7 +99,7 @@ class World(Base):
                                                       lazy='dynamic'))
     enabled = DB.Column(DB.Boolean(), default=True, nullable=False)
 
-    @api_method
+    @api_method(authenticated=True)
     def player_join(self):
         # Check whether a user logged in
         if g.user is None:

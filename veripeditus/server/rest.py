@@ -23,6 +23,7 @@ from flask_restless import APIManager
 from werkzeug.wrappers import Response
 
 from veripeditus.server.app import APP, DB
+from veripeditus.server.control import needs_authentication
 from veripeditus.server.model import *
 from veripeditus.server.util import guess_mime_type
 
@@ -35,20 +36,11 @@ MANAGER.create_api(User,
                                              'players.name', 'players.longitude',
                                              'players.latitude', 'players.avatar', 'current_player'])
 
-
 MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
                                                    'description', 'author',
                                                    'license'])
-# FIXME make this API method less special
-@APP.route("/api/game/<int:id_>/world_create")
-def _world_create(id_):
-    return Game.query.get(id_).world_create()
 
 MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game', 'enabled'])
-# FIXME make this API method less special
-@APP.route("/api/world/<int:id_>/player_join")
-def _world_join(id_):
-    return World.query.get(id_).player_join()
 
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():
@@ -57,23 +49,33 @@ for go in [GameObject] + GameObject.__subclasses__():
                        exclude_columns=go.api_exclude,
                        results_per_page=-1)
 
-@APP.route("/api/gameobject/<int:id_>/<string:method>")
-@APP.route("/api/gameobject/<int:id_>/<string:method>/<arg>")
-def _get_gameobject_method_result(id_, method, arg=None):
+@APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>")
+@APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>/<arg>")
+def _get_gameobject_method_result(type_, id_, method, arg=None):
     """ Runs method on the object defined by the id and returns it verbatim
     if the object was found and has the method, or 404 if not.
     """
 
-    # Get the GameObject
-    gameobject = GameObject.query.get(id_)
+    # Determine tpye of object and object
+    types = {"gameobject": GameObject,
+             "world": World,
+             "game": Game}
+    if type_ in types:
+        obj = types[type_].query.get(id_)
+    else:
+        obj = None
 
     # Check for existence and method existence
-    if gameobject is not None and getattr(gameobject, method):
+    if obj is not None and getattr(obj, method):
         # Get method object
-        method_impl = getattr(gameobject, method)
+        method_impl = getattr(obj, method)
 
         # Check whether execution is allowed
         if method_impl.is_api_method:
+            # Check authentication
+            if method_impl.authenticated and g.user is None:
+                return needs_authentication()
+
             # Run method
             if arg is None:
                 ret = method_impl()
@@ -102,7 +104,7 @@ def _get_gameobject_method_result(id_, method, arg=None):
 
     return res
 
-@APP.route("/api/gameobject_player/self")
+@APP.route("/api/v2/gameobject_player/self")
 def _get_own_player():
     if g.user is None:
         # Return 404 Not Found
