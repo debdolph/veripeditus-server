@@ -59,6 +59,8 @@ GameDataService = function() {
         if (localStorage.username) {
             // Add username and password
             options.headers = {"Authorization": "Basic " + btoa(localStorage.username + ":" + localStorage.password)};
+            options.username = localStorage.username;
+            options.password = localStorage.password;
 
             // Do the request
             return $.ajax(options);
