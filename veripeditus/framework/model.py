@@ -86,7 +86,6 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     longitude = DB.Column(DB.Float(), default=0.0, nullable=False)
     latitude = DB.Column(DB.Float(), default=0.0, nullable=False)
-    isonmap = DB.Column(DB.Boolean(), default=True, nullable=False)
 
     osm_element_id = DB.Column(DB.Integer(), DB.ForeignKey("osm_elements.id"))
     osm_element = DB.relationship(OA.element, backref=DB.backref("osm_elements",
@@ -110,6 +109,10 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     @property
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
+
+    @property
+    def isonmap(self):
+        return True
 
     @api_method(authenticated=False)
     def image_raw(self):
@@ -380,6 +383,15 @@ class Item(GameObject):
             return redirect("/api/gameobject_item/%i" % self.id)
         else:
             return send_action("notice", self, "You cannot hand this over.")
+
+    @property
+    def isonmap(self):
+        if self.owner is not None:
+            return False
+        elif self.owned_max is not None and g.user is not None and g.user.current_player is not None g.user.current_player.has_item(self.__class__) >= self.owned_max:
+            return False
+        else:
+            return True
 
     def may_collect(self, player):
         return True
