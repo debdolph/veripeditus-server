@@ -45,7 +45,7 @@ MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game', 'enabled'])
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():
     MANAGER.create_api(go,
-                       include_methods=["gameobject_type"],
+                       include_methods=["gameobject_type", "isonmap"],
                        exclude_columns=go.api_exclude,
                        results_per_page=-1)
 

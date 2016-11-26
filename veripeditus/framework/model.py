@@ -388,7 +388,7 @@ class Item(GameObject):
     def isonmap(self):
         if self.owner is not None:
             return False
-        elif self.owned_max is not None and g.user is not None and g.user.current_player is not None g.user.current_player.has_item(self.__class__) >= self.owned_max:
+        elif self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
             return False
         else:
             return True
