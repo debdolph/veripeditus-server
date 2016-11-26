@@ -266,7 +266,6 @@ class Player(GameObject):
     def new_item(self, itemclass):
         item = itemclass()
         item.world = self.world
-        item.isonmap = False
         item.owner = self
 
         # Determine any defaults
@@ -365,7 +364,6 @@ class Item(GameObject):
 
         if self.collectible and self.isonmap and self.may_collect(player):
             self.owner = player
-            self.isonmap = False
             self.on_collected()
             DB.session.add(self)
             DB.session.commit()

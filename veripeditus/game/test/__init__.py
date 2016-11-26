@@ -26,6 +26,7 @@ class Player(f.Player):
     pass
 
 class Kangoo(f.Item):
-    spawn_osm = {"public_transport": "platform"}
+    spawn_latlon = (0, 0)
+    owned_max = 3
     default_name = "Kangoo"
     default_image = "avatar_kangaroo"
