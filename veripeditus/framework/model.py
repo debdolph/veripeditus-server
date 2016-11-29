@@ -386,24 +386,21 @@ class Item(GameObject):
     def isonmap(self):
         if self.owner is not None:
             return False
-        elif self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
+
+        if self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
             return False
-        else:
-            if hasattr(self, "spawn_player_attributes"):
-                for key, value in self.spawn_player_attributes.items():
-                    try:
-                        attribute = getattr(g.user.current_player, key)
-                    except AttributeError:
-                        attribute = None
-                    if value is None and attribute is not None:
-                        pass
-                    elif value is not None and attribute == value:
-                        pass
-                    else:
-                        return False
-                return True
-            else:
-                return True
+
+        if hasattr(self, "spawn_player_attributes"):
+            for key, value in self.spawn_player_attributes.items():
+                if key in g.user.current_player.attributes:
+                    attribute = g.user.current_player.attributes[key]
+                else:
+                    return False
+
+                if value is not None and attribute != value:
+                    return False
+
+        return True
 
     def may_collect(self, player):
         return True
