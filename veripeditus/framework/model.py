@@ -396,11 +396,12 @@ class Item(GameObject):
                     except AttributeError:
                         attribute = None
                     if value is None and attribute is not None:
-                        return True
+                        pass
                     elif value is not None and attribute == value:
-                        return True
+                        pass
                     else:
                         return False
+                return True
             else:
                 return True
 
