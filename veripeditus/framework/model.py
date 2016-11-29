@@ -389,7 +389,20 @@ class Item(GameObject):
         elif self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
             return False
         else:
-            return True
+            if hasattr(self, "spawn_player_attributes"):
+                for key, value in self.spawn_player_attributes.items():
+                    try:
+                        attribute = getattr(g.user.current_player, key)
+                    except AttributeError:
+                        attribute = None
+                    if value is None and attribute is not None:
+                        return True
+                    elif value is not None and attribute == value:
+                        return True
+                    else:
+                        return False
+            else:
+                return True
 
     def may_collect(self, player):
         return True
