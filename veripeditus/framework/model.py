@@ -345,6 +345,7 @@ class Item(GameObject):
     collectible = True
     handoverable = True
     owned_max = None
+    show_if_owned_max = None
 
     @api_method(authenticated=True)
     def collect(self):
@@ -388,7 +389,11 @@ class Item(GameObject):
             return False
 
         if self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
-            return False
+            if self.show_if_owned_max is None:
+                return False
+            else:
+                if not self.show_if_owned_max:
+                    return False
 
         if hasattr(self, "spawn_player_attributes"):
             for key, value in self.spawn_player_attributes.items():
