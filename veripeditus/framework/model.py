@@ -103,9 +103,6 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def gameobject_type(self):
         return self.__tablename__
 
-    def distance_to(self, obj):
-        return get_gameobject_distance(self, obj)
-
     @property
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
@@ -113,6 +110,12 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     @property
     def isonmap(self):
         return True
+
+    @property
+    def distance_to_current_player(self):
+        if g.user is None or g.user.current_player is None:
+            return None
+        return get_gameobject_distance(self, g.user.current_player)
 
     @api_method(authenticated=False)
     def image_raw(self):
@@ -323,6 +326,8 @@ class Player(GameObject):
 
         # Update position
         self.latitude, self.longitude = [float(x) for x in latlon.split(",")]
+        for item in GameObject_Item.query.filter(GameObject_Item.distance_to_current_player > 0, GameObject_Item.distance_to_current_player <= GameObject_Item.auto_collect_radius):
+            item.collect()
         DB.session.add(self)
         DB.session.commit()
 
@@ -345,6 +350,7 @@ class Item(GameObject):
     collectible = True
     handoverable = True
     owned_max = None
+    auto_collect_radius = 0
     show_if_owned_max = None
 
     @api_method(authenticated=True)
