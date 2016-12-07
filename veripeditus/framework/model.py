@@ -202,7 +202,12 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
         for latlon, osm_element in spawn_points.items():
             # Determine existing number of objects on map
-            existing = cls.query.filter_by(world=world, isonmap=True, osm_element=osm_element).count()
+            # FIXME remove slow iteration over all objects
+            existing = cls.query.filter_by(world=world, osm_element=osm_element).all()
+            for e in existing:
+                if not e.isonmap:
+                    existing.remove(e)
+            existing = len(existing)
             if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
                 to_spawn = cls.spawn_max - existing
             elif existing == 0:
@@ -329,8 +334,12 @@ class Player(GameObject):
 
         # Update position
         self.latitude, self.longitude = [float(x) for x in latlon.split(",")]
-        for item in GameObject_Item.query.filter(GameObject_Item.distance_to_current_player > 0, GameObject_Item.distance_to_current_player <= GameObject_Item.auto_collect_radius):
-            item.collect()
+
+        # FIXME remove slow iteration
+        for item in Item.query.filter_by(world=g.user.current_player.world).all():
+            if item.distance_to_current_player > 0 and item.distance_to_current_player <= item.auto_collect_radius:
+                item.collect()
+
         DB.session.add(self)
         DB.session.commit()
 
