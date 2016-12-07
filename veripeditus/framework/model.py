@@ -103,6 +103,9 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def gameobject_type(self):
         return self.__tablename__
 
+    def distance_to(self, obj):
+        return get_gameobject_distance(self, obj)
+
     @property
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
@@ -115,7 +118,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def distance_to_current_player(self):
         if g.user is None or g.user.current_player is None:
             return None
-        return get_gameobject_distance(self, g.user.current_player)
+        return self.distance_to(g.user.current_player)
 
     @api_method(authenticated=False)
     def image_raw(self):
