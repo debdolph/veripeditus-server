@@ -21,7 +21,9 @@ from numbers import Real
 from flask import g, redirect
 from sqlalchemy import and_ as sa_and
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.collections import attribute_mapped_collection
+from sqlalchemy.sql import and_
 
 from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat, send_action
 from veripeditus.server.app import DB, OA
@@ -110,7 +112,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
     def image_path(self):
         return get_image_path(self.world.game.module, self.image)
 
-    @property
+    @hybrid_property
     def isonmap(self):
         return True
 
@@ -247,7 +249,7 @@ class GameObjectsToAttributes(Base):
                              DB.ForeignKey('attribute.id'))
 
     gameobject = DB.relationship(GameObject, foreign_keys=[gameobject_id],
-                                 backref=DB.backref("gameobjects_to_attributes",
+                                 backref=DB.backref("attributes",
                                                     collection_class=attribute_mapped_collection(
                                                         "key"),
                                                     cascade="all, delete-orphan"))
@@ -344,7 +346,7 @@ class Player(GameObject):
         DB.session.commit()
 
         # Redirect to own object
-        return redirect("/api/gameobject_player/%i" % self.id)
+        return redirect("/api/Player/%i" % self.id)
 
     @classmethod
     def spawn_default(cls, world):
@@ -386,7 +388,7 @@ class Item(GameObject):
             self.on_collected()
             DB.session.add(self)
             DB.session.commit()
-            return redirect("/api/gameobject_item/%i" % self.id)
+            return redirect("/api/Item/%i" % self.id)
         else:
             return send_action("notice", self, "You cannot collect this!")
 
@@ -397,22 +399,39 @@ class Item(GameObject):
             self.on_handedover()
             DB.session.add(self)
             DB.session.commit()
-            return redirect("/api/gameobject_item/%i" % self.id)
+            return redirect("/api/Item/%i" % self.id)
         else:
             return send_action("notice", self, "You cannot hand this over.")
 
-    @property
+    @hybrid_property
     def isonmap(self):
-        if self.owner is not None:
+        # Check whether we were called as class or instance method
+        if isinstance(self, type):
+            # Class method
+            cls = self
+        else:
+            cls = self.__class__
+
+        # Seed expression
+        expr = True
+
+        # Check if item is owned by someone
+        if self is cls:
+            # For class method, and_() existing expression with check for ownership
+            expr = and_(expr, self.owner is not None)
+        elif self.owner is not None:
+            # For instance method, return a terminal False if owned by someone
             return False
 
-        if self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(self.__class__) >= self.owned_max:
-            if self.show_if_owned_max is None:
+        # Check for owned_max functionality
+        # Independent of class or instance method
+        if self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(cls) >= self.owned_max:
+            if self.show_if_owned_max is None or not self.show_if_owned_max:
+                # Return a terminal false
                 return False
-            else:
-                if not self.show_if_owned_max:
-                    return False
 
+        # Verify conditional attributes for spawning
+        # Independent of class or instance method
         if hasattr(self, "spawn_player_attributes"):
             for key, value in self.spawn_player_attributes.items():
                 if key in g.user.current_player.attributes:
@@ -423,7 +442,13 @@ class Item(GameObject):
                 if value is not None and attribute != value:
                     return False
 
-        return True
+        # Find out final return value
+        if self is cls:
+            # For class method, return boolean SQL expression
+            return expr
+        else:
+            # For instance method, return terminal True
+            return True
 
     def may_collect(self, player):
         return True

@@ -38,7 +38,7 @@ OA = OSMAlchemy(DB, overpass=True)
 import veripeditus.server.model
 DB.create_all()
 
-import veripeditus.server.rest
-
 from veripeditus.server.control import init
 init()
+
+import veripeditus.server.rest

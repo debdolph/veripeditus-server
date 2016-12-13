@@ -31,23 +31,14 @@ _INCLUDE = ['id', 'uuid', 'created', 'updated']
 
 MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 
-MANAGER.create_api(User,
-                   include_columns=_INCLUDE+['username', 'email', 'players',
-                                             'players.name', 'players.longitude',
-                                             'players.latitude', 'players.avatar', 'current_player'])
-
-MANAGER.create_api(Game, include_columns=_INCLUDE+['package', 'name', 'version',
-                                                   'description', 'author',
-                                                   'license'])
-
-MANAGER.create_api(World, include_columns=_INCLUDE+['name', 'game', 'enabled'])
+MANAGER.create_api(User)
+MANAGER.create_api(Game)
+MANAGER.create_api(World)
 
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():
-    MANAGER.create_api(go,
-                       include_methods=["gameobject_type", "isonmap"],
-                       exclude_columns=go.api_exclude,
-                       results_per_page=-1)
+    for rgo in [go] + go.__subclasses__():
+        MANAGER.create_api(rgo)
 
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>")
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>/<arg>")
@@ -119,4 +110,4 @@ def _get_own_player():
             # Create a new player in the first world found
             World.query.filter_by(enabled=True).first().player_join()
 
-    return redirect("/api/gameobject_player/%i" % g.user.current_player.id)
+    return redirect("/api/Player/%i" % g.user.current_player.id)

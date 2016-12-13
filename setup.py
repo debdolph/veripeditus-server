@@ -41,7 +41,7 @@ setup(
     zip_safe=False,
     install_requires=[
                       'Flask>=0.10',
-                      'Flask-Restless==0.17.0',
+                      'Flask-Restless>=1.0.0b2.dev0',
                       'Flask-SQLAlchemy',
                       'gpxpy',
                       'OSMAlchemy',
