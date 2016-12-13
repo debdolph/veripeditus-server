@@ -35,7 +35,7 @@ GameDataService = function() {
     self.gameobjects = {};
     self.gameobjects_temp = {};
     self.gameobjects_missing = 0;
-    self.gameobject_types = ["player", "item", "npc"];
+    self.gameobject_types = ["Player", "Item", "NPC"];
 
     // Current player id
     self.current_player_id = -1;
@@ -51,7 +51,7 @@ GameDataService = function() {
         }
         if (data) {
             options.dataType = "json";
-            options.contentType = "application/json";
+            options.contentType = "application/vnd.api+json";
             options.data = data;
         }
 
@@ -75,13 +75,13 @@ GameDataService = function() {
         // Update own location on server if logged in
         if (self.current_player_id > -1) {
             // Update location in player object
-            self.gameobjects[self.current_player_id].latitude = Device.position.coords.latitude;
-            self.gameobjects[self.current_player_id].longitude = Device.position.coords.longitude;
+            self.gameobjects[self.current_player_id].attributes.latitude = Device.position.coords.latitude;
+            self.gameobjects[self.current_player_id].attributes.longitude = Device.position.coords.longitude;
 
             // Check time of last update
             if (Date.now() - self.last_location_update > 5000) {
                 // Send the update request
-                self.doRequest("GET", "/api/v2/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].latitude + "," + self.gameobjects[self.current_player_id].longitude);
+                self.doRequest("GET", "/api/v2/gameobject/" + self.current_player_id + "/update_position/" + self.gameobjects[self.current_player_id].attributes.latitude + "," + self.gameobjects[self.current_player_id].attributes.longitude);
                 self.last_location_update = Date.now();
             }
         }
@@ -89,8 +89,8 @@ GameDataService = function() {
 
     self.onReturnGameObjects = function(data) {
         // Iterate over data and merge into gameobjects store
-        for (var i = 0; i < data.objects.length; i++) {
-            var go = data.objects[i];
+        for (var i = 0; i < data.data.length; i++) {
+            var go = data.data[i];
             self.gameobjects_temp[go.id] = go;
         }
 
@@ -149,7 +149,7 @@ GameDataService = function() {
                             'val': {
                                 'name': 'id',
                                 'op': 'eq',
-                                'val': self.gameobjects[self.current_player_id].world.id
+                                'val': self.gameobjects[self.current_player_id].relationships.world.data.id
                             }
                         },
 			{
@@ -173,7 +173,7 @@ GameDataService = function() {
             self.gameobjects_temp = {};
 
             $.each(self.gameobject_types, function (i, gameobject_type) {
-                self.doRequest("GET", "/api/gameobject_" + gameobject_type, self.onReturnGameObjects, {
+                self.doRequest("GET", "/api/" + gameobject_type, self.onReturnGameObjects, {
                     q: JSON.stringify(query)
                 });
             });
@@ -193,8 +193,8 @@ GameDataService = function() {
     self.updateSelf = function () {
         // Request own player item
         self.doRequest("GET", "/api/v2/gameobject_player/self", function (data) {
-            self.current_player_id = data.id;
-            self.gameobjects[data.id] = data;
+            self.current_player_id = data.data.id;
+            self.gameobjects[data.data.id] = data.data;
             self.updateGameObjects();
         });
     };

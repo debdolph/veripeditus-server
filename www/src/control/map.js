@@ -64,7 +64,7 @@ MapController = function() {
         // Iterate over gameobjects and add map markers
         $.each(GameData.gameobjects, function (id, gameobject) {
             // Check whether item should be shown on the map
-            if (! gameobject.isonmap) {
+            if (! gameobject.attributes.isonmap) {
                 return;
             }
 
@@ -77,13 +77,8 @@ MapController = function() {
             var marker = self.gameobject_markers[gameobject.id];
             if (marker) {
                 // Marker exists, store location
-                marker.setLatLng([gameobject.latitude, gameobject.longitude]);
+                marker.setLatLng([gameobject.attributes.latitude, gameobject.attributes.longitude]);
             } else {
-                if (gameobject.gameobject_type == "gameobject_player") {
-			// Skip for now to prevent map crowding
-			return;
-		}
-
                 // Marker does not exist
                 // Construct marker icon from gameobject image
                 var icon = L.icon({
@@ -92,18 +87,18 @@ MapController = function() {
                 });
 
                 // Create marker at gameobject location
-                marker = L.marker([gameobject.latitude, gameobject.longitude], {
+                marker = L.marker([gameobject.attributes.latitude, gameobject.attributes.longitude], {
                     'icon': icon
                 });
 
                 // Create popup
                 var html = "<h1>" + gameobject.name + "</h1>";
                 html += "<p class='map_popup_image'><img src='/api/v2/gameobject/" + gameobject.id + "/image_raw' /></p>";
-                if (gameobject.gameobject_type == "gameobject_item") {
+                if (gameobject.attributes.gameobject_type == "gameobject_item") {
                     // FIXME also check for collectible
                     html += "<button class='map_popup_button' onClick='MapView.item_collect(" + gameobject.id + ")'>Collect</button>";
                 }
-                if (gameobject.gameobject_type == "gameobject_npc") {
+                if (gameobject.attributes.gameobject_type == "gameobject_npc") {
                     // FIXME also check for talkable
                     html += "<button class='map_popup_button' onClick='MapView.npc_talk(" + gameobject.id + ")'>Talk</button>";
                 }
@@ -121,7 +116,7 @@ MapController = function() {
                 // Remove marker if object vanished from gameobjects
                 self.map.removeLayer(marker);
                 delete self.gameobject_markers[id];
-            } else if (! GameData.gameobjects[id].isonmap) {
+            } else if (! GameData.gameobjects[id].attributes.isonmap) {
                 // Remove marker if object is not visible on map anymore
                 self.map.removeLayer(marker);
                 delete self.gameobject_markers[id];

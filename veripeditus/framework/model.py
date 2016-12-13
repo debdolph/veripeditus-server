@@ -103,6 +103,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     distance_max = None
 
+    @property
     def gameobject_type(self):
         return self.__tablename__
 
@@ -400,7 +401,7 @@ class Item(GameObject):
             self.on_handedover()
             DB.session.add(self)
             DB.session.commit()
-            return redirect(self.__class__, resource_id=self.id))
+            return redirect(url_for(self.__class__, resource_id=self.id))
         else:
             return send_action("notice", self, "You cannot hand this over.")
 
