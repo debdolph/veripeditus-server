@@ -420,7 +420,7 @@ class Item(GameObject):
         # Check if item is owned by someone
         if self is cls:
             # For class method, and_() existing expression with check for ownership
-            expr = and_(expr, self.owner is not None)
+            expr = and_(expr, self.owner is None)
         elif self.owner is not None:
             # For instance method, return a terminal False if owned by someone
             return False

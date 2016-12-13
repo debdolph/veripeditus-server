@@ -120,8 +120,7 @@ GameDataService = function() {
         // Only run if logged-in
         if (self.current_player_id > -1) {
             // Construct JSON query filter for REST API
-            var query = {
-                'filters': [{
+            var query = [{
                     'or': [{
                         'and': [{
                             'name': 'latitude',
@@ -163,8 +162,7 @@ GameDataService = function() {
                         'op': 'eq',
                         'val': self.current_player_id
                     }]
-                }]
-            };
+                }];
 
             // Define and trace gameobject types to load
             self.gameobjects_missing = self.gameobject_types.length;
@@ -174,7 +172,7 @@ GameDataService = function() {
 
             $.each(self.gameobject_types, function (i, gameobject_type) {
                 self.doRequest("GET", "/api/" + gameobject_type, self.onReturnGameObjects, {
-                    q: JSON.stringify(query)
+                    'filter[objects]': JSON.stringify(query)
                 });
             });
         } else {
