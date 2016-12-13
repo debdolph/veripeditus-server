@@ -95,6 +95,10 @@ GameDataService = function() {
             var go = data.data[i];
             self.gameobjects_temp[go.id] = go;
         }
+        for (var i = 0; i < data.included.length; i++) {
+            var go = data.included[i];
+            self.gameobjects_temp[go.id] = go;
+        }
 
         // Reduce missing objects counter
         self.gameobjects_missing -= 1;

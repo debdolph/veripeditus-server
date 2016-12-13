@@ -47,10 +47,11 @@ function control_click() {
 
                 // Generate inventory list
                 $('table#inventory-table').empty();
-                $.each(GameData.gameobjects[GameData.current_player_id].inventory, function (i, item) {
+                $.each(GameData.gameobjects[GameData.current_player_id].relationships.inventory.data, function (i, item) {
+                    var real_item = GameData.gameobjects[item.id];
                     var html = "<tr>";
-                    html += "<td><img src='/api/gameobject/" + item.id + "/image_raw' /></td>";
-                    html += "<td>" + item.name + "</td>";
+                    html += "<td><img src='/api/v2/gameobject/" + real_item.id + "/image_raw' /></td>";
+                    html += "<td>" + real_item.attributes.name + "</td>";
                     html += "</tr>";
                     var elem = $(html);
                     $('table#inventory-table').append(elem);

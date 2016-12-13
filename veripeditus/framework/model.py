@@ -77,6 +77,8 @@ class Attribute(Base):
 class GameObject(Base, metaclass=_GameObjectMeta):
     __tablename__ = "gameobject"
 
+    _api_includes = ["world", "attributes"]
+
     id = DB.Column(DB.Integer(), primary_key=True)
 
     name = DB.Column(DB.String(32))
@@ -263,6 +265,8 @@ class GameObjectsToAttributes(Base):
 class Player(GameObject):
     __tablename__ = "gameobject_player"
 
+    _api_includes = GameObject._api_includes + ["inventory"]
+
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
 
@@ -270,8 +274,6 @@ class Player(GameObject):
     user = DB.relationship("User", backref=DB.backref("players",
                                                       lazy="dynamic"),
                            foreign_keys=[user_id])
-
-    api_exclude = ["user.password"]
 
     def __init__(self, **kwargs):
         GameObject.__init__(self, **kwargs)

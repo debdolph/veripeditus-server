@@ -39,7 +39,8 @@ MANAGER.create_api(World)
 for go in [GameObject] + GameObject.__subclasses__():
     for rgo in [go] + go.__subclasses__():
         MANAGER.create_api(rgo,
-            additional_attributes=["gameobject_type"])
+            additional_attributes=["gameobject_type"],
+            includes=rgo._api_includes)
 
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>")
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>/<arg>")
