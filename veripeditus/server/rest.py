@@ -19,7 +19,7 @@ API endpoint definitions
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import g, make_response, redirect
-from flask_restless import APIManager
+from flask_restless import APIManager, url_for
 from werkzeug.wrappers import Response
 
 from veripeditus.server.app import APP, DB
@@ -110,4 +110,4 @@ def _get_own_player():
             # Create a new player in the first world found
             World.query.filter_by(enabled=True).first().player_join()
 
-    return redirect("/api/Player/%i" % g.user.current_player.id)
+    return redirect(url_for(g.user.current_player.__class__, resource_id=g.user.current_player.id))

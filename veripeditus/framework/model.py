@@ -19,6 +19,7 @@ from collections import Sequence
 from numbers import Real
 
 from flask import g, redirect
+from flask_restless import url_for
 from sqlalchemy import and_ as sa_and
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -346,7 +347,7 @@ class Player(GameObject):
         DB.session.commit()
 
         # Redirect to own object
-        return redirect("/api/Player/%i" % self.id)
+        return redirect(url_for(self.__class__, resource_id=self.id))
 
     @classmethod
     def spawn_default(cls, world):
@@ -388,7 +389,7 @@ class Item(GameObject):
             self.on_collected()
             DB.session.add(self)
             DB.session.commit()
-            return redirect("/api/Item/%i" % self.id)
+            return redirect(url_for(self.__class__, resource_id=self.id))
         else:
             return send_action("notice", self, "You cannot collect this!")
 
@@ -399,7 +400,7 @@ class Item(GameObject):
             self.on_handedover()
             DB.session.add(self)
             DB.session.commit()
-            return redirect("/api/Item/%i" % self.id)
+            return redirect(self.__class__, resource_id=self.id))
         else:
             return send_action("notice", self, "You cannot hand this over.")
 
