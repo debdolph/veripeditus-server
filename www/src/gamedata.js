@@ -40,7 +40,7 @@ GameDataService = function() {
     // Current player id
     self.current_player_id = -1;
 
-    self.doRequest = function (method, url, cb, data) {
+    self.doRequest = function(method, url, cb, data) {
         // Fill options here
         var options = {};
         options.method = method;
@@ -58,7 +58,9 @@ GameDataService = function() {
         // Check whether a username was provided
         if (localStorage.username) {
             // Add username and password
-            options.headers = {"Authorization": "Basic " + btoa(localStorage.username + ":" + localStorage.password)};
+            options.headers = {
+                "Authorization": "Basic " + btoa(localStorage.username + ":" + localStorage.password)
+            };
             options.username = localStorage.username;
             options.password = localStorage.password;
 
@@ -103,7 +105,7 @@ GameDataService = function() {
             self.gameobjects_temp = {};
 
             // Call onUpdatedGameObjects on all views
-            $.each(Veripeditus.views, function (id, view) {
+            $.each(Veripeditus.views, function(id, view) {
                 if (view.onUpdatedGameObjects) {
                     view.onUpdatedGameObjects();
                 }
@@ -121,48 +123,48 @@ GameDataService = function() {
         if (self.current_player_id > -1) {
             // Construct JSON query filter for REST API
             var query = [{
-                    'or': [{
-                        'and': [{
-                            'name': 'latitude',
-                            'op': 'ge',
-                            'val': self.bounds[0][0]
-                        },
-                        {
-                            'name': 'latitude',
-                            'op': 'le',
-                            'val': self.bounds[1][0]
-                        },
-                        {
-                            'name': 'longitude',
-                            'op': 'ge',
-                            'val': self.bounds[0][1]
-                        },
-                        {
-                            'name': 'longitude',
-                            'op': 'le',
-                            'val': self.bounds[1][1]
-                        },
-                        {
-                            'name': 'world',
-                            'op': 'has',
-                            'val': {
-                                'name': 'id',
-                                'op': 'eq',
-                                'val': self.gameobjects[self.current_player_id].relationships.world.data.id
-                            }
-                        },
-			{
-                            'name': 'isonmap',
-                            'op': 'eq',
-                            'val': true
-                        }]
+                'or': [{
+                    'and': [{
+                        'name': 'latitude',
+                        'op': 'ge',
+                        'val': self.bounds[0][0]
                     },
                     {
-                        'name': 'id',
+                        'name': 'latitude',
+                        'op': 'le',
+                        'val': self.bounds[1][0]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'ge',
+                        'val': self.bounds[0][1]
+                    },
+                    {
+                        'name': 'longitude',
+                        'op': 'le',
+                        'val': self.bounds[1][1]
+                    },
+                    {
+                        'name': 'world',
+                        'op': 'has',
+                        'val': {
+                            'name': 'id',
+                            'op': 'eq',
+                            'val': self.gameobjects[self.current_player_id].relationships.world.data.id
+                        }
+                    },
+                    {
+                        'name': 'isonmap',
                         'op': 'eq',
-                        'val': self.current_player_id
+                        'val': true
                     }]
-                }];
+                },
+                {
+                    'name': 'id',
+                    'op': 'eq',
+                    'val': self.current_player_id
+                }]
+            }];
 
             // Define and trace gameobject types to load
             self.gameobjects_missing = self.gameobject_types.length;
@@ -170,7 +172,7 @@ GameDataService = function() {
             // Clear out gameobjects
             self.gameobjects_temp = {};
 
-            $.each(self.gameobject_types, function (i, gameobject_type) {
+            $.each(self.gameobject_types, function(i, gameobject_type) {
                 self.doRequest("GET", "/api/" + gameobject_type, self.onReturnGameObjects, {
                     'filter[objects]': JSON.stringify(query)
                 });
@@ -180,7 +182,7 @@ GameDataService = function() {
             self.gameobjects = {};
 
             // Call onUpdatedGameObjects on all views
-            $.each(Veripeditus.views, function (id, view) {
+            $.each(Veripeditus.views, function(id, view) {
                 if (view.onUpdatedGameObjects) {
                     view.onUpdatedGameObjects();
                 }
@@ -188,9 +190,9 @@ GameDataService = function() {
         }
     };
 
-    self.updateSelf = function () {
+    self.updateSelf = function() {
         // Request own player item
-        self.doRequest("GET", "/api/v2/gameobject_player/self", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject_player/self", function(data) {
             self.current_player_id = data.data.id;
             self.gameobjects[data.data.id] = data.data;
             self.updateGameObjects();
@@ -223,14 +225,14 @@ GameDataService = function() {
     };
 
     self.item_collect = function(id, view) {
-        self.doRequest("GET", "/api/v2/gameobject/" + id + "/collect", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject/" + id + "/collect", function(data) {
             view.onGameObjectActionDone(data);
             self.updateGameObjects();
         });
     };
 
     self.npc_talk = function(id, view) {
-        self.doRequest("GET", "/api/v2/gameobject/" + id + "/talk", function (data) {
+        self.doRequest("GET", "/api/v2/gameobject/" + id + "/talk", function(data) {
             view.onGameObjectActionDone(data);
             self.updateGameObjects();
         });
@@ -245,7 +247,7 @@ if (localStorage.username) {
 }
 
 // Bind global error handler
-$(document).bind("ajaxError", function (req, status, error) {
+$(document).bind("ajaxError", function(req, status, error) {
     if ((status.readyState == 4) && (status.status == 401)) {
         // Login failed or not logged in for some reason
         // Invalidate
