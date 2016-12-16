@@ -22,7 +22,7 @@ from flask import g, make_response, redirect
 from flask_restless import APIManager, url_for
 from werkzeug.wrappers import Response
 
-from veripeditus.server.app import APP, DB
+from veripeditus.server.app import APP, DB, OA
 from veripeditus.server.control import needs_authentication
 from veripeditus.server.model import *
 from veripeditus.server.util import guess_mime_type
@@ -31,16 +31,19 @@ _INCLUDE = ['id', 'uuid', 'created', 'updated']
 
 MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
 
-MANAGER.create_api(User)
-MANAGER.create_api(Game)
-MANAGER.create_api(World)
+OA.create_api(MANAGER)
+
+MANAGER.create_api(User, page_size=0, max_page_size=0)
+MANAGER.create_api(Game, page_size=0, max_page_size=0)
+MANAGER.create_api(World, page_size=0, max_page_size=0)
 
 # Create APIs for all GameObjects
 for go in [GameObject] + GameObject.__subclasses__():
     for rgo in [go] + go.__subclasses__():
         MANAGER.create_api(rgo,
             additional_attributes=["gameobject_type"],
-            includes=rgo._api_includes)
+            includes=rgo._api_includes,
+            page_size=0, max_page_size=0)
 
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>")
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>/<arg>")
