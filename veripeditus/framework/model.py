@@ -253,7 +253,7 @@ class GameObjectsToAttributes(Base):
                              DB.ForeignKey('attribute.id'))
 
     gameobject = DB.relationship(GameObject, foreign_keys=[gameobject_id],
-                                 backref=DB.backref("attributes",
+                                 backref=DB.backref("gameobjects_to_attributes",
                                                     collection_class=attribute_mapped_collection(
                                                         "key"),
                                                     cascade="all, delete-orphan"))
