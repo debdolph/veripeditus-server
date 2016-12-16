@@ -30,3 +30,4 @@ class Kangoo(f.Item):
     owned_max = 3
     default_name = "Kangoo"
     default_image = "avatar_kangaroo"
+    auto_collect_radius = 500

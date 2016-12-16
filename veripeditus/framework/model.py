@@ -343,7 +343,7 @@ class Player(GameObject):
 
         # FIXME remove slow iteration
         for item in Item.query.filter_by(world=g.user.current_player.world).all():
-            if item.distance_to_current_player > 0 and item.distance_to_current_player <= item.auto_collect_radius:
+            if item.auto_collect_radius > 0 and item.distance_to_current_player <= item.auto_collect_radius:
                 item.collect()
 
         DB.session.add(self)
