@@ -97,7 +97,11 @@ GameDataService = function() {
         }
         for (var i = 0; i < data.included.length; i++) {
             var go = data.included[i];
-            self.gameobjects_temp[go.id] = go;
+
+            // Verify that this is indeed a game objectm not a world
+            if (go.type.startsWith("game")) {
+                self.gameobjects_temp[go.id] = go;
+            }
         }
 
         // Reduce missing objects counter
