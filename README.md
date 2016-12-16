@@ -73,7 +73,7 @@ The authors and lead developers of Veripeditus are…
 
 ## Licence
 
-The project is licenced under the GNU Affero GeneralPublic License
+The project is licenced under the GNU Affero General Public License
 version 3 or later. All artwork and other non-code parts are also
 dual-licenced under the Creative Commons-Attribution-Share Alike 4.0
 Unported licence (or later). See the
