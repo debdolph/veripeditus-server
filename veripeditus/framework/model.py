@@ -253,7 +253,7 @@ class GameObjectsToAttributes(Base):
                              DB.ForeignKey('attribute.id'))
 
     gameobject = DB.relationship(GameObject, foreign_keys=[gameobject_id],
-                                 backref=DB.backref("gameobjects_to_attributes",
+                                 backref=DB.backref("attributes",
                                                     collection_class=attribute_mapped_collection(
                                                         "key"),
                                                     cascade="all, delete-orphan"))
@@ -355,6 +355,22 @@ class Player(GameObject):
     @classmethod
     def spawn_default(cls, world):
         pass
+
+    @hybrid_property
+    def isonmap(self):
+        if isinstance(self, type):
+            cls = self
+        else:
+            cls = self.__class__
+
+        if self == g.user.current_player:
+            return False
+        if g.user is not None and g.user.current_player is not None:
+            mod = g.user.current_player.world.game.module
+            if hasattr(mod, "VISIBLE_RAD_PLAYERS"):
+                if self is not cls and self.distance_to_current_player > mod.VISIBLE_RAD_PLAYERS:
+                    return False
+        return True
 
 class Item(GameObject):
     __tablename__ = "gameobject_item"
