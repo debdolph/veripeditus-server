@@ -92,7 +92,7 @@ MapController = function() {
                 });
 
                 // Create popup
-                var html = "<h1>" + gameobject.name + "</h1>";
+                var html = "<h1>" + gameobject.attributes.name + "</h1>";
                 html += "<p class='map_popup_image'><img src='/api/v2/gameobject/" + gameobject.id + "/image_raw' /></p>";
                 if (gameobject.attributes.gameobject_type == "gameobject_item") {
                     // FIXME also check for collectible
