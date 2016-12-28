@@ -520,3 +520,18 @@ class NPC(GameObject):
 
     def may_talk(self, player):
         return True
+
+    @hybrid_property
+    def isonmap(self):
+        if isinstance(self, type):
+            cls = self
+        else:
+            cls = self.__class__
+
+        if g.user is not None and g.user.current_player is not None:
+            mod = g.user.current_player.world.game.module
+            if hasattr(mod, "VISIBLE_RAD_NPCS"):
+                if self is not cls and self.distance_to_current_player > mod.VISIBLE_RAD_NPCS:
+                    return False
+
+        return True
