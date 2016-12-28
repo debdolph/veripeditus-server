@@ -445,10 +445,15 @@ class Item(GameObject):
 
         # Check for owned_max functionality
         # Independent of class or instance method
-        if self.owned_max is not None and g.user is not None and g.user.current_player is not None and g.user.current_player.has_item(cls) >= self.owned_max:
-            if self.show_if_owned_max is None or not self.show_if_owned_max:
-                # Return a terminal false
-                return False
+        if g.user is not None and g.user.current_player is not None:
+            if self.owned_max is not None and g.user.current_player.has_item(cls) >= self.owned_max:
+                if self.show_if_owned_max is None or not self.show_if_owned_max:
+                    # Return a terminal false
+                    return False
+            mod = g.user.current_player.world.game.module
+            if hasattr(mod, "VISIBLE_RAD_ITEMS"):
+                if self is not cls and self.distance_to_current_player > mod.VISIBLE_RAD_ITEMS:
+                    return False
 
         # Verify conditional attributes for spawning
         # Independent of class or instance method
