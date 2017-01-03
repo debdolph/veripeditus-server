@@ -22,12 +22,16 @@ AUTHOR = 'Dominik George <nik@naturalnet.de>'
 LICENSE = 'AGPL'
 VERSION = f.VERSION
 
+HIDE_SELF = True
+VISIBLE_RAD_NPCS = 1000000000
+
 class Player(f.Player):
     pass
 
-class Kangoo(f.Item):
-    spawn_latlon = (0, 0)
-    owned_max = 3
+class Kangoo(f.NPC):
+    spawn_osm = {"natural": "tree"}
     default_name = "Kangoo"
     default_image = "avatar_kangaroo"
-    auto_collect_radius = 500
+
+    def on_talk(self):
+        return self.say("foo")

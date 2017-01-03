@@ -59,6 +59,14 @@ MapController = function() {
     // Already created markers for gameobjects will be stored here.
     self.gameobject_markers = {};
 
+    // Create a markerClusterGroup for marker clustering functionality
+    self.marker_cluster_group = L.markerClusterGroup({
+        zoomToBoundsOnClick: false
+    });
+
+    // Add markerClusterGroup to map as a layer
+    self.map.addLayer(self.marker_cluster_group);
+
     // Called by GameDataService on gameobjects update
     self.onUpdatedGameObjects = function() {
         // Iterate over gameobjects and add map markers
@@ -106,6 +114,7 @@ MapController = function() {
 
                 // Add marker to map and store to known markers
                 marker.addTo(self.map);
+                self.marker_cluster_group.addLayer(marker);
                 self.gameobject_markers[gameobject.id] = marker;
             }
         });

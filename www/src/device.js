@@ -44,6 +44,8 @@ DeviceService = function() {
         this.position.coords = newpos.coords;
         this.position.timestamp = newpos.timestamp;
 
+        alert(newpos.coords.latitude);
+
         // Call onGeolocationChanged on all views
         $.each(Veripeditus.views, function (id, view) {
             if (view.onGeolocationChanged) {
