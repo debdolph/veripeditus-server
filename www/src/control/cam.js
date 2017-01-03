@@ -80,11 +80,6 @@ CamController = function() {
         return style;
     };
 
-    // FIXME Move to GameDataService
-    this.getGameObjectAvatar = function(gameobject) {
-        return '/api/data/avatar_' + gameobject.avatar + '.svg';
-    };
-
     // Called by GameDataService on gameobject update
     this.onUpdatedGameObjects = function() {
         // FIXME do something
@@ -105,6 +100,7 @@ CamController = function() {
     // Called by DeviceService on orientation change
     this.onOrientationChanged = function() {
         // FIXME do something
+        $('#foo').val(Device.orientation.alpha + " " + Device.orientation.beta + " " + Device.orientation.gamma);
     };
 };
 

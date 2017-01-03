@@ -32,14 +32,15 @@
  <body>
   <div id="content-outer">
    <div id="content-wrapper">
-    <div class="view" id="camview" style="display: none">
+    <div class="view" id="camview" style="display: block">
      <video id="cam" autoplay></video>
 
      <div id="arview">
+      <input type="text" id="foo" size="200" />
      </div>
     </div>
 
-    <div class="view" id="map" style="display: block">
+    <div class="view" id="map" style="display: none">
     </div>
    </div>
 
@@ -60,7 +61,7 @@
   <script src="src/ui.js"></script>
   <script src="src/device.js"></script>
   <script src="src/gamedata.js"></script>
-  <script src="src/control/map.js"></script>
-  <!--script src="src/control/cam.js"></script-->
+  <!--script src="src/control/map.js"></script-->
+  <script src="src/control/cam.js"></script>
  </body>
 </html>
