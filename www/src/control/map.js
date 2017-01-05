@@ -61,7 +61,9 @@ MapController = function() {
 
     // Create a markerClusterGroup for marker clustering functionality
     self.marker_cluster_group = L.markerClusterGroup({
-        zoomToBoundsOnClick: false
+        zoomToBoundsOnClick: false,
+        showCoverageOnHover: false,
+        animate: true
     });
 
     // Add markerClusterGroup to map as a layer
