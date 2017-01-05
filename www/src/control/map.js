@@ -59,6 +59,14 @@ MapController = function() {
     // Already created markers for gameobjects will be stored here.
     self.gameobject_markers = {};
 
+    // Create a markerClusterGroup for marker clustering functionality
+    self.marker_cluster_group = L.markerClusterGroup({
+        zoomToBoundsOnClick: false
+    });
+
+    // Add markerClusterGroup to map as a layer
+    self.map.addLayer(self.marker_cluster_group);
+
     // Called by GameDataService on gameobjects update
     self.onUpdatedGameObjects = function() {
         // Iterate over gameobjects and add map markers
@@ -105,7 +113,7 @@ MapController = function() {
                 marker.bindPopup(html);
 
                 // Add marker to map and store to known markers
-                marker.addTo(self.map);
+                marker.addTo(self.marker_cluster_group);
                 self.gameobject_markers[gameobject.id] = marker;
             }
         });
@@ -114,11 +122,11 @@ MapController = function() {
         $.each(self.gameobject_markers, function (id, marker) {
             if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
                 // Remove marker if object vanished from gameobjects
-                self.map.removeLayer(marker);
+                self.marker_cluster_group.removeLayer(marker);
                 delete self.gameobject_markers[id];
             } else if (! GameData.gameobjects[id].attributes.isonmap) {
                 // Remove marker if object is not visible on map anymore
-                self.map.removeLayer(marker);
+                self.marker_cluster_group.removeLayer(marker);
                 delete self.gameobject_markers[id];
             }
         });
