@@ -13,3 +13,19 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys
+
+# Directories for live games and working trees
+DIR_LIVE = os.path.join(APP.config['CODE_EDITOR_PATH'], 'live')
+DIR_WORK = os.path.join(APP.config['CODE_EDITOR_PATH'], 'work')
+
+# Create missing directories
+if not os.path.isdir(DIR_LIVE):
+    os.mkdir(DIR_LIVE)
+f not os.path.isdir(DIR_WORK):
+    os.mkdir(DIR_WORK)
+
+# Append live directory to module path
+sys.path.append(DIR_LIVE)

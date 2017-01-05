@@ -29,6 +29,7 @@ APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 APP.config['PASSWORD_SCHEMES'] = ['pbkdf2_sha512', 'md5_crypt']
 APP.config['BASIC_REALM'] = "Veripeditus"
 APP.config['ENABLE_CODE_EDITOR'] = False
+APP.config['CODE_EDITOR_PATH'] = '/var/lib/veripeditus/editor'
 
 CFGLIST = ['/var/lib/veripeditus/dbconfig.cfg', '/etc/veripeditus/server.cfg']
 for cfg in CFGLIST:
@@ -39,10 +40,10 @@ OA = OSMAlchemy(DB, overpass=True)
 import veripeditus.server.model
 DB.create_all()
 
+if APP.config['ENABLE_CODE_EDITOR']:
+    import veripeditus.editor
+
 from veripeditus.server.control import init
 init()
 
 import veripeditus.server.rest
-
-if APP.config['ENABLE_CODE_EDITOR']:
-    import veripeditus.editor
