@@ -32,6 +32,7 @@ setup(
               'veripeditus.game.test',
              ],
     namespace_packages=[
+                        'veripeditus',
                         'veripeditus.game',
                        ],
     include_package_data=True,
