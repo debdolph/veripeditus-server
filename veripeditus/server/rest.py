@@ -105,7 +105,7 @@ def _get_own_player():
     if g.user is None:
         # Return 404 Not Found
         # FIXME more specific error
-        return ("", 404)
+        return ("", 401)
 
     if g.user.current_player is None:
         if g.user.players.count() > 0:
