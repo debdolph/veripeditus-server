@@ -29,6 +29,7 @@ setup(
     packages=[
               'veripeditus.framework',
               'veripeditus.server',
+              'veripeditus.editor'¸
               'veripeditus.game.test',
              ],
     namespace_packages=[
