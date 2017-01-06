@@ -39,6 +39,7 @@ setup(
     include_package_data=True,
     package_data={
                   'veripeditus.framework': ['data/*'],
+                  'veripeditus.editor': ['data/*'],
                  },
     zip_safe=False,
     install_requires=[
