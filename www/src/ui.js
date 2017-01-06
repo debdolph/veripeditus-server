@@ -23,9 +23,10 @@ function control_click() {
     dialog.load("html/views/" + view + ".html", function () {
         var head = $('div#dialog h1');
         var title = head.text();
-        dialog.attr("title", title);
         head.remove();
-        dialog.dialog();
+        dialog.dialog({
+            title: title
+        });
 
         // UI magic
         if (view == "player") {

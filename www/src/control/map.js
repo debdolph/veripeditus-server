@@ -177,11 +177,12 @@ MapController = function() {
         if (data.message) {
             var dialog = $('div#dialog');
             dialog.empty();
-            dialog.attr("title", GameData.gameobjects[data.gameobject].name);
             var html = "<p>" + data.message + "</p>";
             var elem = $(html);
             dialog.append(elem);
-            dialog.dialog();
+            dialog.dialog({
+                title: GameData.gameobjects[data.gameobject].attributes.name
+            });
         }
     };
 };
