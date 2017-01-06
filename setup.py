@@ -52,6 +52,11 @@ setup(
                       'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
                      ],
+    extras_require={
+                    'Editor': [
+                               'GitPython',
+                              ],
+                   },
     test_suite='test',
     entry_points={
                   'console_scripts': [
