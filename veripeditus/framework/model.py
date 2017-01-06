@@ -208,12 +208,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
         for latlon, osm_element in spawn_points.items():
             # Determine existing number of objects on map
-            # FIXME remove slow iteration over all objects
-            existing = cls.query.filter_by(world=world, osm_element=osm_element).all()
-            for e in existing:
-                if not e.isonmap:
-                    existing.remove(e)
-            existing = len(existing)
+            existing = cls.query.filter_by(world=world, osm_element=osm_element, isonmap=True).count()
             if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
                 to_spawn = cls.spawn_max - existing
             elif existing == 0:
@@ -439,7 +434,7 @@ class Item(GameObject):
         # Check if item is owned by someone
         if self is cls:
             # For class method, and_() existing expression with check for ownership
-            expr = and_(expr, self.owner is not None)
+            expr = and_(expr, self.owner==None)
         elif self.owner is not None:
             # For instance method, return a terminal False if owned by someone
             return False
