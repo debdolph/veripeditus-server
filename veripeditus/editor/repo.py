@@ -48,6 +48,10 @@ class GameRepo(git.Repo):
         # Commit
         repo.index.commit("Initial commit of template game files.")
 
+        # Create the review branches
+        repo.create_head("review", "HEAD")
+        repo.create_head("reviewed", "HEAD")
+
     def __init__(self, game):
         # Determine working directory for repo
         self.working_dir = os.path.join(DIR_LIVE, game.package)
