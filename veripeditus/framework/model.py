@@ -81,6 +81,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     id = DB.Column(DB.Integer(), primary_key=True)
 
+    # Columns and relationships
+
     name = DB.Column(DB.String(32))
     image = DB.Column(DB.String(32), default="dummy", nullable=False)
 
@@ -107,13 +109,16 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @property
     def gameobject_type(self):
+        # Return type of gameobject
         return self.__tablename__
 
     def distance_to(self, obj):
+        # Return distance to another gamobject
         return get_gameobject_distance(self, obj)
 
     @property
     def image_path(self):
+        # Return path of image file
         return get_image_path(self.world.game.module, self.image)
 
     @hybrid_property
@@ -122,6 +127,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @property
     def distance_to_current_player(self):
+        # Return distance to current player
         if g.user is None or g.user.current_player is None:
             return None
         return self.distance_to(g.user.current_player)
@@ -264,7 +270,7 @@ class Player(GameObject):
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
-
+    # Relationship to the user which the player belongs to
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
     user = DB.relationship("User", backref=DB.backref("players",
                                                       lazy="dynamic"),
@@ -296,6 +302,7 @@ class Player(GameObject):
         DB.session.commit()
 
     def has_item(self, itemclass):
+        # Return how many items of the class the player has
         count = 0
         for item in self.inventory:
             if isinstance(item, itemclass):
@@ -303,6 +310,7 @@ class Player(GameObject):
         return count
 
     def has_items(self, *itemclasses):
+        # Return whether the player has every given item at least one time
         for itemclass in itemclasses:
             if not self.has_item(itemclass):
                 return False
@@ -310,12 +318,14 @@ class Player(GameObject):
         return True
 
     def drop_item(self, itemclass):
+        # Remove every item on a class from the players inventory
         for item in self.inventory:
             if isinstance(item, itemclass):
                 DB.session.delete(item)
                 DB.session.commit()
 
     def drop_items(self, *itemclasses):
+        # Remove every item of every given class from the players inventory
         for itemclass in itemclasses:
             self.drop_item(itemclass)
 
@@ -353,17 +363,21 @@ class Player(GameObject):
 
     @hybrid_property
     def isonmap(self):
+        # Check if isonmap is called by the class or by an instance
         if isinstance(self, type):
             cls = self
         else:
             cls = self.__class__
 
         if g.user is not None and g.user.current_player is not None:
+            # Check if specific constants are set and apply their effects
             mod = g.user.current_player.world.game.module
             if hasattr(mod, "VISIBLE_RAD_PLAYERS"):
+                # Check if the player is in the visible range
                 if self is not cls and self.distance_to_current_player > mod.VISIBLE_RAD_PLAYERS:
                     return False
             if hasattr(mod, "HIDE_SELF"):
+                # Hide the player if it is the current player
                 if self is not cls and self == g.user.current_player and mod.HIDE_SELF:
                     return False
         return True
@@ -371,11 +385,15 @@ class Player(GameObject):
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 
+    # Columns
+
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     owner = DB.relationship("veripeditus.framework.model.Player", backref=DB.backref("inventory", lazy="dynamic"),
                             foreign_keys=[owner_id])
+
+    # Class attributes
 
     collectible = True
     handoverable = True
@@ -391,15 +409,19 @@ class Item(GameObject):
             # FIXME throw proper error
             return None
 
+        # Check if the player is in range
         if self.distance_max is not None:
             if self.distance_max < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
+        # Check if the player already has the maximum amount of items of a class
         if self.owned_max is not None:
             if player.has_item(self.__class__) >= self.owned_max:
                 return send_action("notice", self, "You have already collected enough of this!")
 
+        # Check if the collection is allowed
         if self.collectible and self.isonmap and self.may_collect(player):
+            # Change owner
             self.owner = player
             self.on_collected()
             DB.session.add(self)
@@ -410,7 +432,9 @@ class Item(GameObject):
 
     @api_method(authenticated=True)
     def handover(self, target_player):
+        # Check if the handover is allowed
         if self.owner is not None and self.handoverable and self.may_handover(target_player) and target_player.may_accept_handover(self):
+            # Change owner
             self.owner = target_player
             self.on_handedover()
             DB.session.add(self)
@@ -486,8 +510,11 @@ class Item(GameObject):
 class NPC(GameObject):
     __tablename__ = "gameobject_npc"
 
+    # Columns
+
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
+    # Attribute for determining if a player can talk to the NPC
     talkable = True
 
     def say(self, message):
@@ -504,14 +531,17 @@ class NPC(GameObject):
             # FIXME throw proper error
             return None
 
+        # Check if the player is in range for talking to the NPC
         if self.distance_max is not None:
             if self.distance_max < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
+        # Check if talking to the NPC is allowed
         if self.talkable and self.isonmap and self.may_talk(player):
+            # Run talk logic
             return self.on_talk()
         else:
-            return send_action("notice", self, "You cannot tolk to this character!")
+            return send_action("notice", self, "You cannot talk to this character!")
 
     def may_talk(self, player):
         return True
