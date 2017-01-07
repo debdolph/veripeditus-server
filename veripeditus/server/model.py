@@ -21,8 +21,6 @@ server core.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from uuid import uuid4
-
 from flask import g, redirect
 from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
                               force_auto_coercion)
@@ -43,16 +41,11 @@ class Base(DB.Model):
     # Primary key numeric id for all objects
     # FIXME do we need the uuid?
     id = DB.Column(DB.Integer(), primary_key=True)
-    uuid = DB.Column(UUIDType(binary=False), unique=True, default=uuid4,
-                     nullable=False)
 
     # Timestamps for creation and any update, maintained automatically
     created = DB.Column(DB.DateTime(), default=DB.func.now())
     updated = DB.Column(DB.DateTime(), default=DB.func.now(),
                         onupdate=DB.func.now())
-
-    # FIXME unused?
-    api_exclude = []
 
 class User(Base):
     """ A user account in the Veripeditus webserver.

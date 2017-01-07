@@ -30,7 +30,7 @@ from veripeditus.server.model import *
 from veripeditus.server.util import guess_mime_type
 
 # Columns to include in all endpoints/models
-_INCLUDE = ['id', 'uuid', 'created', 'updated']
+_INCLUDE = ['id', 'created', 'updated']
 
 # API manager from Flask-Restless
 MANAGER = APIManager(APP, flask_sqlalchemy_db=DB)
