@@ -1,5 +1,9 @@
 """
-Utility functions for framework components
+Utility functions for Veripeditus server code.
+
+This module contains functions that are used to achieve various
+things within the rest of the code, but are not called directly
+for views or control.
 """
 
 # veripeditus-server - Server component for the Veripeditus game framework
@@ -72,13 +76,20 @@ def get_data_path():
     return _respath
 
 def api_method(authenticated=True):
+    """ Decorator used to make a method in a model an API method.
+
+    This denotes it as callable through the REST API.
+    """
+
     def api_method(func):
-        """ Decorator to mark a method as runnable by the REST API. """
+        """ Real decorator to mark a method as runnable by the REST API. """
         func.is_api_method = True
         func.authenticated = authenticated
         return func
+
     return api_method
 
+# Find out what MIME magic module is in use
 if "MIME" in vars(magic):
     # libmagic bindings
     _MS = magic.open(magic.MIME)
@@ -88,4 +99,5 @@ if "MIME" in vars(magic):
 else:
     # python-magic
     def guess_mime_type(data):
+        """ Guess a MIME type from magic bytes in a data stream. """
         return magic.from_buffer(data)
