@@ -56,7 +56,6 @@ def server_main(): # pragma: no cover
         APP.config['PATH_WEBAPP'] = realpath(args.webapp)
         @APP.route('/')
         @APP.route('/<path:path>')
-
         def _serve_webapp(path='index.html'):
             """ Called for all static resources. """
 
