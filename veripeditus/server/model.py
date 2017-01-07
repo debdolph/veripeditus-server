@@ -48,8 +48,6 @@ class User(Base):
     username = DB.Column(DB.String(32), unique=True, nullable=False)
     password = DB.Column(PasswordType(schemes=APP.config['PASSWORD_SCHEMES']),
                          nullable=False)
-    name = DB.Column(DB.String(64))
-    email = DB.Column(EmailType())
 
     current_player_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     current_player = DB.relationship("veripeditus.framework.model.Player",
