@@ -20,7 +20,7 @@
 function control_click() {
     var view = $(this).attr("id").substr(8);
     var dialog = $('div#dialog');
-    dialog.load("html/views/" + view + ".html", function () {
+    dialog.load("html/views/" + view + ".html", function() {
         var head = $('div#dialog h1');
         var title = head.text();
         head.remove();
@@ -30,14 +30,14 @@ function control_click() {
 
         // UI magic
         if (view == "player") {
-            $('button#dialog-player-login-button').click(function () {
+            $('button#dialog-player-login-button').click(function() {
                 var username = $('#dialog-player-login-username').val();
                 var password = $('#dialog-player-login-password').val();
                 $('#dialog').dialog("close");
                 GameData.login(username, password);
             });
 
-            $('button#dialog-player-logout-button').click(function () {
+            $('button#dialog-player-logout-button').click(function() {
                 $('#dialog').dialog("close");
                 GameData.logout();
             });
@@ -48,7 +48,7 @@ function control_click() {
 
                 // Generate inventory list
                 $('table#inventory-table').empty();
-                $.each(GameData.gameobjects[GameData.current_player_id].relationships.inventory.data, function (i, item) {
+                $.each(GameData.gameobjects[GameData.current_player_id].relationships.inventory.data, function(i, item) {
                     var real_item = GameData.gameobjects[item.id];
                     var html = "<tr>";
                     html += "<td><img src='/api/v2/gameobject/" + real_item.id + "/image_raw' /></td>";
