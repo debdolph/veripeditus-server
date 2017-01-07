@@ -541,7 +541,7 @@ class NPC(GameObject):
             # Run talk logic
             return self.on_talk()
         else:
-            return send_action("notice", self, "You cannot tolk to this character!")
+            return send_action("notice", self, "You cannot talk to this character!")
 
     def may_talk(self, player):
         return True
