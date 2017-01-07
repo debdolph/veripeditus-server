@@ -23,12 +23,12 @@ used directly in views.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import random
 from flask import request, Response, g
 
+from veripeditus.framework.model import GameObject
 from veripeditus.server.app import DB, APP
 from veripeditus.server.auth import Roles
-from veripeditus.server.model import *
+from veripeditus.server.model import User, Game, World
 from veripeditus.server.util import get_games
 
 def _sync_games():
@@ -143,9 +143,9 @@ def _run_spawns(res):
     # FIXME come up with something more efficient
 
     # Iterate over all known game object classes
-    for go in GameObject.__subclasses__():
+    for gameobject in GameObject.__subclasses__():
         # Run spawn code
-        go.spawn()
+        gameobject.spawn()
 
     # Return original response unchanged
     return res

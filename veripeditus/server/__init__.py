@@ -56,7 +56,7 @@ def server_main(): # pragma: no cover
         APP.config['PATH_WEBAPP'] = realpath(args.webapp)
         @APP.route('/')
         @APP.route('/<path:path>')
-        def _serve_webapp(path='index.html'):
+        def _serve_webapp(path='index.html'): # pylint: disable=unused-variable
             """ Called for all static resources. """
 
             return send_from_directory(APP.config['PATH_WEBAPP'], path)

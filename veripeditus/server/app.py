@@ -20,6 +20,9 @@ This module contains everything to set up the Flask application.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# pragma pylint: disable=wrong-import-position
+# pragma pylint: disable=unused-import
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from osmalchemy import OSMAlchemy

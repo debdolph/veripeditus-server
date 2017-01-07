@@ -24,9 +24,10 @@ from flask import g, make_response, redirect
 from flask_restless import APIManager, url_for
 from werkzeug.wrappers import Response
 
+from veripeditus.framework.model import GameObject
 from veripeditus.server.app import APP, DB, OA
 from veripeditus.server.control import needs_authentication
-from veripeditus.server.model import *
+from veripeditus.server.model import User, World, Game
 from veripeditus.server.util import guess_mime_type
 
 # Columns to include in all endpoints/models
@@ -49,9 +50,9 @@ for go in [GameObject] + GameObject.__subclasses__():
     for rgo in [go] + go.__subclasses__():
         # Dynamically create an API for everything we discovered
         MANAGER.create_api(rgo,
-            additional_attributes=["gameobject_type"],
-            includes=rgo._api_includes,
-            page_size=0, max_page_size=0)
+                           additional_attributes=["gameobject_type"],
+                           includes=rgo._api_includes,
+                           page_size=0, max_page_size=0)
 
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>")
 @APP.route("/api/v2/<string:type_>/<int:id_>/<string:method>/<arg>")

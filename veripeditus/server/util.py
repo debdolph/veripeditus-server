@@ -38,6 +38,9 @@ def get_game_names():
     """
 
     # Get all modules inside the namespace package veripeditus.game
+    # pragma pylint: disable=no-name-in-module
+    # pragma pylint: disable=no-member
+    # pragma pylint: disable=import-error
     import veripeditus.game
     _pkgs = [i[1] for i in pkgutil.iter_modules(veripeditus.game.__path__)]
 
@@ -81,20 +84,22 @@ def api_method(authenticated=True):
     This denotes it as callable through the REST API.
     """
 
-    def api_method(func):
+    def _real_api_method(func):
         """ Real decorator to mark a method as runnable by the REST API. """
         func.is_api_method = True
         func.authenticated = authenticated
         return func
 
-    return api_method
+    return _real_api_method
 
 # Find out what MIME magic module is in use
+# pragma pylint: disable=no-member
 if "MIME" in vars(magic):
     # libmagic bindings
     _MS = magic.open(magic.MIME)
     _MS.load()
     def guess_mime_type(data):
+        """ Guess a MIME type from magic bytes in a data stream. """
         return _MS.buffer(data)
 else:
     # python-magic

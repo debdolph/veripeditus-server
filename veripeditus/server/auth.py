@@ -1,3 +1,5 @@
+""" Utility code for authentication in the Veripeditus server """
+
 # veripeditus-server - Server component for the Veripeditus game framework
 # Copyright (C) 2016  Dominik George <nik@naturalnet.de>
 #
@@ -17,5 +19,7 @@
 from enum import Enum
 
 class Roles(Enum):
+    """ Enumeration of all available roles. """
+
     player = "PLAYER"
     admin = "ADMIN"

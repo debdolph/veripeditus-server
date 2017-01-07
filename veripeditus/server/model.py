@@ -21,9 +21,10 @@ server core.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# pragma pylint: disable=too-few-public-methods
+
 from flask import g, redirect
-from sqlalchemy_utils import (EmailType, PasswordType, UUIDType,
-                              force_auto_coercion)
+from sqlalchemy_utils import PasswordType, force_auto_coercion
 
 from veripeditus.server.app import APP, DB
 from veripeditus.server.auth import Roles
@@ -167,7 +168,7 @@ class World(Base):
         if player is None:
             # Create a new player in this world
             player = self.game.module.Player()
-            player.name = g.user.name
+            player.name = g.user.username
             player.world = self
             player.user = g.user
             DB.session.add(player)
@@ -185,4 +186,7 @@ class World(Base):
 # This needs to be at the bottom due to the (slightly complex) import
 # structure of the project and because it uses the base models described
 # in here
-from veripeditus.framework.model import *
+# pragma pylint: disable=unused-import
+# pragma pylint: disable=wrong-import-position
+import veripeditus.framework.model
+from veripeditus.framework.model import Player
