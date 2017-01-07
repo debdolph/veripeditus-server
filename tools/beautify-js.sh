@@ -1,5 +1,7 @@
 #!/bin/mksh
 
+# Needs the libjavascript-beautifier-perl package.
+
 find ./src/ -iname "*.js" -print0 |
     while IFS= read -r -d '' f; do
     	t=$(mktemp)
