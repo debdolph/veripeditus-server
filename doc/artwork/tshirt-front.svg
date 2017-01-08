@@ -276,7 +276,7 @@
          id="tspan4501"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
          y="293.51508"
-         x="-944.56787">        return f.say(</tspan><tspan
+         x="-944.56787">        return self.say(</tspan><tspan
          id="tspan4503"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.06928825px;font-family:Hack;-inkscape-font-specification:Hack;fill:#007aff;fill-opacity:1;stroke:#007aff;stroke-width:1.2611022px;stroke-opacity:1;"
          y="321.10168"
