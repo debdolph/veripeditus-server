@@ -24,6 +24,7 @@ import random
 
 from flask import g
 from gpxpy import geo
+from shapely.geometry import Point, Polygon
 
 from veripeditus.server.app import DB
 import veripeditus.framework
@@ -84,3 +85,14 @@ def send_action(action, gameobject, message):
                        "gameobject": gameobject.id,
                        "message": message
                       })
+
+def random_point_in_polygon(points):
+    polygon = Polygon(points)
+    bounds = polygon.bounds
+
+    while True:
+        point = Point(random.uniform(bounds[0], bounds[1]), random.uniform(bounds[2], bounds[3]))
+        if polygon.contains(point):
+            break
+
+    return point.bounds[0:2]
