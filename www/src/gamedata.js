@@ -36,6 +36,7 @@ GameDataService = function() {
     self.gameobjects_temp = {};
     self.gameobjects_missing = 0;
     self.gameobject_types = ["Player", "Item", "NPC"];
+    self.worlds = {};
 
     // Current player id
     self.current_player_id = -1;
@@ -204,6 +205,19 @@ GameDataService = function() {
             self.current_player_id = data.data.id;
             self.gameobjects[data.data.id] = data.data;
             self.updateGameObjects();
+        });
+
+        // Request list of worlds
+        self.doRequest("GET", "/api/world", function(data) {
+            self.worlds = data.data;
+        });
+    };
+
+    self.joinWorld = function(id) {
+        // Set off request
+        self.doRequest("GET", "/api/v2/world/" + id + "/player_join", function() {
+            // Chain self update
+            self.updateSelf();
         });
     };
 

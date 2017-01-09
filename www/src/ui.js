@@ -40,7 +40,6 @@ function control_click() {
             $('button#dialog-player-register-button').click(function() {
                 var username = $('#dialog-player-login-username').val();
                 var password = $('#dialog-player-login-password').val();
-                $('#dialog').dialog("close");
                 GameData.register(username, password);
             });
 
@@ -63,6 +62,30 @@ function control_click() {
                     html += "</tr>";
                     var elem = $(html);
                     $('table#inventory-table').append(elem);
+                });
+
+                // Generate world list
+                var worlds_select = $('select#worlds');
+                worlds_select.empty();
+                $.each(GameData.worlds, function(i, item) {
+                    // Create a new select option
+                    var option = $("<option>", {
+                        value: item.id
+                    });
+                    option.text(item.attributes.name);
+
+                    // Append to select box
+                    worlds_select.append(option);
+                });
+                worlds_select.val(GameData.gameobjects[GameData.current_player_id].relationships.world.data.id);
+
+                // Bind event to worlds_select to handle world change action
+                worlds_select.change(function() {
+                    // Close dialog
+                    $('#dialog').dialog("close");
+
+                    // Pass on joining the world to GameData service
+                    GameData.joinWorld(worlds_select.val());
                 });
             } else {
                 $("#dialog-player-login").show();
