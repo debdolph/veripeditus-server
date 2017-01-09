@@ -27,7 +27,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.sql import and_
 
-from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, random_point_in_polygon, send_action
+from veripeditus.framework.util import get_image_path, get_gameobject_distance, random_point_in_polygon, send_action
 from veripeditus.server.app import DB, OA
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
@@ -248,7 +248,13 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     obj.name = cls.__name__.lower()
 
                 # Add to session
-                add(obj)
+                obj.add()
+
+    def commit(self):
+        """ Commit this object to the database. """
+
+        DB.session.add(self)
+        DB.session.commit()
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"

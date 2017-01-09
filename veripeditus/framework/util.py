@@ -26,8 +26,6 @@ from flask import g
 from gpxpy import geo
 from shapely.geometry import Point, Polygon
 
-from veripeditus.server.app import DB
-
 def get_image_path(game_mod, basename):
     """
     Get the path for an image file (.svg or .png, in order).
@@ -67,10 +65,6 @@ def get_image_path(game_mod, basename):
 def get_gameobject_distance(obj1, obj2):
     return geo.haversine_distance(obj1.latitude, obj1.longitude,
                                         obj2.latitude, obj2.longitude)
-
-def add(obj):
-    DB.session.add(obj)
-    DB.session.commit()
 
 def current_player():
     return None if g.user is None else g.user.current_player
