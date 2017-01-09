@@ -119,7 +119,7 @@ class Game(Base):
         return get_game_by_name(self.package)
 
     @api_method(authenticated=True)
-    def world_create(self):
+    def world_create(self, name=None):
         """ Create a world with this game.
 
         Called as an API method from a client.
@@ -127,7 +127,10 @@ class Game(Base):
 
         # Create a new World object and store in database
         world = World()
-        world.name = self.name
+        if name is None:
+            world.name = self.name
+        else:
+            world.name = name
         world.game = self
         DB.session.add(world)
         DB.session.commit()
