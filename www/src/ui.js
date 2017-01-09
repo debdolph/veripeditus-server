@@ -1,6 +1,6 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
- * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
  * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,13 @@ function control_click() {
                 var password = $('#dialog-player-login-password').val();
                 $('#dialog').dialog("close");
                 GameData.login(username, password);
+            });
+
+            $('button#dialog-player-register-button').click(function() {
+                var username = $('#dialog-player-login-username').val();
+                var password = $('#dialog-player-login-password').val();
+                $('#dialog').dialog("close");
+                GameData.register(username, password);
             });
 
             $('button#dialog-player-logout-button').click(function() {

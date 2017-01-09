@@ -1,6 +1,6 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
- * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
  * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -221,6 +221,17 @@ GameDataService = function() {
 
         // Update own player state
         self.updateSelf();
+    };
+
+    self.register = function(username, password) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+
+        // Call register API
+        self.doRequest("GET", "/api/v2/user/register", function () {
+            // Do a normal login once registered
+            self.login(username, password);
+        });
     };
 
     self.logout = function() {

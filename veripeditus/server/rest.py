@@ -5,7 +5,7 @@ This module contains everything to set up the API.
 """
 
 # veripeditus-server - Server component for the Veripeditus game framework
-# Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+# Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,13 +20,13 @@ This module contains everything to set up the API.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import g, make_response, redirect
+from flask import g, make_response, redirect, request
 from flask_restless import APIManager, url_for
 from werkzeug.wrappers import Response
 
 from veripeditus.framework.model import GameObject
 from veripeditus.server.app import APP, DB, OA
-from veripeditus.server.control import needs_authentication
+from veripeditus.server.control import needs_authentication, _check_auth
 from veripeditus.server.model import User, World, Game
 from veripeditus.server.util import guess_mime_type
 
@@ -133,3 +133,34 @@ def _get_own_player():
 
     # Redirect to the current player object
     return redirect(url_for(g.user.current_player.__class__, resource_id=g.user.current_player.id))
+
+@APP.route("/api/v2/user/register")
+def _register_user():
+    """ Create the User defined in the WWW-Authenticate header """
+
+    # Get credentials from HTTP basic auth
+    username = request.authorization.username
+    password = request.authorization.password
+
+    # Try to find a user with that name
+    user = DB.session.query(User).filter_by(username=username).scalar()
+
+    if user is None:
+        # Create a new User object with these credentials
+        user = User()
+        user.username = username
+        user.password = password
+
+        # Store in database
+        DB.session.add(user)
+        DB.session.commit()
+
+        # Re-check auth to get newly created user
+        _check_auth()
+
+        # Pass on to login routine
+        return _get_own_player()
+    else:
+        # If a user with this name already exists, return an error
+        # FIXME proper error
+        return ("", 409)
