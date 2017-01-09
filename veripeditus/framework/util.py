@@ -73,9 +73,6 @@ def add(obj):
     DB.session.add(obj)
     DB.session.commit()
 
-def randfloat(a, b):
-    return a + (b - a)*random.random()
-
 def current_player():
     return None if g.user is None else g.user.current_player
 

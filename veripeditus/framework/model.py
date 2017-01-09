@@ -17,6 +17,7 @@
 
 from collections import Sequence
 from numbers import Real
+import random
 
 from flask import g, redirect
 from flask_restless import url_for
@@ -26,7 +27,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.sql import and_
 
-from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat, random_point_in_polygon, send_action
+from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, random_point_in_polygon, send_action
 from veripeditus.server.app import DB, OA
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
@@ -170,7 +171,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     if len(latlon) == 2:
                         # We got a rect like ((lat, lon), (lat, lon))
                         # Randomise coordinates within that rect
-                        latlon = (randfloat(latlon[0][0], latlon[1][0]), randfloat(latlon[0][1], latlon[1][1]))
+                        latlon = (random.uniform(latlon[0][0], latlon[1][0]), random.uniform(latlon[0][1], latlon[1][1]))
                     else:
                         # We got a polygon, randomise coordinates within it
                         latlon = random_point_in_polygon(latlon)
