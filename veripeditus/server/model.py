@@ -6,7 +6,7 @@ server core.
 """
 
 # veripeditus-server - Server component for the Veripeditus game framework
-# Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+# Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -24,6 +24,7 @@ server core.
 # pragma pylint: disable=too-few-public-methods
 
 from flask import g, redirect
+from flask_restless import url_for
 from sqlalchemy_utils import PasswordType, force_auto_coercion
 
 from veripeditus.server.app import APP, DB
@@ -183,6 +184,7 @@ class World(Base):
         DB.session.commit()
 
         # Redirect to new player object
+        return redirect(url_for(player.__class__, resource_id=player.id))
         return redirect("/api/gameobject_player/%i" % player.id)
 
 # Import framework model here
