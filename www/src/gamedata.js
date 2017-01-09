@@ -242,7 +242,7 @@ GameDataService = function() {
         localStorage.setItem("password", password);
 
         // Call register API
-        self.doRequest("GET", "/api/v2/user/register", function () {
+        self.doRequest("GET", "/api/v2/user/register", function() {
             // Do a normal login once registered
             self.login(username, password);
         });
