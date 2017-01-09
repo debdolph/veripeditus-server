@@ -27,7 +27,6 @@ from gpxpy import geo
 from shapely.geometry import Point, Polygon
 
 from veripeditus.server.app import DB
-import veripeditus.framework
 
 def get_image_path(game_mod, basename):
     """
@@ -40,7 +39,7 @@ def get_image_path(game_mod, basename):
     """
 
     # Get module paths of framework and the provided game
-    _path_framework = os.path.dirname(veripeditus.framework.__file__)
+    _path_framework = os.path.dirname(sys.modules[__name__].__file__)
     _path_game = os.path.dirname(game_mod.__file__)
 
     # Get data sub-directories
