@@ -136,7 +136,7 @@ def _get_own_player():
 
 @APP.route("/api/v2/user/register")
 def _register_user():
-    """ Create the User defined in the WWW-Authenticate header """
+    """ Create the User defined in the Authorization header """
 
     # Get credentials from HTTP basic auth
     username = request.authorization.username
