@@ -248,7 +248,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     obj.name = cls.__name__.lower()
 
                 # Add to session
-                obj.add()
+                obj.commit()
 
     def commit(self):
         """ Commit this object to the database. """
