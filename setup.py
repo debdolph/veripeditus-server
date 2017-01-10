@@ -47,6 +47,7 @@ setup(
                       'gpxpy',
                       'OSMAlchemy',
                       'passlib',
+                      'Shapely',
                       'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
                      ],
