@@ -102,5 +102,3 @@ function control_click() {
 }
 
 $('div.control').on("click", control_click);
-
-$("div.view").hide();

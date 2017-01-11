@@ -22,8 +22,10 @@ Veripeditus = {
     services: [],
     registerView: function(view) {
         this.views.push(view);
+        view.deactivate();
         if (! this.currentView) {
             this.currentView = view;
+            view.activate();
         }
         this.registerService(view);
     },
