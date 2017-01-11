@@ -28,14 +28,11 @@ CamController = function() {
     // Called by DeviceService on camera stream change
     self.onCameraChanged = function() {
         // Update stream URL of video view
-        self.cam.src = Device.cameraUrl;
-        self.cam.onloadedmetadata = function() {
+        self.cam.attr("src", Device.cameraUrl);
+        self.cam.on("loadedmetadata", function() {
             self.cam.play();
-        };
+        });
     };
-
-    // Start camera
-    Device.startCamera();
 
     this.getARStyle = function(gameobject) {
         // Target object

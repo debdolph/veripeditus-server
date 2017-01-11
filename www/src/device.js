@@ -21,15 +21,15 @@ DeviceService = function() {
     var self = this;
 
     // Options to give to the Geolocation API
-    this.locationOptions = {
+    self.locationOptions = {
         enableHighAccuracy: true,
         maximumAge: 0
     };
 
     // Stores the id of the watchPosition() service
-    this.watchId = -1;
+    self.watchId = -1;
     // Stores the last position from the Geolocation service
-    this.position = {
+    self.position = {
         coords: {
             latitude: 0.0,
             longitude: 0.0,
@@ -39,10 +39,10 @@ DeviceService = function() {
     };
 
     // Callback for Geolocation's watchPosition()
-    this.onLocationUpdate = function(newpos) {
+    self.onLocationUpdate = function(newpos) {
         // Store coords and timestamp from Geolocation service
-        this.position.coords = newpos.coords;
-        this.position.timestamp = newpos.timestamp;
+        self.position.coords = newpos.coords;
+        self.position.timestamp = newpos.timestamp;
 
         // Call onGeolocationChanged on all views
         $.each(Veripeditus.views, function(id, view) {
@@ -53,7 +53,7 @@ DeviceService = function() {
     };
 
     // Callback for Geolocation errors
-    this.onLocationError = function(error) {
+    self.onLocationError = function(error) {
         // Stores message after finding out what caused the error
         var msg;
 
@@ -70,26 +70,26 @@ DeviceService = function() {
     };
 
     // Start watching Geolocation
-    this.startLocation = function() {
+    self.startLocation = function() {
         // Store watchId for later clearing
-        this.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
+        self.watchId = window.navigator.geolocation.watchPosition(function(newpos) {
             self.onLocationUpdate.call(self, newpos);
         },
-        this.onLocationError, this.locationOptions);
+        self.onLocationError, self.locationOptions);
     }
 
     // Stop watching Geolocation
-    this.stopLocation = function() {
+    self.stopLocation = function() {
         // Only clear if a watch is actually active
-        if (this.watchId) {
+        if (self.watchId) {
             // Clear previously stored watchId
-            window.navigator.geolocation.clearWatch(this.watchId);
-            this.watchId = undefined;
+            window.navigator.geolocation.clearWatch(self.watchId);
+            self.watchId = undefined;
         }
     }
 
     // Video constraints
-    this.mediaConstraints = {
+    self.mediaConstraints = {
         audio: false,
         video: {
             width: window.innerWidth,
@@ -101,16 +101,16 @@ DeviceService = function() {
     };
 
     // Stores the stream URL for the camera and internal stream object
-    this.cameraUrl = undefined;
-    this.cameraStream = undefined;
+    self.cameraUrl = undefined;
+    self.cameraStream = undefined;
 
     // Start camera by getting user media
-    this.startCamera = function() {
+    self.startCamera = function() {
         // Look for running stream
-        if (!this.cameraStream) {
-            navigator.mediaDevices.getUserMedia(this.mediaConstraints).then(function(stream) {
-                this.cameraStream = stream;
-                this.cameraUrl = window.URL.createObjectURL(stream);
+        if (!self.cameraStream) {
+            navigator.mediaDevices.getUserMedia(self.mediaConstraints).then(function(stream) {
+                self.cameraStream = stream;
+                self.cameraUrl = window.URL.createObjectURL(stream);
 
                 // Call onCameraChanged on all views
                 $.each(Veripeditus.views, function(id, view) {
@@ -123,10 +123,10 @@ DeviceService = function() {
     };
 
     // Stop camera
-    this.stopCamera = function() {
-        if (this.cameraStream) {
-            this.cameraStream.getTracks()[0].stop();
-            this.cameraStream = undefined;
+    self.stopCamera = function() {
+        if (self.cameraStream) {
+            self.cameraStream.getTracks()[0].stop();
+            self.cameraStream = undefined;
 
             // Call onCameraChanged on all views
             $.each(Veripeditus.views, function(id, view) {
@@ -138,21 +138,21 @@ DeviceService = function() {
     }
 
     // Fullscreen state
-    this.fullscreen = {
+    self.fullscreen = {
         enabled: false
     };
 
     // Subscribe to fullscreen change event
     document.onmozfullscreenchange = function() {
         if (document.mozFullScreenElement) {
-            this.fullscreen.enabled = true;
+            self.fullscreen.enabled = true;
         } else {
-            this.fullscreen.enabled = false;
+            self.fullscreen.enabled = false;
         }
     };
 
     // Start fullscreen mode
-    this.startFullscreen = function() {
+    self.startFullscreen = function() {
         if (document.body.requestFullScreen) {
             document.body.requestFullScreen();
         } else if (document.body.mozRequestFullScreen) {
@@ -163,7 +163,7 @@ DeviceService = function() {
     };
 
     // Stop fullscreen mode
-    this.stopFullscreen = function() {
+    self.stopFullscreen = function() {
         if (document.cancelFullScreen) {
             document.cancelFullScreen();
         } else if (document.mozCancelFullScreen) {
@@ -174,7 +174,7 @@ DeviceService = function() {
     };
 
     // Storage for orientation data
-    this.orientation = {
+    self.orientation = {
         absolute: false,
         alpha: 0,
         beta: 0,
@@ -183,7 +183,7 @@ DeviceService = function() {
     };
 
     // Determine browser/screen orientation
-    this.browserOrientation = function() {
+    self.browserOrientation = function() {
         if (screen.orientation && screen.orientation.type) {
             return screen.orientation.type;
         } else {
@@ -192,22 +192,22 @@ DeviceService = function() {
     };
 
     // Event handler for device oreintation changes
-    this.handleOrientation = function(event) {
+    self.handleOrientation = function(event) {
         // Store values
-        this.orientation.absolute = event.absolute;
-        this.orientation.alpha = event.alpha;
-        this.orientation.beta = event.beta;
-        this.orientation.gamma = event.gamma;
+        self.orientation.absolute = event.absolute;
+        self.orientation.alpha = event.alpha;
+        self.orientation.beta = event.beta;
+        self.orientation.gamma = event.gamma;
 
         // Calculate compass heading
         var heading = event.alpha;
-        var orientation = this.browserOrientation();
+        var orientation = self.browserOrientation();
         var adjustment = 0;
-        if (this.defaultOrientation == "landscape") {
+        if (self.defaultOrientation == "landscape") {
             adjustment -= 90;
         }
-        if (this.defaultOrientation != orientation.split("-")[0]) {
-            if (this.defaultOrientation == "landscape") {
+        if (self.defaultOrientation != orientation.split("-")[0]) {
+            if (self.defaultOrientation == "landscape") {
                 adjustment -= 270;
             } else {
                 adjustment -= 90;
@@ -220,7 +220,7 @@ DeviceService = function() {
         if (heading < 0) {
             heading = heading + 360;
         }
-        this.orientation.heading = Math.round(360 - heading);
+        self.orientation.heading = Math.round(360 - heading);
 
         // Call onOrientationChanged on all views
         $.each(Veripeditus.views, function(id, view) {
@@ -234,18 +234,18 @@ DeviceService = function() {
     var handleOrientation = function(event) {
         self.handleOrientation.call(self, event);
     };
-    this.startOrientation = function() {
+    self.startOrientation = function() {
         // Add global event handler
         window.addEventListener('deviceorientation', handleOrientation, true);
     };
 
     // Stop listening for orientation events
-    this.stopOrientation = function() {
+    self.stopOrientation = function() {
         // Remove global event listener
         window.removeEventListener('deviceorientation', handleOrientation, true);
 
         // Reset orientation data
-        this.orientation = {
+        self.orientation = {
             absolute: false,
             alpha: 0,
             beta: 0,
@@ -256,9 +256,9 @@ DeviceService = function() {
 
     // Determine default orientation of device
     if (screen.width > screen.height) {
-        this.defaultOrientation = "landscape";
+        self.defaultOrientation = "landscape";
     } else {
-        this.defaultOrientation = "portrait";
+        self.defaultOrientation = "portrait";
     }
 };
 
