@@ -44,10 +44,10 @@ DeviceService = function() {
         self.position.coords = newpos.coords;
         self.position.timestamp = newpos.timestamp;
 
-        // Call onGeolocationChanged on all views
-        $.each(Veripeditus.views, function(id, view) {
-            if (view.onGeolocationChanged) {
-                view.onGeolocationChanged();
+        // Call onGeolocationChanged on all services
+        $.each(Veripeditus.services, function(id, service) {
+            if (service.onGeolocationChanged) {
+                service.onGeolocationChanged();
             }
         });
     };
@@ -112,10 +112,10 @@ DeviceService = function() {
                 self.cameraStream = stream;
                 self.cameraUrl = window.URL.createObjectURL(stream);
 
-                // Call onCameraChanged on all views
-                $.each(Veripeditus.views, function(id, view) {
-                    if (view.onCameraChanged) {
-                        view.onCameraChanged();
+                // Call onCameraChanged on all services
+                $.each(Veripeditus.services, function(id, service) {
+                    if (service.onCameraChanged) {
+                        service.onCameraChanged();
                     }
                 });
             });
@@ -128,10 +128,10 @@ DeviceService = function() {
             self.cameraStream.getTracks()[0].stop();
             self.cameraStream = undefined;
 
-            // Call onCameraChanged on all views
-            $.each(Veripeditus.views, function(id, view) {
-                if (view.onCameraChanged) {
-                    view.onCameraChanged();
+            // Call onCameraChanged on all services
+            $.each(Veripeditus.services, function(id, service) {
+                if (service.onCameraChanged) {
+                    service.onCameraChanged();
                 }
             });
         }
@@ -222,10 +222,10 @@ DeviceService = function() {
         }
         self.orientation.heading = Math.round(360 - heading);
 
-        // Call onOrientationChanged on all views
-        $.each(Veripeditus.views, function(id, view) {
-            if (view.onOrientationChanged) {
-                view.onOrientationChanged();
+        // Call onOrientationChanged on all services
+        $.each(Veripeditus.services, function(id, service) {
+            if (service.onOrientationChanged) {
+                service.onOrientationChanged();
             }
         });
     };

@@ -19,11 +19,16 @@
 Veripeditus = {
     version: '1.0.0a0.dev0',
     views: [],
+    services: [],
     registerView: function(view) {
         this.views.push(view);
         if (! this.currentView) {
             this.currentView = view;
         }
+        this.registerService(view);
+    },
+    registerService: function(service) {
+        this.services.push(service);
     },
     nextView: function() {
         var i = this.views.indexOf(this.currentView);

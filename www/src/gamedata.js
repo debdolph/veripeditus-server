@@ -113,10 +113,10 @@ GameDataService = function() {
             self.gameobjects = self.gameobjects_temp;
             self.gameobjects_temp = {};
 
-            // Call onUpdatedGameObjects on all views
-            $.each(Veripeditus.views, function(id, view) {
-                if (view.onUpdatedGameObjects) {
-                    view.onUpdatedGameObjects();
+            // Call onUpdatedGameObjects on all services
+            $.each(Veripeditus.services, function(id, service) {
+                if (service.onUpdatedGameObjects) {
+                    service.onUpdatedGameObjects();
                 }
             });
         }
@@ -190,10 +190,10 @@ GameDataService = function() {
             // Invalidate game
             self.gameobjects = {};
 
-            // Call onUpdatedGameObjects on all views
-            $.each(Veripeditus.views, function(id, view) {
-                if (view.onUpdatedGameObjects) {
-                    view.onUpdatedGameObjects();
+            // Call onUpdatedGameObjects on all services
+            $.each(Veripeditus.services, function(id, service) {
+                if (service.onUpdatedGameObjects) {
+                    service.onUpdatedGameObjects();
                 }
             });
         }
@@ -297,4 +297,4 @@ $(document).bind("ajaxError", function(req, status, error) {
     }
 });
 
-Veripeditus.registerView(GameData);
+Veripeditus.registerService(GameData);

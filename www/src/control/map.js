@@ -187,11 +187,11 @@ MapController = function() {
     };
 
     self.activate = function() {
-        $("div#map").style("display", "block");
+        $("div#map").css("display", "block");
     };
 
     self.deactivate = function() {
-        $("div#map").style("display", "none");
+        $("div#map").css("display", "none");
     };
 };
 
