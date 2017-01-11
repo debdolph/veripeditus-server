@@ -151,10 +151,12 @@ CamController = function() {
     };
 
     self.activate = function() {
+        $("div#camview").style("display", "block");
         Device.startCamera();
     };
 
     self.deactivate = function() {
+        $("div#camview").style("display", "none");
         Device.stopCamera();
     };
 };
@@ -162,6 +164,3 @@ CamController = function() {
 // Instantiate controller and register to services
 CamView = new CamController();
 Veripeditus.registerView(CamView);
-
-// FIXME trigger from UI
-CamView.activate();

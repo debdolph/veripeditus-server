@@ -21,7 +21,21 @@ Veripeditus = {
     views: [],
     registerView: function(view) {
         this.views.push(view);
+        if (! this.currentView) {
+            this.currentView = view;
+        }
     },
+    nextView: function() {
+        var i = this.views.indexOf(this.currentView);
+        i++;
+        if (i == this.views.length) {
+            i = 0;
+        }
+        this.currentView.deactivate();
+        this.currentView = this.views[i];
+        this.currentView.activate();
+    },
+    currentView: undefined,
     debug: true
 };
 
