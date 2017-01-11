@@ -1,6 +1,7 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
- * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2017  Eike Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -17,24 +18,25 @@
  */
 
 CamController = function() {
-    this.MAX_DISTANCE = 100;
+    var self = this;
+
+    self.MAX_DISTANCE = 100;
 
     // Find video view
-    this.cam = $("#cam");
+    self.cam = $("#cam");
 
     // Called by DeviceService on camera stream change
-    this.onCameraChanged = function() {
+    self.onCameraChanged = function() {
         // Update stream URL of video view
-        this.cam.src = Device.cameraUrl;
-        this.cam.onloadedmetadata = function() {
-            this.cam.play();
+        self.cam.src = Device.cameraUrl;
+        self.cam.onloadedmetadata = function() {
+            self.cam.play();
         };
     };
 
     // Start camera
     Device.startCamera();
-    // FIXME Stop on leave
-    // Utility functions for generating gameobject images
+
     this.getARStyle = function(gameobject) {
         // Target object
         var style = {}
@@ -50,13 +52,13 @@ CamController = function() {
         // Get own LatLng
         var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
         // Get gameobject LatLng
-        var gameobject_latlng = L.latLng(gameobject.latitude, gameobject.longitude);
+        var gameobject_latlng = L.latLng(gameobject.attributes.latitude, gameobject.attributes.longitude);
 
         // Get distance and bearing
         var distance = own_latlng.distanceTo(gameobject_latlng);
         var bearing = own_latlng.bearingTo(gameobject_latlng);
         // Determine difference of bearing and device orientation
-        var bearing_diff = Device.orientation.alpha - bearing;
+        var bearing_diff = Device.orientation.heading - bearing;
 
         if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
             // Calculate offsets in 3D space in relation to camera
@@ -80,13 +82,59 @@ CamController = function() {
         return style;
     };
 
+    // Already created markers for gameobjects will be stored here.
+    self.gameobject_images = {};
+
     // Called by GameDataService on gameobject update
-    this.onUpdatedGameObjects = function() {
-        // FIXME do something
+    self.onUpdatedGameObjects = function() {
+        // Iterate over gameobjects and add map markers
+        $.each(GameData.gameobjects, function(id, gameobject) {
+            // Check whether item should be shown
+            if (!gameobject.attributes.isonmap) {
+                return;
+            }
+
+            // Skip if object is own player
+            if (id == GameData.current_player_id) {
+                return;
+            }
+
+            // Look for already created image for gameobject id
+            var image = self.gameobject_images[gameobject.id];
+            if (! image) {
+                // Image does not exist
+                // Construct image element
+                image = $("<image>", {
+                    id: "argameobject-" + gameobject.id,
+                    "class": "argameobject",
+                    src: '/api/v2/gameobject/' + gameobject.id + '/image_raw'
+                });
+
+                // Add image to DOM
+                $("div#arview").append(image);
+                self.gameobject_images[gameobject.id] = image;
+            }
+
+            // Update style of image element
+            image.css(self.getARStyle(gameobject));
+        });
+
+        // Iterate over found images and remove everything not found in gameobjects
+        $.each(self.gameobject_images, function(id, image) {
+            if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
+                // Remove image if object vanished from gameobjects
+                image.remove();
+                delete self.gameobject_images[id];
+            } else if (!GameData.gameobjects[id].attributes.isonmap) {
+                // Remove image if object is not visible on map anymore
+                image.remove();
+                delete self.gameobject_images[id];
+            }
+        });
     };
 
     // Called by DeviceService on geolocation change
-    this.onGeolocationChanged = function() {
+    self.onGeolocationChanged = function() {
         // Calculate view bounds
         // FIXME come up with something smarter
         var bounds = [
@@ -98,9 +146,11 @@ CamController = function() {
     };
 
     // Called by DeviceService on orientation change
-    this.onOrientationChanged = function() {
-        // FIXME do something
-        $('#foo').val(Device.orientation.heading);
+    self.onOrientationChanged = function() {
+        // Update AR style for all objects
+        $.each(self.gameobject_markers, function(id, image) {
+            image.css(self.getARStyle(gameData.gameobjects[id]));
+        });
     };
 };
 
