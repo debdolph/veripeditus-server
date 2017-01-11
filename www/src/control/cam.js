@@ -49,7 +49,7 @@ CamController = function() {
         var perspective = 800;
 
         // Center image first
-        var width = $("#argameobject-" + gameobject.id).width;
+        var width = $("#argameobject-" + gameobject.id).width();
         style['left'] = ((screen.width - width) / 2) + "px";
 
         // Get own LatLng
@@ -87,14 +87,14 @@ CamController = function() {
         return style;
     };
 
-    // Already created markers for gameobjects will be stored here.
+    // Already created images for gameobjects will be stored here.
     self.gameobject_images = {};
 
     // Called by GameDataService on gameobject update
     self.onUpdatedGameObjects = function() {
         log_debug("CamController received update of gameobjects.");
 
-        // Iterate over gameobjects and add map markers
+        // Iterate over gameobjects and add images
         $.each(GameData.gameobjects, function(id, gameobject) {
             log_debug("Inspecting gameobject id " + id + ".");
 
@@ -115,7 +115,7 @@ CamController = function() {
             if (! image) {
                 // Image does not exist
                 // Construct image element
-                image = $("<image>", {
+                image = $("<img>", {
                     id: "argameobject-" + gameobject.id,
                     "class": "argameobject",
                     src: '/api/v2/gameobject/' + gameobject.id + '/image_raw'
@@ -171,8 +171,8 @@ CamController = function() {
         log_debug("CamController received orientation change.");
 
         // Update AR style for all objects
-        $.each(self.gameobject_markers, function(id, image) {
-            image.css(self.getARStyle(gameData.gameobjects[id]));
+        $.each(self.gameobject_images, function(id, image) {
+            image.css(self.getARStyle(GameData.gameobjects[id]));
         });
     };
 
