@@ -178,7 +178,17 @@ DeviceService = function() {
         absolute: false,
         alpha: 0,
         beta: 0,
-        gamma: 0
+        gamma: 0,
+        heading: 0
+    };
+
+    // Determine browser/screen orientation
+    this.browserOrientation = function() {
+        if (screen.orientation && screen.orientation.type) {
+            return screen.orientation.type;
+        } else {
+            return screen.orientation || screen.mozOrientation || screen.msOrientation;
+        }
     };
 
     // Event handler for device oreintation changes
@@ -188,6 +198,29 @@ DeviceService = function() {
         this.orientation.alpha = event.alpha;
         this.orientation.beta = event.beta;
         this.orientation.gamma = event.gamma;
+
+        // Calculate compass heading
+        var heading = event.alpha;
+        var orientation = this.browserOrientation();
+        var adjustment = 0;
+        if (defaultOrientation == "landscape") {
+            adjustment -= 90;
+        }
+        if (this.defaultOrientation != orientation.split("-")[0]) {
+            if (this.defaultOrientation == "landscape") {
+                adjustment -= 270;
+            } else {
+                adjustment -= 90;
+            }
+        }
+        if (orientation.split("-")[1] == "secondary") {
+            adjustment -= 180;
+        }
+        heading = heading + adjustment;
+        if (heading < 0) {
+            heading = heading + 360;
+        }
+        this.orientation.heading = 360 - heading;
 
         // Call onOrientationChanged on all views
         $.each(Veripeditus.views, function(id, view) {
@@ -216,9 +249,17 @@ DeviceService = function() {
             absolute: false,
             alpha: 0,
             beta: 0,
-            gamma: 0
+            gamma: 0,
+            heading: 0
         };
     };
+
+    // Determine default orientation of device
+    if (screen.width > screen.height) {
+        this.defaultOrientation = "landscape";
+    } else {
+        this.defaultOrientation = "portrait";
+    }
 };
 
 Device = new DeviceService();
