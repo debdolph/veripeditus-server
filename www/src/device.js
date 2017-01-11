@@ -203,7 +203,7 @@ DeviceService = function() {
         var heading = event.alpha;
         var orientation = this.browserOrientation();
         var adjustment = 0;
-        if (defaultOrientation == "landscape") {
+        if (this.defaultOrientation == "landscape") {
             adjustment -= 90;
         }
         if (this.defaultOrientation != orientation.split("-")[0]) {
