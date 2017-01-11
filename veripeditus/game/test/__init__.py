@@ -22,14 +22,11 @@ AUTHOR = 'Dominik George <nik@naturalnet.de>'
 LICENSE = 'AGPL'
 VERSION = f.VERSION
 
-HIDE_SELF = True
-VISIBLE_RAD_NPCS = 1000000000
-
 class Player(f.Player):
     pass
 
 class Kangoo(f.NPC):
-    spawn_osm = {"natural": "tree"}
+    spawn_latlon = (0.00009, 0.0)
     default_name = "Kangoo"
     default_image = "avatar_kangaroo"
 
