@@ -224,6 +224,7 @@ DeviceService = function() {
                 heading = heading + 360;
             }
             self.orientation.heading = Math.round(360 - heading);
+alert(self.orientation.heading);
         }
 
         // Call onOrientationChanged on all services
