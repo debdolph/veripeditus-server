@@ -33,7 +33,7 @@ MapController = function() {
     // Add debugging handlers if debugging is enabled
     if (Veripeditus.debug) {
         self.map.on('click', function(event) {
-            if (event.originalEvent.ctrlKey) {
+            if (event.originalEvent.ctrlKey && (event.originalEvent.button == 0)) {
                 fake_pos = {
                     "timestamp": Date.now(),
                     "coords": {
@@ -43,6 +43,21 @@ MapController = function() {
                     }
                 };
                 Device.onLocationUpdate(fake_pos);
+            } else if (event.originalEvent.ctrlKey && (event.originalEvent.button == 2)) {
+                // Get own LatLng
+                var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
+
+                // Get bearing
+                var bearing = own_latlng.bearingTo(event.latlng);
+
+                fake_orientation = {
+                    alpha: 0,
+                    beta: 0,
+                    gamma: 0,
+                    absolute: false,
+                    heading: bearing
+                };
+                Device.handleOrientation(fake_orientation);
             }
         });
     }

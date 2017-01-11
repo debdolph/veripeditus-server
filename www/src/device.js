@@ -200,27 +200,31 @@ DeviceService = function() {
         self.orientation.gamma = event.gamma;
 
         // Calculate compass heading
-        var heading = event.alpha;
-        var orientation = self.browserOrientation();
-        var adjustment = 0;
-        if (self.defaultOrientation == "landscape") {
-            adjustment -= 90;
-        }
-        if (self.defaultOrientation != orientation.split("-")[0]) {
+        if (event.heading) {
+            self.orientation.heading = event.heading;
+        } else {
+            var heading = event.alpha;
+            var orientation = self.browserOrientation();
+            var adjustment = 0;
             if (self.defaultOrientation == "landscape") {
-                adjustment -= 270;
-            } else {
                 adjustment -= 90;
             }
+            if (self.defaultOrientation != orientation.split("-")[0]) {
+                if (self.defaultOrientation == "landscape") {
+                    adjustment -= 270;
+                } else {
+                    adjustment -= 90;
+                }
+            }
+            if (orientation.split("-")[1] == "secondary") {
+                adjustment -= 180;
+            }
+            heading = heading + adjustment;
+            if (heading < 0) {
+                heading = heading + 360;
+            }
+            self.orientation.heading = Math.round(360 - heading);
         }
-        if (orientation.split("-")[1] == "secondary") {
-            adjustment -= 180;
-        }
-        heading = heading + adjustment;
-        if (heading < 0) {
-            heading = heading + 360;
-        }
-        self.orientation.heading = Math.round(360 - heading);
 
         // Call onOrientationChanged on all services
         $.each(Veripeditus.services, function(id, service) {
