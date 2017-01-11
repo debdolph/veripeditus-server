@@ -7,15 +7,6 @@ client/server augmented reality gaming engine and framework. It allows
 writing game „cartridges“ for the server, which it can then run. Players
 access the game while being outside with a mobile device.
 
-## Reference games
-
-While developing the framework, two reference games are developed:
-
- * [Verimagica](https://github.com/Veripeditus/game-verimagica),
-   a fantasy game about magic, designed by Eike
- * [Ingressio](https://github.com/Veripeditus/game-ingressio),
-   a clone of the popular Ingress game, designed by Nik
-
 ## Development
 
 The server component, the framework and the games are developed in pure

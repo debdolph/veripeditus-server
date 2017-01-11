@@ -21,12 +21,11 @@ Utility functions for framework components
 import json
 import os
 import random
+import sys
 
 from flask import g
 from gpxpy import geo
-
-from veripeditus.server.app import DB
-import veripeditus.framework
+from shapely.geometry import Point, Polygon
 
 def get_image_path(game_mod, basename):
     """
@@ -39,7 +38,7 @@ def get_image_path(game_mod, basename):
     """
 
     # Get module paths of framework and the provided game
-    _path_framework = os.path.dirname(veripeditus.framework.__file__)
+    _path_framework = os.path.dirname(sys.modules[__name__].__file__)
     _path_game = os.path.dirname(game_mod.__file__)
 
     # Get data sub-directories
@@ -68,13 +67,6 @@ def get_gameobject_distance(obj1, obj2):
     return geo.haversine_distance(obj1.latitude, obj1.longitude,
                                         obj2.latitude, obj2.longitude)
 
-def add(obj):
-    DB.session.add(obj)
-    DB.session.commit()
-
-def randfloat(a, b):
-    return a + (b - a)*random.random()
-
 def current_player():
     return None if g.user is None else g.user.current_player
 
@@ -84,3 +76,14 @@ def send_action(action, gameobject, message):
                        "gameobject": gameobject.id,
                        "message": message
                       })
+
+def random_point_in_polygon(points):
+    polygon = Polygon(points)
+    bounds = polygon.bounds
+
+    while True:
+        point = Point(random.uniform(bounds[0], bounds[1]), random.uniform(bounds[2], bounds[3]))
+        if polygon.contains(point):
+            break
+
+    return point.bounds[0:2]

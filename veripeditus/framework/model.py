@@ -17,6 +17,7 @@
 
 from collections import Sequence
 from numbers import Real
+import random
 
 from flask import g, redirect
 from flask_restless import url_for
@@ -26,7 +27,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.sql import and_
 
-from veripeditus.framework.util import add, get_image_path, get_gameobject_distance, randfloat, send_action
+from veripeditus.framework.util import get_image_path, get_gameobject_distance, random_point_in_polygon, send_action
 from veripeditus.server.app import DB, OA
 from veripeditus.server.model import Base, World
 from veripeditus.server.util import api_method
@@ -81,6 +82,8 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     id = DB.Column(DB.Integer(), primary_key=True)
 
+    # Columns and relationships
+
     name = DB.Column(DB.String(32))
     image = DB.Column(DB.String(32), default="dummy", nullable=False)
 
@@ -107,13 +110,16 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @property
     def gameobject_type(self):
+        # Return type of gameobject
         return self.__tablename__
 
     def distance_to(self, obj):
+        # Return distance to another gamobject
         return get_gameobject_distance(self, obj)
 
     @property
     def image_path(self):
+        # Return path of image file
         return get_image_path(self.world.game.module, self.image)
 
     @hybrid_property
@@ -122,6 +128,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
     @property
     def distance_to_current_player(self):
+        # Return distance to current player
         if g.user is None or g.user.current_player is None:
             return None
         return self.distance_to(g.user.current_player)
@@ -158,12 +165,16 @@ class GameObject(Base, metaclass=_GameObjectMeta):
             if isinstance(latlon, Sequence):
                 # We got one of:
                 #  (lat, lon)
-                #  ((lat, lon), (lat, lon))
+                #  ((lat, lon), (lat, lon),…)
                 #  ((lat, lon), radius)
                 if isinstance(latlon[0], Sequence) and isinstance(latlon[1], Sequence):
-                    # We got a rect like ((lat, lon), (lat, lon))
-                    # Randomise coordinates within that rect
-                    latlon = (randfloat(latlon[0][0], latlon[1][0]), randfloat(latlon[0][1], latlon[1][1]))
+                    if len(latlon) == 2:
+                        # We got a rect like ((lat, lon), (lat, lon))
+                        # Randomise coordinates within that rect
+                        latlon = (random.uniform(latlon[0][0], latlon[1][0]), random.uniform(latlon[0][1], latlon[1][1]))
+                    else:
+                        # We got a polygon, randomise coordinates within it
+                        latlon = random_point_in_polygon(latlon)
                 elif isinstance(latlon[0], Sequence) and isinstance(latlon[1], Real):
                     # We got a circle like ((lat, lon), radius)
                     # FIXME implement
@@ -208,12 +219,7 @@ class GameObject(Base, metaclass=_GameObjectMeta):
 
         for latlon, osm_element in spawn_points.items():
             # Determine existing number of objects on map
-            # FIXME remove slow iteration over all objects
-            existing = cls.query.filter_by(world=world, osm_element=osm_element).all()
-            for e in existing:
-                if not e.isonmap:
-                    existing.remove(e)
-            existing = len(existing)
+            existing = cls.query.filter_by(world=world, osm_element=osm_element, isonmap=True).count()
             if "spawn_min" in vars(cls) and "spawn_max" in vars(cls) and existing < cls.spawn_min:
                 to_spawn = cls.spawn_max - existing
             elif existing == 0:
@@ -242,7 +248,13 @@ class GameObject(Base, metaclass=_GameObjectMeta):
                     obj.name = cls.__name__.lower()
 
                 # Add to session
-                add(obj)
+                obj.commit()
+
+    def commit(self):
+        """ Commit this object to the database. """
+
+        DB.session.add(self)
+        DB.session.commit()
 
 class GameObjectsToAttributes(Base):
     __tablename__ = "gameobjects_to_attributes"
@@ -269,7 +281,7 @@ class Player(GameObject):
 
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
-
+    # Relationship to the user which the player belongs to
     user_id = DB.Column(DB.Integer(), DB.ForeignKey("user.id"))
     user = DB.relationship("User", backref=DB.backref("players",
                                                       lazy="dynamic"),
@@ -301,6 +313,7 @@ class Player(GameObject):
         DB.session.commit()
 
     def has_item(self, itemclass):
+        # Return how many items of the class the player has
         count = 0
         for item in self.inventory:
             if isinstance(item, itemclass):
@@ -308,6 +321,7 @@ class Player(GameObject):
         return count
 
     def has_items(self, *itemclasses):
+        # Return whether the player has every given item at least one time
         for itemclass in itemclasses:
             if not self.has_item(itemclass):
                 return False
@@ -315,12 +329,14 @@ class Player(GameObject):
         return True
 
     def drop_item(self, itemclass):
+        # Remove every item on a class from the players inventory
         for item in self.inventory:
             if isinstance(item, itemclass):
                 DB.session.delete(item)
                 DB.session.commit()
 
     def drop_items(self, *itemclasses):
+        # Remove every item of every given class from the players inventory
         for itemclass in itemclasses:
             self.drop_item(itemclass)
 
@@ -358,17 +374,21 @@ class Player(GameObject):
 
     @hybrid_property
     def isonmap(self):
+        # Check if isonmap is called by the class or by an instance
         if isinstance(self, type):
             cls = self
         else:
             cls = self.__class__
 
         if g.user is not None and g.user.current_player is not None:
+            # Check if specific constants are set and apply their effects
             mod = g.user.current_player.world.game.module
             if hasattr(mod, "VISIBLE_RAD_PLAYERS"):
+                # Check if the player is in the visible range
                 if self is not cls and self.distance_to_current_player > mod.VISIBLE_RAD_PLAYERS:
                     return False
             if hasattr(mod, "HIDE_SELF"):
+                # Hide the player if it is the current player
                 if self is not cls and self == g.user.current_player and mod.HIDE_SELF:
                     return False
         return True
@@ -376,11 +396,15 @@ class Player(GameObject):
 class Item(GameObject):
     __tablename__ = "gameobject_item"
 
+    # Columns
+
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
     owner_id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject_player.id"))
     owner = DB.relationship("veripeditus.framework.model.Player", backref=DB.backref("inventory", lazy="dynamic"),
                             foreign_keys=[owner_id])
+
+    # Class attributes
 
     collectible = True
     handoverable = True
@@ -396,15 +420,19 @@ class Item(GameObject):
             # FIXME throw proper error
             return None
 
+        # Check if the player is in range
         if self.distance_max is not None:
             if self.distance_max < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
+        # Check if the player already has the maximum amount of items of a class
         if self.owned_max is not None:
             if player.has_item(self.__class__) >= self.owned_max:
                 return send_action("notice", self, "You have already collected enough of this!")
 
+        # Check if the collection is allowed
         if self.collectible and self.isonmap and self.may_collect(player):
+            # Change owner
             self.owner = player
             self.on_collected()
             DB.session.add(self)
@@ -415,7 +443,9 @@ class Item(GameObject):
 
     @api_method(authenticated=True)
     def handover(self, target_player):
+        # Check if the handover is allowed
         if self.owner is not None and self.handoverable and self.may_handover(target_player) and target_player.may_accept_handover(self):
+            # Change owner
             self.owner = target_player
             self.on_handedover()
             DB.session.add(self)
@@ -439,7 +469,7 @@ class Item(GameObject):
         # Check if item is owned by someone
         if self is cls:
             # For class method, and_() existing expression with check for ownership
-            expr = and_(expr, self.owner is not None)
+            expr = and_(expr, self.owner==None)
         elif self.owner is not None:
             # For instance method, return a terminal False if owned by someone
             return False
@@ -491,8 +521,11 @@ class Item(GameObject):
 class NPC(GameObject):
     __tablename__ = "gameobject_npc"
 
+    # Columns
+
     id = DB.Column(DB.Integer(), DB.ForeignKey("gameobject.id"), primary_key=True)
 
+    # Attribute for determining if a player can talk to the NPC
     talkable = True
 
     def say(self, message):
@@ -509,14 +542,17 @@ class NPC(GameObject):
             # FIXME throw proper error
             return None
 
+        # Check if the player is in range for talking to the NPC
         if self.distance_max is not None:
             if self.distance_max < self.distance_to(player):
                 return send_action("notice", self, "You are too far away!")
 
+        # Check if talking to the NPC is allowed
         if self.talkable and self.isonmap and self.may_talk(player):
+            # Run talk logic
             return self.on_talk()
         else:
-            return send_action("notice", self, "You cannot tolk to this character!")
+            return send_action("notice", self, "You cannot talk to this character!")
 
     def may_talk(self, player):
         return True

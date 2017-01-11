@@ -32,6 +32,7 @@ setup(
               'veripeditus.game.test',
              ],
     namespace_packages=[
+                        'veripeditus',
                         'veripeditus.game',
                        ],
     include_package_data=True,
@@ -46,6 +47,7 @@ setup(
                       'gpxpy',
                       'OSMAlchemy',
                       'passlib',
+                      'Shapely',
                       'SQLAlchemy>=1.1.0',
                       'SQLAlchemy-Utils',
                      ],

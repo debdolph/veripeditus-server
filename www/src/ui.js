@@ -1,6 +1,6 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
- * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
  * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,23 +20,30 @@
 function control_click() {
     var view = $(this).attr("id").substr(8);
     var dialog = $('div#dialog');
-    dialog.load("html/views/" + view + ".html", function () {
+    dialog.load("html/views/" + view + ".html", function() {
         var head = $('div#dialog h1');
         var title = head.text();
-        dialog.attr("title", title);
         head.remove();
-        dialog.dialog();
+        dialog.dialog({
+            title: title
+        });
 
         // UI magic
         if (view == "player") {
-            $('button#dialog-player-login-button').click(function () {
+            $('button#dialog-player-login-button').click(function() {
                 var username = $('#dialog-player-login-username').val();
                 var password = $('#dialog-player-login-password').val();
                 $('#dialog').dialog("close");
                 GameData.login(username, password);
             });
 
-            $('button#dialog-player-logout-button').click(function () {
+            $('button#dialog-player-register-button').click(function() {
+                var username = $('#dialog-player-login-username').val();
+                var password = $('#dialog-player-login-password').val();
+                GameData.register(username, password);
+            });
+
+            $('button#dialog-player-logout-button').click(function() {
                 $('#dialog').dialog("close");
                 GameData.logout();
             });
@@ -47,7 +54,7 @@ function control_click() {
 
                 // Generate inventory list
                 $('table#inventory-table').empty();
-                $.each(GameData.gameobjects[GameData.current_player_id].relationships.inventory.data, function (i, item) {
+                $.each(GameData.gameobjects[GameData.current_player_id].relationships.inventory.data, function(i, item) {
                     var real_item = GameData.gameobjects[item.id];
                     var html = "<tr>";
                     html += "<td><img src='/api/v2/gameobject/" + real_item.id + "/image_raw' /></td>";
@@ -55,6 +62,30 @@ function control_click() {
                     html += "</tr>";
                     var elem = $(html);
                     $('table#inventory-table').append(elem);
+                });
+
+                // Generate world list
+                var worlds_select = $('select#worlds');
+                worlds_select.empty();
+                $.each(GameData.worlds, function(i, item) {
+                    // Create a new select option
+                    var option = $("<option>", {
+                        value: item.id
+                    });
+                    option.text(item.attributes.name);
+
+                    // Append to select box
+                    worlds_select.append(option);
+                });
+                worlds_select.val(GameData.gameobjects[GameData.current_player_id].relationships.world.data.id);
+
+                // Bind event to worlds_select to handle world change action
+                worlds_select.change(function() {
+                    // Close dialog
+                    $('#dialog').dialog("close");
+
+                    // Pass on joining the world to GameData service
+                    GameData.joinWorld(worlds_select.val());
                 });
             } else {
                 $("#dialog-player-login").show();

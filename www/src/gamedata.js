@@ -1,6 +1,6 @@
 /*
  * veripeditus-web - Web frontend to the veripeditus server
- * Copyright (C) 2016  Dominik George <nik@naturalnet.de>
+ * Copyright (C) 2016, 2017  Dominik George <nik@naturalnet.de>
  * Copyright (C) 2016  Eike Tim Jesinghaus <eike@naturalnet.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ GameDataService = function() {
     self.gameobjects_temp = {};
     self.gameobjects_missing = 0;
     self.gameobject_types = ["Player", "Item", "NPC"];
+    self.worlds = {};
 
     // Current player id
     self.current_player_id = -1;
@@ -205,6 +206,19 @@ GameDataService = function() {
             self.gameobjects[data.data.id] = data.data;
             self.updateGameObjects();
         });
+
+        // Request list of worlds
+        self.doRequest("GET", "/api/world", function(data) {
+            self.worlds = data.data;
+        });
+    };
+
+    self.joinWorld = function(id) {
+        // Set off request
+        self.doRequest("GET", "/api/v2/world/" + id + "/player_join", function() {
+            // Chain self update
+            self.updateSelf();
+        });
     };
 
     // Public method to update view boundaries, e.g. from map view
@@ -221,6 +235,17 @@ GameDataService = function() {
 
         // Update own player state
         self.updateSelf();
+    };
+
+    self.register = function(username, password) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+
+        // Call register API
+        self.doRequest("GET", "/api/v2/user/register", function() {
+            // Do a normal login once registered
+            self.login(username, password);
+        });
     };
 
     self.logout = function() {
