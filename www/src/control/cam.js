@@ -60,9 +60,9 @@ CamController = function() {
         if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
             // Calculate offsets in 3D space in relation to camera
             var angle = (((-bearing_diff) % 360) / 360) * L.LatLng.DEG_TO_RAD;
-            var tx = Math.sin(angle) * (perspective * (distance / MAX_DISTANCE));
+            var tx = Math.sin(angle) * (perspective * (distance / self.MAX_DISTANCE));
             var ty = 0;
-            var tz = perspective - Math.cos(angle) * (perspective * (distance / MAX_DISTANCE));
+            var tz = perspective - Math.cos(angle) * (perspective * (distance / self.MAX_DISTANCE));
 
             // Generate transform functions
             var rotation = "rotateY(" + (bearing_diff) + "deg)";
