@@ -220,7 +220,7 @@ DeviceService = function() {
         if (heading < 0) {
             heading = heading + 360;
         }
-        this.orientation.heading = 360 - heading;
+        this.orientation.heading = Math.round(360 - heading);
 
         // Call onOrientationChanged on all views
         $.each(Veripeditus.views, function(id, view) {
