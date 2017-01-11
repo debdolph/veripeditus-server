@@ -20,6 +20,8 @@
 DeviceService = function() {
     var self = this;
 
+    log_debug("Loading DeviceService.");
+
     // Options to give to the Geolocation API
     self.locationOptions = {
         enableHighAccuracy: true,
@@ -44,6 +46,8 @@ DeviceService = function() {
         self.position.coords = newpos.coords;
         self.position.timestamp = newpos.timestamp;
 
+        log_debug("Position changed to " + newpos.coords.latitude + ", " + newpos.coords.longitude);
+
         // Call onGeolocationChanged on all services
         $.each(Veripeditus.services, function(id, service) {
             if (service.onGeolocationChanged) {
@@ -58,6 +62,7 @@ DeviceService = function() {
         var msg;
 
         // Check error code and select own message
+        // FIXME display message
         if (error.code == error.PERMISSION_DENIED) {
             msg = "Permission for tracking location denied.";
         } else if (error.code == error.POSITION_UNAVAILABLE) {
@@ -76,6 +81,8 @@ DeviceService = function() {
             self.onLocationUpdate.call(self, newpos);
         },
         self.onLocationError, self.locationOptions);
+
+        log_debug("Started watching for geolocation.");
     }
 
     // Stop watching Geolocation
@@ -86,6 +93,8 @@ DeviceService = function() {
             window.navigator.geolocation.clearWatch(self.watchId);
             self.watchId = undefined;
         }
+
+        log_debug("Stopped watching for geolocation.");
     }
 
     // Video constraints
@@ -120,6 +129,8 @@ DeviceService = function() {
                 });
             });
         }
+
+        log_debug("Started camera stream.");
     };
 
     // Stop camera
@@ -135,6 +146,8 @@ DeviceService = function() {
                 }
             });
         }
+
+        log_debug("Stopped camera stream.");
     }
 
     // Fullscreen state
@@ -226,6 +239,8 @@ DeviceService = function() {
             self.orientation.heading = Math.round(360 - heading);
         }
 
+        log_debug("Heading changed to " + self.orientation.heading + "°.");
+
         // Call onOrientationChanged on all services
         $.each(Veripeditus.services, function(id, service) {
             if (service.onOrientationChanged) {
@@ -241,6 +256,8 @@ DeviceService = function() {
     self.startOrientation = function() {
         // Add global event handler
         window.addEventListener('deviceorientation', handleOrientation, true);
+
+        log_debug("Started watching for orientation changes.");
     };
 
     // Stop listening for orientation events
@@ -256,6 +273,8 @@ DeviceService = function() {
             gamma: 0,
             heading: 0
         };
+
+        log_debug("Stopped listening for orientation changes.");
     };
 
     // Determine default orientation of device

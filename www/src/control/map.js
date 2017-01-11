@@ -20,6 +20,8 @@
 MapController = function() {
     var self = this;
 
+    log_debug("Loading MapController.");
+
     // Set up map view
     self.map = L.map("map", {
         zoomControl: false,
@@ -30,11 +32,15 @@ MapController = function() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(self.map);
 
+    log_debug("Set up map layers.");
+
     // Add debugging handlers if debugging is enabled
     if (Veripeditus.debug) {
         self.map.on('click', function(event) {
             if (event.originalEvent.ctrlKey) {
                 if (! event.originalEvent.shiftKey) {
+                    log_debug("Faking geolocation.");
+
                     fake_pos = {
                         "timestamp": Date.now(),
                         "coords": {
@@ -45,6 +51,8 @@ MapController = function() {
                     };
                     Device.onLocationUpdate(fake_pos);
                 } else {
+                    log_debug("Faking heading.");
+
                     // Get own LatLng
                     var own_latlng = L.latLng(Device.position.coords.latitude, Device.position.coords.longitude);
 
@@ -87,14 +95,20 @@ MapController = function() {
 
     // Called by GameDataService on gameobjects update
     self.onUpdatedGameObjects = function() {
+        log_debug("MapController received update of gameobjects.");
+
         // Iterate over gameobjects and add map markers
         $.each(GameData.gameobjects, function(id, gameobject) {
+            log_debug("Inspecting gameobject id " + id + ".");
+
             // Check whether item should be shown on the map
             if (!gameobject.attributes.isonmap) {
+                log_debug("Not on map.");
                 return;
             }
 
             // Skip if object is own player
+            // FIXME Hasn't this moved to isonmap with VISIBLE_SELF?
             if (id == GameData.current_player_id) {
                 return;
             }
@@ -104,6 +118,7 @@ MapController = function() {
             if (marker) {
                 // Marker exists, store location
                 marker.setLatLng([gameobject.attributes.latitude, gameobject.attributes.longitude]);
+                log_debug("Updated marker.");
             } else {
                 // Marker does not exist
                 // Construct marker icon from gameobject image
@@ -133,25 +148,32 @@ MapController = function() {
                 // Add marker to map and store to known markers
                 marker.addTo(self.marker_cluster_group);
                 self.gameobject_markers[gameobject.id] = marker;
+                log_debug("Created marker.");
             }
         });
 
         // Iterate over found markers and remove everything not found in gameobjects
         $.each(self.gameobject_markers, function(id, marker) {
+            log_debug("Inspecting marker for gameobject id " + id + ".");
+
             if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
                 // Remove marker if object vanished from gameobjects
                 self.marker_cluster_group.removeLayer(marker);
                 delete self.gameobject_markers[id];
+                log_debug("No longer exists, removing.");
             } else if (!GameData.gameobjects[id].attributes.isonmap) {
                 // Remove marker if object is not visible on map anymore
                 self.marker_cluster_group.removeLayer(marker);
                 delete self.gameobject_markers[id];
+                log_debug("No longer on map, removing.");
             }
         });
     };
 
     // Called by DeviceService on geolocation update
     self.onGeolocationChanged = function() {
+        log_debug("MapController received geolocation update.");
+
         // Update position of own marker
         self.marker_self.setLatLng([Device.position.coords.latitude, Device.position.coords.longitude]);
 
@@ -203,10 +225,12 @@ MapController = function() {
     };
 
     self.activate = function() {
+        log_debug("MapController activated.");
         $("div#map").show();
     };
 
     self.deactivate = function() {
+        log_debug("MapController deactivated.");
         $("div#map").hide();
     };
 };

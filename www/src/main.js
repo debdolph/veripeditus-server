@@ -17,11 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Utility code for logging
+function log_debug(msg) {
+    if (Veripeditus.debug) {
+        console.log(msg);
+    }
+}
+
 Veripeditus = {
     version: '1.0.0a0.dev0',
     views: [],
     services: [],
     registerView: function(view) {
+        log_debug("Registering view " + view.constructor.name + ".");
+
         this.views.push(view);
         view.deactivate();
         if (! this.currentView) {
@@ -31,6 +40,8 @@ Veripeditus = {
         this.registerService(view);
     },
     registerService: function(service) {
+        log_debug("Registering service " + service.constructor.name + ".");
+
         this.services.push(service);
     },
     nextView: function() {

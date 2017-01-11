@@ -20,6 +20,8 @@
 CamController = function() {
     var self = this;
 
+    log_debug("Loading CamController.");
+
     self.MAX_DISTANCE = 100;
 
     // Find video view
@@ -27,6 +29,8 @@ CamController = function() {
 
     // Called by DeviceService on camera stream change
     self.onCameraChanged = function() {
+        log_debug("Camera stream changed. New URL: " + Device.cameraUrl);
+
         // Update stream URL of video view
         self.cam.attr("src", Device.cameraUrl);
         self.cam.on("loadedmetadata", function() {
@@ -35,6 +39,8 @@ CamController = function() {
     };
 
     this.getARStyle = function(gameobject) {
+        log_debug("Assembling AR style for gameobject id " + gameobject.id + ".");
+
         // Target object
         var style = {}
 
@@ -56,6 +62,8 @@ CamController = function() {
         var bearing = own_latlng.bearingTo(gameobject_latlng);
         // Determine difference of bearing and device orientation
         var bearing_diff = Device.orientation.heading - bearing;
+
+        log_debug("Gameobject is " + distance + "m in " + bearing + "°, diff " + bearing_diff + "°.");
 
         if (((-bearing_diff) % 360) > 270 || ((-bearing_diff) % 360) < 90) {
             // Calculate offsets in 3D space in relation to camera
@@ -84,14 +92,20 @@ CamController = function() {
 
     // Called by GameDataService on gameobject update
     self.onUpdatedGameObjects = function() {
+        log_debug("CamController received update of gameobjects.");
+
         // Iterate over gameobjects and add map markers
         $.each(GameData.gameobjects, function(id, gameobject) {
+            log_debug("Inspecting gameobject id " + id + ".");
+
             // Check whether item should be shown
             if (!gameobject.attributes.isonmap) {
+                log_debug("Item is not on map.");
                 return;
             }
 
             // Skip if object is own player
+            // FIXME isn't this replaced by isonmap with VISIBLE_SELF?
             if (id == GameData.current_player_id) {
                 return;
             }
@@ -110,6 +124,10 @@ CamController = function() {
                 // Add image to DOM
                 $("div#arview").append(image);
                 self.gameobject_images[gameobject.id] = image;
+
+                log_debug("Created image.");
+            } else {
+                log_debug("Found existing image.");
             }
 
             // Update style of image element
@@ -118,20 +136,26 @@ CamController = function() {
 
         // Iterate over found images and remove everything not found in gameobjects
         $.each(self.gameobject_images, function(id, image) {
+            log_debug("Inspecting gameobject id " + id + ".");
+
             if ($.inArray(id, Object.keys(GameData.gameobjects)) == -1) {
                 // Remove image if object vanished from gameobjects
                 image.remove();
                 delete self.gameobject_images[id];
+                log_debug("No longer exists, removing.");
             } else if (!GameData.gameobjects[id].attributes.isonmap) {
                 // Remove image if object is not visible on map anymore
                 image.remove();
                 delete self.gameobject_images[id];
+                log_debug("No longer on map, removing.");
             }
         });
     };
 
     // Called by DeviceService on geolocation change
     self.onGeolocationChanged = function() {
+        log_debug("CamController received geolocation change.");
+
         // Calculate view bounds
         // FIXME come up with something smarter
         var bounds = [
@@ -144,6 +168,8 @@ CamController = function() {
 
     // Called by DeviceService on orientation change
     self.onOrientationChanged = function() {
+        log_debug("CamController received orientation change.");
+
         // Update AR style for all objects
         $.each(self.gameobject_markers, function(id, image) {
             image.css(self.getARStyle(gameData.gameobjects[id]));
@@ -153,11 +179,13 @@ CamController = function() {
     self.activate = function() {
         $("div#camview").show();;
         Device.startCamera();
+        log_debug("CamController activated.");
     };
 
     self.deactivate = function() {
         $("div#camview").hide();
         Device.stopCamera();
+        log_debug("CamController deactivated.");
     };
 };
 
