@@ -100,7 +100,7 @@ CamController = function() {
     // Called by DeviceService on orientation change
     this.onOrientationChanged = function() {
         // FIXME do something
-        $('#foo').val(Device.orientation.alpha + " " + Device.orientation.beta + " " + Device.orientation.gamma);
+        $('#foo').val(Device.orientation.heading);
     };
 };
 
