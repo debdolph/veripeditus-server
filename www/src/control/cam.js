@@ -151,12 +151,12 @@ CamController = function() {
     };
 
     self.activate = function() {
-        $("div#camview").css("display", "block");
+        $("div#camview").show();;
         Device.startCamera();
     };
 
     self.deactivate = function() {
-        $("div#camview").css("display", "none");
+        $("div#camview").hide();
         Device.stopCamera();
     };
 };

@@ -203,11 +203,11 @@ MapController = function() {
     };
 
     self.activate = function() {
-        $("div#map").css("display", "block");
+        $("div#map").show();
     };
 
     self.deactivate = function() {
-        $("div#map").css("display", "none");
+        $("div#map").hide();
     };
 };
 
