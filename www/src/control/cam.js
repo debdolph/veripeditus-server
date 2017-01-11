@@ -152,8 +152,19 @@ CamController = function() {
             image.css(self.getARStyle(gameData.gameobjects[id]));
         });
     };
+
+    self.activate = function() {
+        Device.startCamera();
+    };
+
+    self.deactivate = function() {
+        Device.stopCamera();
+    };
 };
 
 // Instantiate controller and register to services
 CamView = new CamController();
 Veripeditus.registerView(CamView);
+
+// FIXME trigger from UI
+CamView.activate();

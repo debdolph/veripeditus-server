@@ -185,6 +185,12 @@ MapController = function() {
             });
         }
     };
+
+    self.activate = function() {
+    };
+
+    self.deactivate = function() {
+    };
 };
 
 // Instantiate controller and register to services
